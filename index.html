@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Biblioteca PSN · BD1</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#050608">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Estante PSN">
+<link rel="apple-touch-icon" href="icone.png">
+<link rel="icon" href="icone.png">
+<link rel="stylesheet" href="intergalactic.css">
+<link rel="stylesheet" href="estante.css">
+<script defer src="_brokkr/js/alpine.min.js"></script>
+<script> 
+try{ if(!sessionStorage.getItem("estante-abertura") && !matchMedia("(prefers-reduced-motion: reduce)").matches){
+  document.documentElement.classList.add("abre");
+  setTimeout(()=>document.documentElement.classList.remove("abre"), 3500);    
+  for(const [h,a] of [["_brokkr\/rive/rive.wasm","fetch"],["_brokkr\/rive/rive-umd.js","script"],["abertura.riv","fetch"]]){
+    const l=document.createElement("link"); l.rel="preload"; l.href=h; l.as=a; if(a==="fetch") l.crossOrigin="anonymous"; document.head.appendChild(l); }
+} }catch(e){}</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400;1,600&family=Bebas+Neue&display=swap">
+</head>
+<body data-vista="sala">
+
+<div class="abertura" id="abertura" aria-hidden="true" data-rive="_brokkr/rive/" data-riv="abertura.riv"><canvas></canvas></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="bd1-lq-lens" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.010 0.014" numOctaves="1" seed="4" result="n"/>
+    <feGaussianBlur in="n" stdDeviation="3" result="s"/>
+    <feDisplacementMap in="SourceGraphic" in2="s" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+
+
+<div class="sala ig-stagger" id="sala">
+  <header class="sala-cab">
+    <div>
+      <span class="ig-gravado">Estante PSN</span>
+      <h1 class="sala-tit">A coleção</h1>
+      <p class="sala-lede">Toque numa caixa para tirar da prateleira.</p>
+    </div>
+    <button class="tecla" id="vaiAparelho" type="button"><span class="ig-bead ig-bead--off" id="salaBead"></span>Diário e cronômetro</button>
+  </header>
+
+  
+  <div class="movel" x-data="camera">
+    
+    <section class="vitrine" aria-label="Vitrine dos preferidos">
+      <span class="c3 c3-fundo" aria-hidden="true"></span><span class="c3 c3-piso" aria-hidden="true"></span>
+      <span class="c3 c3-esq" aria-hidden="true"></span><span class="c3 c3-dir" aria-hidden="true"></span>
+      <span class="c3 c3-teto" aria-hidden="true"><span class="vit-led"></span></span>
+      <div class="vit-prats" id="vitPrats"><div class="vit-prat">
+    <div class="vit-fila"><button class="vit-cx" type="button" data-id="gta6" data-plat="PS5" style="--cor:#8d7486"
+        title="GTA VI" aria-label="GTA VI. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS5">PS5</span><img src="https://image.api.playstation.com/vulcan/ap/rnd/202606/1818/9f51f0ccdb65bd29c36a0907a738c2902a712f03e2fd6470.png?w=720" alt="" decoding="async" draggable="false"><span class="vit-selo">19/11</span></span></button><button class="vit-cx" type="button" data-id="007" data-plat="PS5" style="--cor:#564e3f"
+        title="007 First Light" aria-label="007 First Light. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS5">PS5</span><img src="https://image.api.playstation.com/vulcan/ap/rnd/202507/0215/f54f11bcf773a3bcace540344dc12154973f53d3490b93fc.png?w=720" alt="" decoding="async" draggable="false"></span></button><button class="vit-cx" type="button" data-id="mad-max" data-plat="PS4" style="--cor:#ceb08f"
+        title="Mad Max" aria-label="Mad Max. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS4">PS4</span><img src="https://image.api.playstation.com/cdn/UP1018/CUSA02703_00/MGxPvD9T3pWjuEPwnb5NaTI6T9nowlGu.png?w=720" alt="" decoding="async" draggable="false"></span></button></div>
+    <span class="vit-tampo" aria-hidden="true"></span>
+    <span class="vit-placa">Os preferidos</span>
+  </div><div class="vit-prat">
+    <div class="vit-fila"><button class="vit-cx" type="button" data-id="god-of-war-iii-remastered" data-plat="PS4" style="--cor:#cd1e1d"
+        title="God of War III Remastered" aria-label="God of War III Remastered. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS4">PS4</span><img src="https://image.api.playstation.com/vulcan/img/rnd/202011/0711/p8JCvA8692BICXAPoyylh7ed.png?w=720" alt="" decoding="async" draggable="false"></span></button><button class="vit-cx" type="button" data-id="god-of-war-2018" data-plat="PS4" style="--cor:#6496af"
+        title="God of War (2018)" aria-label="God of War (2018). Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS4">PS4</span><img src="https://image.api.playstation.com/vulcan/img/rnd/202011/1021/X3WIAh63yKhRRiMohLoJMeQu.png?w=720" alt="" decoding="async" draggable="false"></span></button><button class="vit-cx" type="button" data-id="god-of-war-ragnarok" data-plat="PS5" style="--cor:#7c91ab"
+        title="God of War Ragnarök" aria-label="God of War Ragnarök. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS5">PS5</span><img src="https://image.api.playstation.com/vulcan/ap/rnd/202503/2016/b69c06fb108299866057126b0d3a0530bdf96a39d2ce1cb9.png?w=720" alt="" decoding="async" draggable="false"></span></button></div>
+    <span class="vit-tampo" aria-hidden="true"></span>
+    <span class="vit-placa">God of War</span>
+  </div><div class="vit-prat">
+    <div class="vit-fila"><button class="vit-cx" type="button" data-id="batman-return-to-arkham-arkham-asylum" data-plat="PS4" style="--cor:#666a67"
+        title="Batman: Return to Arkham – Arkham Asylum" aria-label="Batman: Return to Arkham – Arkham Asylum. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS4">PS4</span><img src="https://image.api.playstation.com/cdn/UP1018/CUSA04744_00/iEdE6peaqi0WAsPBaqPEhEFPMukHtFjX.png?w=720" alt="" decoding="async" draggable="false"></span></button><button class="vit-cx" type="button" data-id="batman-return-to-arkham-arkham-city" data-plat="PS4" style="--cor:#ffffff"
+        title="Batman: Return to Arkham – Arkham City" aria-label="Batman: Return to Arkham – Arkham City. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS4">PS4</span><img src="https://image.api.playstation.com/gs2-sec/appkgo/prod/CUSA05776_00/1/i_33c5c5cf3f72d849f68d18405ee65e505ef16de3cd424b4edf3421f9b316f2f7/i/icon0.png?w=720" alt="" decoding="async" draggable="false"></span></button><button class="vit-cx" type="button" data-id="batman-arkham-knight" data-plat="PS4" style="--cor:#3c3731"
+        title="Batman: Arkham Knight" aria-label="Batman: Arkham Knight. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS4">PS4</span><img src="https://image.api.playstation.com/cdn/UP1018/CUSA01764_00/daExAVIqaWz8NNeqTaFW2IcweYzqt4d8.png?w=720" alt="" decoding="async" draggable="false"></span></button><button class="vit-cx" type="button" data-id="batman-the-telltale-series" data-plat="PS4" style="--cor:#222020"
+        title="Batman: The Telltale Series" aria-label="Batman: The Telltale Series. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS4">PS4</span><img src="https://image.api.playstation.com/vulcan/ap/rnd/202007/2020/s4JNNSnHQL0eTF3RBr4IiORs.png?w=720" alt="" decoding="async" draggable="false"></span></button><button class="vit-cx" type="button" data-id="batman-the-enemy-within" data-plat="PS4" style="--cor:#413e3d"
+        title="Batman: The Enemy Within" aria-label="Batman: The Enemy Within. Tirar a caixa da vitrine">
+        <span class="cx3 cx3-sombra" aria-hidden="true"></span><span class="cx3 cx3-topo" aria-hidden="true"></span>
+        <span class="cx3 cx3-esq" aria-hidden="true"></span><span class="cx3 cx3-dir" aria-hidden="true"></span>
+        <span class="cx3 cx3-frente"><span class="banda" data-plat="PS4">PS4</span><img src="https://image.api.playstation.com/cdn/UP2026/CUSA09313_00/vN1ecmCt78v8wNJwopvKpYUx4nQPfojP.png?w=720" alt="" decoding="async" draggable="false"></span></button></div>
+    <span class="vit-tampo" aria-hidden="true"></span>
+    <span class="vit-placa">Batman</span>
+  </div></div>
+      <span class="vit-vidro" aria-hidden="true"></span>
+    </section>
+
+    
+    <section class="acervo" aria-label="Acervo PSN">
+      <span class="c3 c3-fundo" aria-hidden="true"></span><span class="c3 c3-piso" aria-hidden="true"></span>
+      <span class="c3 c3-esq" aria-hidden="true"></span><span class="c3 c3-dir" aria-hidden="true"></span>
+      <span class="c3 c3-teto" aria-hidden="true"></span>
+      <div class="un-top">
+        <span class="ig-gravado">A estante inteira</span>
+        <span class="ig-regua-gravada" id="acervoSum"></span>
+      </div>
+
+      <div class="estante-ctl">
+        <input type="search" id="q" placeholder="Achar na estante…" aria-label="Buscar na estante">
+        <button class="tecla" id="modoTirar" type="button" aria-pressed="false">Tirar da estante</button>
+        <label class="sel"><select id="gameSel" aria-label="Escolher o jogo pela lista"></select></label>
+        <button class="link" id="showHidden" type="button" hidden>rever ocultos</button>
+        <span class="ig-gravado" id="hiddenNote"></span>
+      </div>
+
+      <div class="ig-nicho ig-estante-nicho">
+        <div class="ig-estante__trilho" id="trilho">
+          <div class="ig-estante" id="acervoList"></div>
+        </div>
+        <div class="ig-estante__piso"></div>
+      </div>
+      <span class="ig-regua-gravada" id="estanteRegua">arraste a estante · a altura da lombada é o tamanho da campanha · toque numa pra abrir a caixa</span>
+    </section>
+  </div>
+</div>
+
+<main class="rack ig-stagger">
+<div class="rack-volta">
+  <button class="tecla" id="vaiSala" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Voltar pra estante</button>
+</div>
+
+
+<section class="ig-chassi un deck" id="deck" aria-label="Controle da sessão">
+  <span class="ig-screw tl"></span><span class="ig-screw tr"></span>
+  <span class="ig-screw bl"></span><span class="ig-screw br"></span>
+
+  <div class="un-top">
+    <span class="ig-gravado"><b>01</b> Transporte</span>
+    <span class="ig-janela" id="stateWin"><span><span class="ig-bead ig-bead--off" id="stateBead"></span><span id="stateLabel">Parado</span></span></span>
+  </div>
+
+  <div class="ig-nicho janela-nicho">
+    <div class="cena">
+      
+      <svg class="scene mafia" viewBox="0 0 800 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="msky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c120c"/><stop offset=".55" stop-color="#5a321a"/><stop offset="1" stop-color="#b8763a"/></linearGradient>
+          <radialGradient id="msun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe2a8"/><stop offset=".6" stop-color="#f3b866" stop-opacity=".9"/><stop offset="1" stop-color="#f3b866" stop-opacity="0"/></radialGradient>
+          <filter id="mgrain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .1  0 0 0 0 .07  0 0 0 0 .04  0 0 0 .35 0"/></filter>
+        </defs>
+        <rect width="800" height="260" fill="url(#msky)"/>
+        <circle cx="560" cy="150" r="120" fill="url(#msun)" opacity=".75"/>
+        <circle cx="560" cy="150" r="38" fill="#ffe7b8"/>
+        <g class="haze"><path d="M0 170 Q120 130 240 155 T480 150 T800 140 V260 H0Z" fill="#6f5a3a" opacity=".55"/></g>
+        <path d="M0 190 Q100 160 210 180 T420 175 Q520 160 600 178 T800 170 V260 H0Z" fill="#3e3120"/>
+        <g fill="#2a2016"><rect x="150" y="136" width="22" height="48"/><path d="M146 138 h30 l-15 -14z"/><rect x="172" y="158" width="34" height="26"/></g>
+        <g fill="#1e1a10">
+          <path d="M640 182 C630 150 636 118 644 100 C652 118 658 150 648 182Z"/>
+          <path d="M662 186 C654 160 658 132 664 116 C670 132 674 160 668 186Z"/>
+          <path d="M86 196 C78 170 82 144 88 128 C94 144 98 170 90 196Z"/>
+        </g>
+        <path d="M0 214 Q160 196 330 210 T640 204 T800 208 V260 H0Z" fill="#1a130c"/>
+        <g fill="#140f09"><circle cx="720" cy="226" r="34"/><circle cx="760" cy="232" r="26"/><circle cx="40" cy="238" r="30"/></g>
+        <g fill="#e2b84a" opacity=".85"><circle cx="708" cy="220" r="2.4"/><circle cx="728" cy="232" r="2.2"/><circle cx="752" cy="226" r="2.2"/><circle cx="36" cy="232" r="2.2"/></g>
+        <rect width="800" height="260" filter="url(#mgrain)"/>
+      </svg>
+
+      
+      <svg class="scene gta" viewBox="0 0 800 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="gsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#140829"/><stop offset=".45" stop-color="#6a1b6e"/><stop offset=".75" stop-color="#ff3d7f"/><stop offset="1" stop-color="#ffb347"/></linearGradient>
+          <linearGradient id="gsun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset="1" stop-color="#ff5e8a"/></linearGradient>
+          <linearGradient id="gsea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1550"/><stop offset="1" stop-color="#0a0514"/></linearGradient>
+          <clipPath id="gsunclip"><rect x="0" y="0" width="800" height="176"/></clipPath>
+        </defs>
+        <rect width="800" height="176" fill="url(#gsky)"/>
+        <g clip-path="url(#gsunclip)">
+          <circle cx="400" cy="176" r="92" fill="url(#gsun)"/>
+          <g fill="#6a1b6e" opacity=".9"><rect x="300" y="140" width="200" height="4"/><rect x="300" y="152" width="200" height="6"/><rect x="300" y="165" width="200" height="8"/></g>
+        </g>
+        <path d="M0 176 V160 h30 v-14 h18 v22 h26 v-30 h14 v30 h40 v-10 h22 v10 h470 v-18 h16 v-12 h10 v30 h28 v-22 h20 v22 h36 v10 Z" fill="#2a0f3e" opacity=".9"/>
+        <rect y="176" width="800" height="84" fill="url(#gsea)"/>
+        <g fill="#ff9ad0"><rect class="glint" x="360" y="186" width="80" height="2" rx="1"/><rect class="glint" x="340" y="198" width="120" height="2" rx="1"/><rect class="glint" x="372" y="212" width="56" height="2" rx="1"/><rect class="glint" x="386" y="226" width="28" height="2" rx="1"/></g>
+        <g fill="#07030d">
+          <g transform="translate(120 0)"><g class="palm">
+            <path d="M92 262 C98 210 108 170 128 132 L134 134 C116 172 108 212 104 262Z"/>
+            <g transform="translate(131 132)"><path d="M0 0 C-30 -18 -62 -12 -84 6 C-58 -4 -30 -4 0 4Z"/><path d="M0 0 C-18 -34 -46 -46 -72 -44 C-46 -34 -24 -18 0 4Z"/><path d="M0 0 C14 -34 42 -48 70 -46 C44 -34 22 -16 0 4Z"/><path d="M0 0 C30 -14 64 -6 86 14 C58 4 30 2 0 4Z"/><path d="M0 0 C6 -28 0 -54 -10 -70 C8 -52 10 -26 2 4Z"/></g>
+          </g></g>
+          <g transform="translate(-90 0)"><g class="palm b">
+            <path d="M700 262 C696 220 690 186 676 156 L682 154 C698 184 706 220 712 262Z"/>
+            <g transform="translate(679 155)"><path d="M0 0 C-28 -16 -58 -10 -78 8 C-54 -2 -28 -2 0 4Z"/><path d="M0 0 C-16 -30 -42 -42 -66 -40 C-42 -30 -22 -16 0 4Z"/><path d="M0 0 C14 -30 40 -44 66 -42 C40 -30 20 -14 0 4Z"/><path d="M0 0 C28 -12 58 -4 78 14 C52 4 28 2 0 4Z"/></g>
+          </g>
+          <g class="palm" style="animation-delay:-3s">
+            <path d="M752 262 C752 232 748 208 740 188 L745 186 C755 206 760 232 762 262Z"/>
+            <g transform="translate(742 187) scale(.7)"><path d="M0 0 C-28 -16 -58 -10 -78 8 C-54 -2 -28 -2 0 4Z"/><path d="M0 0 C14 -30 40 -44 66 -42 C40 -30 20 -14 0 4Z"/><path d="M0 0 C28 -12 58 -4 78 14 C52 4 28 2 0 4Z"/><path d="M0 0 C-16 -30 -42 -42 -66 -40 C-42 -30 -22 -16 0 4Z"/></g>
+          </g></g>
+        </g>
+      </svg>
+
+      
+      <svg class="scene waste" viewBox="0 0 800 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="wsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0704"/><stop offset=".4" stop-color="#3a1e0c"/><stop offset=".72" stop-color="#9a5522"/><stop offset="1" stop-color="#E8AE5E"/></linearGradient>
+          <radialGradient id="wsun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe6b0"/><stop offset=".5" stop-color="#E8AE5E" stop-opacity=".95"/><stop offset="1" stop-color="#E8AE5E" stop-opacity="0"/></radialGradient>
+          <filter id="wgrain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .12  0 0 0 0 .08  0 0 0 0 .04  0 0 0 .3 0"/></filter>
+        </defs>
+        <rect width="800" height="260" fill="url(#wsky)"/>
+        <circle cx="300" cy="196" r="122" fill="url(#wsun)" opacity=".85"/>
+        <circle cx="300" cy="196" r="46" fill="#ffe1a2"/>
+        <g class="haze"><path d="M0 176 Q160 160 320 172 T640 168 T800 162 V260 H0Z" fill="#c98a44" opacity=".26"/></g>
+        <path d="M0 196 Q200 176 400 190 T800 184 V260 H0Z" fill="#6b3f1e"/>
+        <g stroke="#0c0805" stroke-width="2.5" fill="none" stroke-linecap="round"><path d="M556 236 V150"/><path d="M536 166 H576"/><path d="M542 156 H570"/></g>
+        <path d="M0 214 Q180 196 360 210 T720 206 T800 210 V260 H0Z" fill="#3a2311"/>
+        <g stroke="#0c0805" stroke-width="3.4" fill="none" stroke-linecap="round"><path d="M706 236 V166"/><path d="M706 182 L690 166"/><path d="M706 190 L722 174"/><path d="M706 176 L697 165"/><path d="M706 200 L720 191"/></g>
+        <path d="M0 232 Q220 216 440 228 T800 226 V260 H0Z" fill="#160f08"/>
+        <rect width="800" height="260" filter="url(#wgrain)"/>
+      </svg>
+
+      
+      <svg class="scene def" viewBox="0 0 800 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="dsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05060a"/><stop offset=".62" stop-color="#0a0d14"/><stop offset="1" stop-color="#151a24"/></linearGradient>
+          <radialGradient id="dglow" cx=".18" cy="1" r=".75"><stop offset="0" stop-color="#E8AE5E" stop-opacity=".40"/><stop offset=".55" stop-color="#c8862e" stop-opacity=".12"/><stop offset="1" stop-color="#E8AE5E" stop-opacity="0"/></radialGradient>
+          <linearGradient id="dfloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5EEAD4" stop-opacity=".30"/><stop offset="1" stop-color="#5EEAD4" stop-opacity=".02"/></linearGradient>
+          <filter id="dgrain"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .09  0 0 0 0 .1  0 0 0 0 .12  0 0 0 .3 0"/></filter>
+        </defs>
+        <rect width="800" height="260" fill="url(#dsky)"/>
+        <g fill="#cfd6e4"><circle cx="92" cy="34" r="1"/><circle cx="188" cy="62" r=".8"/><circle cx="286" cy="26" r="1.1"/><circle cx="404" cy="52" r=".9"/><circle cx="512" cy="30" r="1"/><circle cx="628" cy="66" r=".8"/><circle cx="716" cy="38" r="1.1"/><circle cx="352" cy="84" r=".7"/><circle cx="600" cy="18" r=".8"/></g>
+        <rect width="800" height="260" fill="url(#dglow)"/>
+        
+        <g stroke="url(#dfloor)" stroke-width="1" fill="none">
+          <path d="M0 258 H800M-40 234 H840M40 214 H760M110 198 H690M165 186 H635M208 177 H592M242 170 H558M268 165 H532M288 161 H512M302 158 H498"/>
+          <path d="M400 156 L400 260M400 156 L300 260M400 156 L500 260M400 156 L190 260M400 156 L610 260M400 156 L60 260M400 156 L740 260M400 156 L-80 260M400 156 L880 260"/>
+        </g>
+        <line x1="0" y1="156" x2="800" y2="156" stroke="#E8AE5E" stroke-width="1" opacity=".5"/>
+        
+        <g fill="#04050a">
+          <rect x="612" y="108" width="52" height="48"/><rect x="664" y="128" width="30" height="28"/>
+          <rect x="120" y="126" width="38" height="30"/>
+        </g>
+        <g stroke="#04050a" stroke-width="2.6" fill="none" stroke-linecap="round">
+          <path d="M642 108 V62"/><path d="M628 78 H656"/><path d="M634 70 H650"/>
+          <path d="M136 126 V86"/><path d="M126 98 H146"/>
+        </g>
+        <circle class="faro" cx="642" cy="58" r="2.6" fill="#E8AE5E"/>
+        <circle class="faro" cx="136" cy="82" r="2.2" fill="#5EEAD4" style="animation-delay:-2.4s"/>
+        <rect width="800" height="260" filter="url(#dgrain)"/>
+      </svg>
+
+      <span class="ig-janela ig-janela--cyan selo" id="heroBadge" hidden><span><span class="ig-bead ig-bead--cyan is-live"></span><span id="heroBadgeTxt">jogo da vez</span></span></span>
+    </div>
+
+    <div class="ig-visor">
+      <div class="vis-linha">
+        <span class="ig-visor__num timer" data-fantasma="88:88:88"><b id="vfdTime">00:00:00</b></span>
+        <div class="ig-vu-celas" id="deckVU" data-celas="20" style="width:96px;flex:none;margin:0 0 7px" aria-hidden="true"></div>
+      </div>
+      <div class="vis-sub" id="vfdSub">APERTE PLAY PARA COMEÇAR</div>
+    </div>
+    <div class="ig-lente"></div>
+  </div>
+
+  <div class="un-id">
+    <div class="placa">
+      <span class="ig-gravado" id="heroKicker">BD1 · diário de sessões</span>
+      <h1 id="gameTitle">Mafia: The Old Country</h1>
+      <p class="lede" id="deadlineLine">GTA VI sai em 19/11.</p>
+    </div>
+  </div>
+
+  <hr class="sulco">
+
+  <div class="transport">
+    <span class="grelha" aria-hidden="true"></span>
+    <span class="tkey">
+      <button class="vkey vkey--play" id="playBtn" type="button" aria-label="Começar sessão">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg></button>
+      <span class="ig-gravado">Play</span></span>
+    <span class="tkey">
+      <button class="vkey" id="stopBtn" type="button" aria-label="Encerrar sessão" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg></button>
+      <span class="ig-gravado">Stop</span></span>
+    <p class="guia"><b id="guiaTit">Aperte play quando ligar o PS5.</b><span id="guiaSub">O dia e a hora entram sozinhos — você não anota nada.</span></p>
+    <button class="tecla" id="guiaAcao" type="button" hidden>Ir pra estante</button>
+  </div>
+
+  <div class="primeira" id="primeira" hidden>
+    <span class="ig-gravado">Como este aparelho funciona</span>
+    <ol>
+      <li><b>1</b><span>Escolha a caixa do jogo na <strong>estante</strong>, a primeira tela. O aparelho inteiro se ajusta a ele.</span></li>
+      <li><b>2</b><span>Aperte <strong>play</strong> quando ligar o PS5. Abre o deck de fita e o cronômetro roda.</span></li>
+      <li><b>3</b><span>Aperte <strong>stop</strong> quando largar o controle. O dia fecha sozinho, com hora e data.</span></li>
+    </ol>
+  </div>
+
+  <div class="research" id="research" hidden>
+    <button class="tecla" id="calmBtn" type="button">Abrir o deck</button>
+    <button class="tecla" id="researchBtn" type="button">Parar pra pesquisar · 5 min</button>
+    <span class="count" id="researchCount" hidden>05:00</span>
+    <span class="research-note" id="researchNote">Gatilho: pesquisa tem cronômetro. Acabou, volta pro jogo.</span>
+  </div>
+</section>
+
+
+<section class="ig-chassi un" aria-label="Progresso">
+  <span class="ig-screw tl"></span><span class="ig-screw tr"></span>
+  <span class="ig-screw bl"></span><span class="ig-screw br"></span>
+
+  <div class="un-top">
+    <span class="ig-gravado"><b>02</b> Medição</span>
+    <span class="ig-janela" id="vStat"><span><span class="ig-bead" id="vStatBead"></span><span id="vStatTxt">no prazo</span></span></span>
+  </div>
+
+  <div class="grade3">
+    <div class="ig-mostrador">
+      <span class="ig-gravado">Jogado</span>
+      <div class="ig-nicho">
+        <div class="ig-visor" id="cPlayedVis" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso da campanha">
+          <div class="mostr-topo">
+            <span class="ig-visor__linha"><span class="ig-visor__num" data-fantasma="888"><b id="cPlayed">0</b></span><span class="ig-visor__unid" id="cPlayedUn">h</span></span>
+            <span class="pct" id="cPct">0%</span>
+          </div>
+          <div class="ig-vu-celas" id="cBarVU" data-celas="22" aria-hidden="true"></div>
+        </div>
+        <div class="ig-lente"></div>
+      </div>
+      <span class="ig-regua-gravada" id="cPlayedRule">de ~30h estimadas</span>
+    </div>
+
+    <div class="ig-mostrador">
+      <span class="ig-gravado">Falta</span>
+      <div class="ig-nicho">
+        <div class="ig-visor ig-visor--cyan">
+          <div class="ig-visor__linha"><span class="ig-visor__num" data-fantasma="888"><b id="cLeft">30</b></span><span class="ig-visor__unid" id="cLeftUn">h</span></div>
+          <div class="ig-vu-celas" id="cLeftVU" data-celas="22" aria-hidden="true"></div>
+        </div>
+        <div class="ig-lente"></div>
+      </div>
+      <span class="ig-regua-gravada" id="cLeftRule">pra zerar no seu jeito</span>
+    </div>
+
+    <div class="ig-mostrador">
+      <span class="ig-gravado">Hoje</span>
+      <div class="ig-nicho">
+        <div class="ig-visor">
+          <div class="ig-visor__linha"><span class="ig-visor__num" data-fantasma="888"><b id="cToday">0</b></span><span class="ig-visor__unid">min</span></div>
+          <div class="ig-vu-celas" id="cTodayVU" data-celas="22" aria-hidden="true"></div>
+        </div>
+        <div class="ig-lente"></div>
+      </div>
+      <span class="ig-regua-gravada" id="cTodayRule">meta do dia: —</span>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <span id="zerarSede"><button class="tecla" id="zerarBtn" type="button" aria-pressed="false">Marcar como zerado</button></span>
+    <div class="chips" id="estChips" role="group" aria-label="Estimativa pra zerar"></div>
+  </div>
+
+  <hr class="sulco">
+
+  <div class="un-top">
+    <span class="ig-gravado">Registrador · últimos 14 dias</span>
+    <span class="ig-regua-gravada" id="streak">sequência: 0 dias</span>
+  </div>
+  <div class="ig-nicho">
+    <div class="registrador" id="sparkGrid"></div>
+    <div class="ig-lente"></div>
+  </div>
+  <div class="dias" id="sparkDays"></div>
+
+  <p class="previsao"><span class="cab" id="vHead">—</span><span id="vText"></span></p>
+</section>
+
+
+<section class="ig-chassi un" aria-label="Diário">
+  <span class="ig-screw tl"></span><span class="ig-screw tr"></span>
+  <span class="ig-screw bl"></span><span class="ig-screw br"></span>
+
+  <div class="un-top">
+    <span class="ig-gravado"><b>03</b> Diário</span>
+    <span class="ig-regua-gravada" id="saveNote"></span>
+  </div>
+
+  <div id="log" style="display:flex;flex-direction:column;gap:14px"></div>
+
+  <hr class="sulco">
+  <div class="manual">
+    <span class="ig-gravado">Esqueceu o play?</span>
+    <input type="date" id="mDate" aria-label="Dia">
+    <input type="number" id="mMin" min="1" max="600" placeholder="min" aria-label="Minutos jogados">
+    <button class="tecla" id="mAdd" type="button">Lançar sessão</button>
+  </div>
+</section>
+
+<p class="rodape">
+  <b>Play</b> abre o deck de fita e roda o cronômetro. <b>Stop</b> fecha o dia com hora e data.<br>
+  A estante é o seu acervo PSN lido em 21/09. Sessão e diário ficam guardados neste aparelho.
+</p>
+</main>
+
+
+<div class="cxcena" id="cxcena" hidden role="dialog" aria-modal="true" aria-label="Caixa do jogo">
+  <div class="cxfundo" id="cxfundo" aria-hidden="true"></div>
+  <button class="cxfechar" id="cxfechar" type="button" aria-label="Devolver a caixa à estante">×</button>
+  <div class="cxmesa">
+    <div class="cxlado">
+      <div class="cxpalco" id="cxpalco">
+        <div class="voo" id="cxvoo"><div class="flutua"><div class="estojo" id="estojo">
+          <div class="ej-f ej-tras" id="ejTras">
+            <div class="tr-arte"></div>
+            <div class="tr-corpo">
+              <h3 class="tr-tit" id="trTit"></h3>
+              <p class="tr-txt" id="trTxt"></p>
+              <dl class="tr-nums" id="trNums"></dl>
+              <div class="tr-pe"><span id="trCat">BD1</span><span class="tr-barras"></span></div>
+            </div>
+          </div>
+          <div class="ej-f ej-lombo" id="ejLombo"><b></b><span></span></div>
+          <div class="ej-f ej-borda"></div>
+          <div class="ej-f ej-topo"></div>
+          <div class="ej-f ej-base"></div>
+          <div class="ej-f ej-bandeja">
+            <button class="disco" id="discoBtn" type="button" aria-label="Tocar o disco e começar a sessão">
+              <span class="disco-giro"><span class="disco-midia"></span><span class="disco-arte"></span><span class="disco-luz"></span></span>
+              <span class="rot">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>
+                <span>tocar</span></span>
+            </button>
+          </div>
+          <div class="ej-tampa">
+            <div class="ej-f ej-capa" id="cxarte"></div>
+            <div class="ej-f ej-dentro">
+              <span class="ej-presilha a"></span><span class="ej-presilha b"></span>
+              <div class="ej-folheto">
+                <div class="fl-arte"></div>
+                <small>Encarte</small>
+                <strong id="flTit"></strong>
+                <p id="flTxt"></p>
+              </div>
+            </div>
+          </div>
+        </div></div></div>
+        <div class="ej-sombra" aria-hidden="true"></div>
+      </div>
+      <p class="cxdica" id="cxdica" aria-live="polite"></p>
+      <div class="cxacoes">
+        <button class="tecla acesa" id="cxprim" type="button">Abrir a caixa</button>
+        <button class="tecla" id="cxsec" type="button">Ver o verso</button>
+        <button class="tecla" id="cxbancada" type="button">Só deixar na bancada</button>
+      </div>
+    </div>
+
+    <div class="encarte">
+      <div class="cab">
+        <span class="ig-gravado">Encarte</span>
+        <h2 id="cxtitulo">—</h2>
+        <span class="ig-regua-gravada" id="cxreg"></span>
+      </div>
+      <dl class="dnums" id="cxnums"></dl>
+      <div class="dtxt" id="cxtxt"></div>
+      <p class="dnota" id="cxnota"></p>
+      <div class="cxacoes">
+        <button class="tecla" id="cxcapaAcao" type="button">Pôr a minha capa</button>
+        <button class="tecla" id="cxcapaTira" type="button" hidden>Voltar pra capa da loja</button>
+      </div>
+      <input type="file" id="cxcapaFile" accept="image/*" hidden>
+      <p class="dnota" id="cxcapaNota">A capa que aparece é a da PlayStation Store. Se quiser outra, arraste uma imagem em cima da caixa.</p>
+    </div>
+  </div>
+</div>
+
+<div class="calm" id="calm" hidden role="dialog" aria-label="Sessão em curso">
+  <iframe class="calm-deck" id="calmDeck" title="Deck de fita da sessão" scrolling="no" tabindex="-1"></iframe>
+  <div class="calm-fallback" id="calmFallback" hidden><span class="lbl">decorrido</span><span id="calmFbTime">00:00:00</span></div>
+  <div class="calm-research" id="calmResearch" hidden></div>
+  <div class="calm-hint">toque na tela pra ver os controles</div>
+  <div class="calm-ui" id="calmUI">
+    <button type="button" id="calmResearchBtn">Pesquisar · 5 min</button>
+    <button type="button" id="calmExit">Voltar ao painel</button>
+    <button type="button" class="stop" id="calmStop">Encerrar sessão</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="vendor.js"></script>
+<script src="liquid-glass.js"></script>
+<script>window.ESTANTE = {"biblioteca":[{"t":"GOALS","h":0},{"t":"Mafia: The Old Country","h":15},{"t":"Uncharted: The Lost Legacy","h":9},{"t":"Matterfall","h":5},{"t":"MONOPOLY","h":0},{"t":"Assassin's Creed IV Black Flag","h":35},{"t":"Sonic X Shadow Generations","h":12},{"t":"Avatar: Frontiers of Pandora","h":35},{"t":"Ben 10: Power Trip","h":6},{"t":"Ben 10: Uma Super Viagem","h":6},{"t":"Coffee Talk","h":6},{"t":"Minecraft","h":0},{"t":"Batman: The Enemy Within","h":9},{"t":"Final Fantasy XVI","h":45},{"t":"Star Wars Outlaws","h":40},{"t":"Nine Sols","h":25},{"t":"EA Sports FC 26","h":0},{"t":"NBA 2K26","h":0},{"t":"Echoes of the End","h":14},{"t":"LEGO Horizon Adventures","h":10},{"t":"LEGO The Hobbit","h":15},{"t":"Cat Quest III","h":10},{"t":"TopSpin 2K25","h":0},{"t":"NBA 2K23","h":0},{"t":"LEGO Star Wars: A Saga Skywalker","h":35},{"t":"Warhammer 40,000: Space Marine 2","h":15},{"t":"Crysis Remastered","h":9},{"t":"The Last of Us: Left Behind","h":3},{"t":"Marvel's Spider-Man 2","h":25},{"t":"Stellar Blade","h":30},{"t":"Sword of the Sea","h":6},{"t":"Rayman Legends","h":15},{"t":"Trials Fusion","h":12},{"t":"Trackmania Turbo","h":10},{"t":"STEEP","h":15},{"t":"Rainbow Six Extraction","h":0},{"t":"Riders Republic","h":25},{"t":"Crash Bandicoot N. Sane Trilogy","h":20},{"t":"Call of Duty: WWII","h":8},{"t":"Call of Duty: Black Ops 4","h":0},{"t":"Battlefield V","h":12},{"t":"Battlefield 2042","h":0},{"t":"Just Cause 3","h":30},{"t":"Just Cause 4","h":25},{"t":"Final Fantasy VII Remake","h":40},{"t":"Shadow of the Tomb Raider","h":20},{"t":"Guardiões da Galáxia da Marvel","h":18},{"t":"Cartoon Network: Battle Crashers","h":5},{"t":"Ace Combat 7","h":20},{"t":"NBA 2K16","h":0},{"t":"PGA Tour 2K21","h":0},{"t":"Mafia: Definitive Edition","h":18},{"t":"Fallout 4","h":60},{"t":"DOOM Eternal","h":20},{"t":"Mad Max","h":21},{"t":"Grand Theft Auto V","h":45},{"t":"Batman: Arkham Knight","h":25},{"t":"Terra-média: Sombras da Guerra","h":35},{"t":"LEGO DC Super-Villains","h":15},{"t":"Hogwarts Legacy","h":45},{"t":"Mortal Kombat 1","h":6},{"t":"Alan Wake 2","h":22},{"t":"Hollow Knight","h":30},{"t":"Stray","h":6},{"t":"Mortal Shell","h":12},{"t":"Hotline Miami 2","h":10},{"t":"DiRT Rally 2.0","h":0},{"t":"DIRT 5","h":20},{"t":"AO Tennis 2","h":0},{"t":"Tennis World Tour 2","h":0},{"t":"Control Ultimate Edition","h":18},{"t":"Crime Boss: Rockay City","h":12},{"t":"Hood: Outlaws \u0026 Legends","h":0},{"t":"A Plague Tale: Innocence","h":13},{"t":"Zombie Army 4","h":15},{"t":"SpongeBob: Battle for Bikini Bottom","h":12},{"t":"Kingdoms of Amalur: Re-Reckoning","h":40},{"t":"I am Bread","h":5},{"t":"HITMAN 2","h":25},{"t":"Rock of Ages 3","h":8},{"t":"Stranded Deep","h":25},{"t":"Session: Skate Sim","h":15},{"t":"Killzone Shadow Fall","h":9},{"t":"inFAMOUS Second Son","h":14},{"t":"Uncharted 4","h":18},{"t":"Until Dawn","h":9},{"t":"Beyond: Two Souls","h":11},{"t":"LittleBigPlanet 3","h":12},{"t":"Bloodborne","h":40},{"t":"The Last Guardian","h":15},{"t":"That's You!","h":0},{"t":"God of War (2018)","h":30},{"t":"Detroit: Become Human","h":13},{"t":"Days Gone","h":40},{"t":"Concrete Genie","h":8},{"t":"Sackboy: Uma Grande Aventura","h":20},{"t":"Ghost of Tsushima","h":40},{"t":"Ratchet \u0026 Clank: Em Uma Outra Dimensão","h":15},{"t":"Death Stranding Director's Cut","h":50},{"t":"Destruction AllStars","h":0},{"t":"Uncharted: Coleção Legado dos Ladrões","h":27},{"t":"2XKO","h":0},{"t":"Forza Horizon 5","h":50},{"t":"Marvel Rivals","h":0},{"t":"Zenless Zone Zero","h":0},{"t":"Hot Wheels Rift Rally","h":10},{"t":"Asphalt Legends","h":0},{"t":"Omega Strikers","h":0},{"t":"Trackmania","h":0},{"t":"UFL","h":0},{"t":"skate.","h":0},{"t":"Black Myth: Wukong","h":45},{"t":"The First Descendant","h":0},{"t":"Rise of the Ronin","h":45},{"t":"Devil May Cry 5 Special Edition","h":18},{"t":"Dead or Alive 5 Last Round","h":0},{"t":"The Last of Us Part II Remastered","h":28},{"t":"Star Wars Jedi: Survivor","h":30},{"t":"Diablo II: Resurrected","h":25},{"t":"Gauntlet","h":8},{"t":"God of War Ragnarök","h":35},{"t":"Gran Turismo 7","h":50},{"t":"eFootball","h":0},{"t":"The Witcher 3: Complete Edition","h":80},{"t":"Overwatch","h":0},{"t":"Horizon Forbidden West","h":45},{"t":"Cyberpunk 2077","h":60},{"t":"Spider-Man: Miles Morales","h":12},{"t":"Marvel's Spider-Man Remastered","h":20},{"t":"Hot Wheels Unleashed","h":15},{"t":"Broforce","h":8},{"t":"Marvel vs. Capcom: Infinite","h":6},{"t":"Capcom Arcade Stadium","h":0},{"t":"Genshin Impact","h":0},{"t":"Dead or Alive 6: Core Fighters","h":0},{"t":"Life is Strange 2","h":15},{"t":"Crossout","h":0},{"t":"Rocket League","h":0},{"t":"Brawlhalla","h":0},{"t":"Batman: Return to Arkham – Arkham City","h":20},{"t":"Batman: Return to Arkham – Arkham Asylum","h":14},{"t":"Fortnite","h":0},{"t":"Batman: The Telltale Series","h":9},{"t":"Ratchet \u0026 Clank (2016)","h":12},{"t":"South Park: A Fenda que Abunda Força","h":20},{"t":"South Park: The Stick of Truth","h":15},{"t":"Hyper Scape","h":0},{"t":"Destiny 2","h":0},{"t":"Warframe","h":0},{"t":"Call of Duty: Modern Warfare (2019)","h":7},{"t":"Uncharted: The Nathan Drake Collection","h":30},{"t":"Red Dead Redemption 2","h":60},{"t":"FIFA 19","h":0},{"t":"Marvel's Spider-Man","h":20},{"t":"Need for Speed Payback","h":20},{"t":"Battlefield 1","h":10},{"t":"FIFA 18","h":0},{"t":"EA Sports UFC 2","h":0},{"t":"PES 2018","h":0},{"t":"Project CARS 2","h":0},{"t":"Rise of the Tomb Raider","h":20},{"t":"Blue Estate","h":4},{"t":"Horizon Zero Dawn","h":40},{"t":"Injustice 2","h":8},{"t":"DRIVECLUB","h":15},{"t":"Tomb Raider: Definitive Edition","h":15},{"t":"Mortal Kombat XL","h":5},{"t":"God of War III Remastered","h":12},{"t":"FIFA 17","h":0},{"t":"Injustice: Gods Among Us","h":8},{"t":"Paragon","h":0},{"t":"Need for Speed (2015)","h":18},{"t":"The Amazing Spider-Man 2","h":15},{"t":"The Last of Us Remastered","h":17}],"capas":{"007":{"plat":"PS5","cor":"#564e3f","src":"https://image.api.playstation.com/vulcan/ap/rnd/202507/0215/f54f11bcf773a3bcace540344dc12154973f53d3490b93fc.png"},"2xko":{"plat":"PS5","cor":"#54f9ef","src":"https://image.api.playstation.com/vulcan/ap/rnd/202606/2221/b1d41d6c682ad4f80942e61d0ad765afb644ba16b9a6e1aa.png"},"a-plague-tale-innocence":{"plat":"PS4","cor":"#fbf4f6","src":"https://image.api.playstation.com/vulcan/ap/rnd/202106/2216/uFqCClqXSIsEFIo3ktJdZm7H.png"},"ace-combat-7":{"plat":"PS4","cor":"#7390bc","src":"https://image.api.playstation.com/cdn/UP0700/CUSA05636_00/YceFYLyEQxAphJQNopWMtXXYlojKttRa.png"},"alan-wake-2":{"plat":"PS5","cor":"#641321","src":"https://image.api.playstation.com/vulcan/ap/rnd/202305/2420/c3daf3037feb797d9e71b81618e3b5ff3ff1f9609db5a4a2.png"},"ao-tennis-2":{"plat":"PS4","cor":"#244783","src":"https://image.api.playstation.com/vulcan/img/cfn/113077zKmM0_BTrHtajhtubzthq4LowiOJMy-swoapwB0r_w-hc8USTCCPNSCtAMOhfi62XdxEUQx-S4MbYfIEsv1Yo0m0y6.png"},"asphalt-legends":{"plat":"PS4","cor":"#1a1b23","src":"https://image.api.playstation.com/vulcan/ap/rnd/202603/2410/3e7d67f09bf3ea2962ecb373ce75f533a7235a25a944fb12.png"},"assassin-s-creed-iv-black-flag":{"plat":"PS4","cor":"#d4dfe3","src":"https://image.api.playstation.com/cdn/UP0001/CUSA00010_00/US4NCAJYPPkVtniLblOOTn0G4Uy293sB.png"},"avatar-frontiers-of-pandora":{"plat":"PS5","cor":"#164450","src":"https://image.api.playstation.com/vulcan/ap/rnd/202306/0113/38ad0cc5b92af440d46ccebf5d1f271213d656684fce3385.png"},"batman-arkham-knight":{"plat":"PS4","cor":"#3c3731","src":"https://image.api.playstation.com/cdn/UP1018/CUSA01764_00/daExAVIqaWz8NNeqTaFW2IcweYzqt4d8.png"},"batman-return-to-arkham-arkham-asylum":{"plat":"PS4","cor":"#666a67","src":"https://image.api.playstation.com/cdn/UP1018/CUSA04744_00/iEdE6peaqi0WAsPBaqPEhEFPMukHtFjX.png"},"batman-return-to-arkham-arkham-city":{"plat":"PS4","cor":"#ffffff","src":"https://image.api.playstation.com/gs2-sec/appkgo/prod/CUSA05776_00/1/i_33c5c5cf3f72d849f68d18405ee65e505ef16de3cd424b4edf3421f9b316f2f7/i/icon0.png"},"batman-the-enemy-within":{"plat":"PS4","cor":"#413e3d","src":"https://image.api.playstation.com/cdn/UP2026/CUSA09313_00/vN1ecmCt78v8wNJwopvKpYUx4nQPfojP.png"},"batman-the-telltale-series":{"plat":"PS4","cor":"#222020","src":"https://image.api.playstation.com/vulcan/ap/rnd/202007/2020/s4JNNSnHQL0eTF3RBr4IiORs.png"},"battlefield-1":{"plat":"PS4","cor":"#6b1b21","src":"https://image.api.playstation.com/cdn/UP0006/CUSA02429_00/OiogYov24Z1qOACNXqDgXG6HDilA0amk.png"},"battlefield-2042":{"plat":"PS5","cor":"#629ba1","src":"https://image.api.playstation.com/vulcan/ap/rnd/202305/2515/586f0b4d3c158e5dcae2c7c0bc589df078bc9bf955b1ceae.png"},"battlefield-v":{"plat":"PS4","cor":"#381a44","src":"https://image.api.playstation.com/cdn/UP0006/CUSA08724_00/knyiQNrzbp6tEe8t04AYRhhJUF5wLIGO.png"},"ben-10-power-trip":{"plat":"PS5","cor":"#7bb9c2","src":"https://image.api.playstation.com/vulcan/ap/rnd/202207/2314/QAxzQOSlQjSDNxzrQN0DAH9E.png"},"ben-10-uma-super-viagem":{"plat":"PS5","cor":"#7bb9c2","src":"https://image.api.playstation.com/vulcan/ap/rnd/202207/2314/QAxzQOSlQjSDNxzrQN0DAH9E.png"},"beyond-two-souls":{"plat":"PS4","cor":"#9cbcd2","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/0522/0qBPvJ5xqVxay9Ia0LviK6wG.png"},"black-myth-wukong":{"plat":"PS5","cor":"#2e322e","src":"https://image.api.playstation.com/vulcan/ap/rnd/202405/2117/bd406f42e9352fdb398efcf21a4ffe575b2306ac40089d21.png"},"bloodborne":{"plat":"PS4","cor":"#2a2d2f","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/0713/WSZqsrnejjt85wYmUqeBQvMQ.png"},"brawlhalla":{"plat":"PS4","cor":"#e6a991","src":"https://image.api.playstation.com/vulcan/ap/rnd/202609/1613/0089b4fb7d248ef81e278ff4be9b06becab156e945012a70.png"},"broforce":{"plat":"PS4","cor":"#dfa25e","src":"https://image.api.playstation.com/vulcan/ap/rnd/202010/1206/ZBrZdWMpe8J5dHsXfJxWsGHr.png"},"call-of-duty-black-ops-4":{"plat":"PS4","cor":"#dba856","src":"https://image.api.playstation.com/vulcan/img/cfn/11307mWaEjTEJ0S9Mvb64cBPBluyR6_ZLrGrDyjnj8U50MVUD4vvRZ7vT915N8GwntDoRJosrxIcYOjlPIkLtqqH_IQI4MlI.png"},"call-of-duty-modern-warfare-2019":{"plat":"PS5","cor":"#393730","src":"https://image.api.playstation.com/vulcan/ap/rnd/202605/1419/39e532d5d5a31d9113c7fa8f3e4c332af9428613efe01037.png"},"call-of-duty-wwii":{"plat":"PS4","cor":"#7d7468","src":"https://image.api.playstation.com/cdn/UP0002/CUSA08603_00/m08GbANRol6VudoOh7Qse1qf7H3iOKvr.png"},"capcom-arcade-stadium":{"plat":"PS4","cor":"#ead124","src":"https://image.api.playstation.com/vulcan/ap/rnd/202104/0207/f20ELAxcx6PVULsA7zdcPhqa.png"},"cartoon-network-battle-crashers":{"plat":"PS4","cor":"#405f7d","src":"https://image.api.playstation.com/cdn/UP0283/CUSA04729_00/0lu6N9aNUFiWEJrWtlHFBjKDwQHeceCb.png"},"cat-quest-iii":{"plat":"PS5","cor":"#ae7b51","src":"https://image.api.playstation.com/vulcan/ap/rnd/202308/3013/02b1e714b0f267f2ef62fc7f0ef934de009483f4e9335713.png"},"coffee-talk":{"plat":"PS5","cor":"#8f5757","src":"https://image.api.playstation.com/vulcan/img/rnd/202104/0510/kqFKzYXgYrUH0Ytg9ehjazY9.png"},"concrete-genie":{"plat":"PS4","cor":"#1e2534","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/0923/lbjNLN1pA9vZiHjECrt3Gnc7.png"},"control-ultimate-edition":{"plat":"PS4","cor":"#481217","src":"https://image.api.playstation.com/vulcan/ap/rnd/202008/2111/hvVTsd8akckaGtN2eZ3yIuwc.png"},"crash-bandicoot-n-sane-trilogy":{"plat":"PS4","cor":"#7c7b52","src":"https://image.api.playstation.com/cdn/UP0002/CUSA07402_00/03ZtrPdjasIxzi8QrzOb2zCIHLMydFbh.png"},"crime-boss-rockay-city":{"plat":"PS5","cor":"#b25d46","src":"https://image.api.playstation.com/vulcan/ap/rnd/202405/2110/19bed77029988cd50c040aaad79f8f56ab0f02f448b8aa09.png"},"crossout":{"plat":"PS4","cor":"#a07251","src":"https://image.api.playstation.com/vulcan/ap/rnd/202608/2013/432d8ddd5cf1da2e5e3af4cca9ac27081648eca990f83ef8.png"},"crysis-remastered":{"plat":"PS4","cor":"#364649","src":"https://image.api.playstation.com/vulcan/ap/rnd/202009/0715/rNqpXMO3CX4zfiNMwiFNpWf5.png"},"cyberpunk-2077":{"plat":"PS5","cor":"#fcf405","src":"https://image.api.playstation.com/vulcan/ap/rnd/202111/3013/cKZ4tKNFj9C00giTzYtH8PF1.png"},"days-gone":{"plat":"PS4","cor":"#8a8e8d","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/1204/wYL4v2r8uMQFvVTJlfuj8ICk.png"},"dead-or-alive-5-last-round":{"plat":"PS4","cor":"#41433c","src":"https://image.api.playstation.com/cdn/UP4108/CUSA01627_00/8b3eVINuTJf6y47a98THfkEtiuB1zs0u.png"},"dead-or-alive-6-core-fighters":{"plat":"PS4","cor":"#57362b","src":"https://image.api.playstation.com/cdn/UP4108/CUSA12152_00/suTiUywgfKg7QS6lnU497q1W98KWbIae.png"},"death-stranding-director-s-cut":{"plat":"PS5","cor":"#e5b671","src":"https://image.api.playstation.com/vulcan/ap/rnd/202106/2214/Trdth4yKbz45CVH7VGCT1INp.png"},"destiny-2":{"plat":"PS5","cor":"#151b20","src":"https://image.api.playstation.com/vulcan/ap/rnd/202605/2700/67e26ca577583cd8189696baa2181bfc51820ecab1709869.png"},"detroit-become-human":{"plat":"PS4","cor":"#936075","src":"https://image.api.playstation.com/vulcan/img/rnd/202010/2119/wl4DB5QGzlEHAXy1KLUVgOAu.png"},"devil-may-cry-5-special-edition":{"plat":"PS5","cor":"#202832","src":"https://image.api.playstation.com/vulcan/ap/rnd/202009/1710/UUnpHLJqLAIJX5HioswiPuAm.png"},"diablo-ii-resurrected":{"plat":"PS5","cor":"#111b22","src":"https://image.api.playstation.com/vulcan/ap/rnd/202602/0317/13004a1e1f9f7a90933604ec069bd725173b446dfb8dc1c0.png"},"dirt-5":{"plat":"PS5","cor":"#733d2d","src":"https://image.api.playstation.com/vulcan/img/rnd/202007/2111/AU9y67cQ8s4t6S0Tg2peRQ5s.png"},"dirt-rally-2-0":{"plat":"PS4","cor":"#00247f","src":"https://image.api.playstation.com/vulcan/img/cfn/11307fasND5O_2yj5uvkOeIRyf7_FWDV_zxjcjMLHGf7lZrgb0PNOQ7taPhLMcs8rPxMkxwyA-ooyikkINQ6Scz-gWYzfU7M.png"},"doom-eternal":{"plat":"PS5","cor":"#3d251a","src":"https://image.api.playstation.com/vulcan/ap/rnd/202010/0114/ERNPc4gFqeRDG1tYQIfOKQtM.png"},"ea-sports-fc-26":{"plat":"PS5","cor":"#0a2120","src":"https://image.api.playstation.com/vulcan/ap/rnd/202608/0314/d0cc38456ebe67005ebea2709f52a3d2f6780985b6403219.png"},"echoes-of-the-end":{"plat":"PS5","cor":"#bfd5e9","src":"https://image.api.playstation.com/vulcan/ap/rnd/202510/2815/700a1331c6df2182e0e42ff907b749c4fd6975570a90e874.png"},"efootball":{"plat":"PS5","cor":"#040d5e","src":"https://image.api.playstation.com/vulcan/ap/rnd/202608/1804/51aba58072e55f50d98061563deb9610226e0f18ba149787.png"},"fallout-4":{"plat":"PS5","cor":"#2f2b1b","src":"https://image.api.playstation.com/cdn/UP1003/CUSA02557_00/j4PdxSxO3optsrP1SxnAqdq6qCmYPd9x.png"},"final-fantasy-vii-remake":{"plat":"PS4","cor":"#485a5d","src":"https://image.api.playstation.com/vulcan/img/cfn/11307-dNapclgq_VqNtQ98Xp_LxovvAdjd5AknZhd_-k2Cckq9FPtKDXAHk-ODCfvDKChH6hkEO0VLtj7Vk4E-Z8G707oe0N.png"},"final-fantasy-xvi":{"plat":"PS5","cor":"#8f7f73","src":"https://image.api.playstation.com/vulcan/ap/rnd/202211/3007/lgFVhRm5BfoX02pRUt3lSmLV.png"},"fortnite":{"plat":"PS5","cor":"#5996b9","src":"https://image.api.playstation.com/vulcan/ap/rnd/202609/1519/82cb6c66d3c7dcb2bfd6486bb352cc72b1c417ffccc597da.png"},"forza-horizon-5":{"plat":"PS5","cor":"#917059","src":"https://image.api.playstation.com/vulcan/ap/rnd/202501/2717/42b3ee6b1b2094212231b0b0a82824f687fc5c4dc9bde31c.png"},"gauntlet":{"plat":"PS4","cor":"#3a2b1d","src":"https://image.api.playstation.com/cdn/UP1018/CUSA02800_00/uDqToftkbe07EPHKwI9BA9r1i6hY9sAr.png"},"ghost-of-tsushima":{"plat":"PS5","cor":"#231110","src":"https://image.api.playstation.com/vulcan/img/rnd/202108/2719/LnjXN1f1qsOLAn9tiPfAiRuq.png"},"goals":{"plat":"PS5","cor":"#384e37","src":"https://image.api.playstation.com/vulcan/ap/rnd/202609/0815/cded6a0a4727639c5edd57dbd3b8a312041ee7c5f0743f7d.png"},"god-of-war-2018":{"plat":"PS4","cor":"#6496af","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/1021/X3WIAh63yKhRRiMohLoJMeQu.png"},"god-of-war-iii-remastered":{"plat":"PS4","cor":"#cd1e1d","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/0711/p8JCvA8692BICXAPoyylh7ed.png"},"god-of-war-ragnarok":{"plat":"PS5","cor":"#7c91ab","src":"https://image.api.playstation.com/vulcan/ap/rnd/202503/2016/b69c06fb108299866057126b0d3a0530bdf96a39d2ce1cb9.png"},"gran-turismo-7":{"plat":"PS4","cor":"#740417","src":"https://image.api.playstation.com/vulcan/ap/rnd/202511/0707/303f5701426596a09891f9f33fa93e49ae522d5295b26dce.png"},"grand-theft-auto-v":{"plat":"PS5","cor":"#a28d77","src":"https://image.api.playstation.com/vulcan/ap/rnd/202203/1409/oltI7Zc96usbdvhVVXcV1EAi.png"},"gta6":{"plat":"PS5","cor":"#8d7486","src":"https://image.api.playstation.com/vulcan/ap/rnd/202606/1818/9f51f0ccdb65bd29c36a0907a738c2902a712f03e2fd6470.png"},"guardioes-da-galaxia-da-marvel":{"plat":"PS5","cor":"#b32964","src":"https://image.api.playstation.com/vulcan/ap/rnd/202106/0215/Pw9cWnyqkix3EoCOGqrN1cgN.png"},"hogwarts-legacy":{"plat":"PS5","cor":"#344547","src":"https://image.api.playstation.com/vulcan/ap/rnd/202208/0921/dR9KJAKDW2izPbptHQbh3rnj.png"},"hollow-knight":{"plat":"PS5","cor":"#05429d","src":"https://image.api.playstation.com/vulcan/ap/rnd/202601/1505/1425e65d043da63396a10ccf87d5e4af50175464e64cda30.png"},"hood-outlaws-legends":{"plat":"PS5","cor":"#1f0b37","src":"https://image.api.playstation.com/vulcan/ap/rnd/202311/1811/b54a5ff25e5e055d8b4e65e900cd037fa81cae69f9ed849c.png"},"horizon-forbidden-west":{"plat":"PS5","cor":"#4791b0","src":"https://image.api.playstation.com/vulcan/ap/rnd/202107/3100/ki0STHGAkIF06Q4AU8Ow4OkV.png"},"horizon-zero-dawn":{"plat":"PS5","cor":"#74b2f8","src":"https://image.api.playstation.com/vulcan/ap/rnd/202409/2716/16b33fa9a5c7285ba86a035b4a1c5f8eb430b407eae35ffd.png"},"hot-wheels-rift-rally":{"plat":"PS4","cor":"#2ebeda","src":"https://image.api.playstation.com/vulcan/ap/rnd/202303/2822/925e73ad2eb9299b10f51f76127e1583d36f2829c056d0ca.png"},"hot-wheels-unleashed":{"plat":"PS5","cor":"#051531","src":"https://image.api.playstation.com/vulcan/ap/rnd/202102/1008/rS6hKW6RluVColmbTAIt9Fl1.png"},"hotline-miami-2":{"plat":"PS5","cor":"#44142b","src":"https://image.api.playstation.com/cdn/UP3643/CUSA00486_00/T1mmY3q3rilwXOL7WddwzgEChcdIJaAz.png"},"i-am-bread":{"plat":"PS4","cor":"#43302c","src":"https://image.api.playstation.com/cdn/UP4491/CUSA03083_00/O7nRpOcstykzPWEGzs4SzMxPnph07s0p.png"},"infamous-second-son":{"plat":"PS4","cor":"#97785e","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/0700/enLAr4eVGBxWjrHh5nLTUSnn.png"},"injustice-2":{"plat":"PS4","cor":"#0b191f","src":"https://image.api.playstation.com/vulcan/img/cfn/113070iqJ5_6lv6FCFMn0yO46dQBHXeIRL_0c47E-7cGfFU0DdpFd4mpcaGsrn0Jl40xpsUIbrdsPNE8iUvAcd8uZRMJjzPQ.png"},"injustice-gods-among-us":{"plat":"PS4","cor":"#4b403e","src":"https://image.api.playstation.com/cdn/UP1018/CUSA00079_00/VPlO7zQIxJBkQlYYdNO7fH715a1u8jRx.png"},"just-cause-3":{"plat":"PS4","cor":"#60a6d1","src":"https://image.api.playstation.com/cdn/UP0082/CUSA01493_00/PZic3LvHOpeMPSmfBTQXg3LsIkkayPgW.png"},"just-cause-4":{"plat":"PS4","cor":"#4c4128","src":"https://image.api.playstation.com/vulcan/img/cfn/11307qGmqy1ZvihqcOEioHrr9SL8Ds4sXtIS65WTgyCnjI748HEhb4m6V2CfthjRPGxgbS4pd7f0qSX7dx_NfckIq0kytz4t.png"},"killzone-shadow-fall":{"plat":"PS4","cor":"#f7fcfd","src":"https://image.api.playstation.com/cdn/UP9000/CUSA00191_00/e7X1OTNrSN1j0ifqh2lUvMuIrVq5la5G.png"},"kingdoms-of-amalur-re-reckoning":{"plat":"PS4","cor":"#271714","src":"https://image.api.playstation.com/vulcan/ap/rnd/202006/2610/7j1GUXdvOGPoLaaQRt2J2viK.png"},"lego-dc-super-villains":{"plat":"PS4","cor":"#4bc126","src":"https://image.api.playstation.com/cdn/UP1018/CUSA11542_00/kdjKM4iuhNNNzHmYGMDTpl5wf9jaTF6U.png"},"lego-horizon-adventures":{"plat":"PS5","cor":"#214359","src":"https://image.api.playstation.com/vulcan/ap/rnd/202409/2013/96a84262e4562c459c213515a9dfd53d82547603b86a2c6a.png"},"lego-star-wars-a-saga-skywalker":{"plat":"PS5","cor":"#232b3f","src":"https://image.api.playstation.com/vulcan/ap/rnd/202112/2121/qrpfY71rsvMn6beyjgStw3cH.png"},"lego-the-hobbit":{"plat":"PS4","cor":"#0b6534","src":"https://image.api.playstation.com/vulcan/img/rnd/202110/2217/UCuVngKqFRmzuk6EesKqX9gW.png"},"life-is-strange-2":{"plat":"PS4","cor":"#5a3924","src":"https://image.api.playstation.com/vulcan/img/cfn/11307sP-uYDm-1CmuLpZ9Ihhph3cKJZT1GQhpGB9GiZT-M_QvF0ab_bWziMGUNxjfkAlimQXYXdrzmr_bSmttkb9nvwSlx4-.png"},"mad-max":{"plat":"PS4","cor":"#ceb08f","src":"https://image.api.playstation.com/cdn/UP1018/CUSA02703_00/MGxPvD9T3pWjuEPwnb5NaTI6T9nowlGu.png"},"mafia-definitive-edition":{"plat":"PS4","cor":"#de6e35","src":"https://image.api.playstation.com/vulcan/ap/rnd/202006/1023/35jaBRLW6kV4wfF3bi0nxRIH.png"},"mafia-oc":{"plat":"PS5","cor":"#3c0f08","src":"https://image.api.playstation.com/vulcan/ap/rnd/202504/2416/06f677b905f8794395b855a0de3e9fcb42b567e78c50aaed.png"},"marvel-rivals":{"plat":"PS4","cor":"#7788ab","src":"https://image.api.playstation.com/vulcan/ap/rnd/202609/1008/3d85937370ce5d1fe39c9541e7cdc14455798fed56dc2390.png"},"marvel-s-spider-man":{"plat":"PS5","cor":"#ac0202","src":"https://image.api.playstation.com/vulcan/ap/rnd/202009/3021/B2aUYFC0qUAkNnjbTHRyhrg3.png"},"marvel-s-spider-man-2":{"plat":"PS5","cor":"#b40605","src":"https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7b75d8ed9271516546560d219ad0b22ee0a263b4537bd8.png"},"marvel-s-spider-man-remastered":{"plat":"PS5","cor":"#ac0202","src":"https://image.api.playstation.com/vulcan/ap/rnd/202009/3021/B2aUYFC0qUAkNnjbTHRyhrg3.png"},"marvel-vs-capcom-infinite":{"plat":"PS4","cor":"#180b23","src":"https://image.api.playstation.com/cdn/UP0102/CUSA06400_00/2orMO7L3wlUUSzNsfzzdFtNdAwoMqazu.png"},"matterfall":{"plat":"PS4","cor":"#761e15","src":"https://image.api.playstation.com/cdn/UP9000/CUSA07765_00/xwDubZSn4nsCIhKh1W05xQqhWANiOML4.png"},"minecraft":{"plat":"PS5","cor":"#86e0f6","src":"https://image.api.playstation.com/vulcan/ap/rnd/202407/0401/670c294ded3baf4fa11068db2ec6758c63f7daeb266a35a1.png"},"monopoly":{"plat":"PS5","cor":"#d49466","src":"https://image.api.playstation.com/vulcan/ap/rnd/202511/2015/2bd7c98745e0f06a75d6faeec67e4c1d38f097a206d39a63.png"},"mortal-kombat-1":{"plat":"PS5","cor":"#61a2ca","src":"https://image.api.playstation.com/vulcan/ap/rnd/202305/1515/1cc63f4f4b2c9a9852fabefba4ca7eea936b1ef7867811a5.png"},"mortal-kombat-xl":{"plat":"PS4","cor":"#1e1f21","src":"https://image.api.playstation.com/cdn/UP1018/CUSA03589_00/ezdXAsaNqjRSG19ujCjT1p1KqoI67wDO.png"},"mortal-shell":{"plat":"PS4","cor":"#383a3d","src":"https://image.api.playstation.com/vulcan/ap/rnd/202008/0109/F5Wvzwr4VFVlonLj4wtjYkDx.png"},"nba-2k16":{"plat":"PS5","cor":"#38d2fb","src":"https://image.api.playstation.com/vulcan/ap/rnd/202606/2913/4a31f711e2ff460cd44ad646983f36533278cea61f639be9.png"},"nba-2k26":{"plat":"PS5","cor":"#222a4e","src":"https://image.api.playstation.com/vulcan/ap/rnd/202506/2509/ec1eec85d9130210701491db769cb9874cc09f6512ebca20.png"},"need-for-speed-2015":{"plat":"PS4","cor":"#215773","src":"https://image.api.playstation.com/cdn/UP0006/CUSA01925_00/G09ByOtS3WnRahoOgiQL88H9NqXDFFl9.png"},"need-for-speed-payback":{"plat":"PS4","cor":"#944858","src":"https://image.api.playstation.com/vulcan/ap/rnd/202211/2510/VOSSvGjCpMF0uj9qQtmW6AnH.png"},"nine-sols":{"plat":"PS5","cor":"#ba8b58","src":"https://image.api.playstation.com/vulcan/ap/rnd/202409/1611/b3c75af796ea9931524b4c5f9500e801bb49be5664d52c17.png"},"omega-strikers":{"plat":"PS4","cor":"#6b3a52","src":"https://image.api.playstation.com/vulcan/ap/rnd/202304/2723/ff737dc8d66fd51a7f74599564080f38d052fe06a82268e6.png"},"overwatch":{"plat":"PS5","cor":"#36498f","src":"https://image.api.playstation.com/vulcan/ap/rnd/202607/2921/a213c057a3adc5c341911157e461954a97500126e4e2acef.png"},"rainbow-six-extraction":{"plat":"PS5","cor":"#f2e465","src":"https://image.api.playstation.com/vulcan/ap/rnd/202105/1919/TQPQtelumFuvM4njKGjgJHQP.png"},"ratchet-clank-2016":{"plat":"PS4","cor":"#4f7cb4","src":"https://image.api.playstation.com/cdn/UP9000/CUSA01047_00/XUMI7tohtY97NG57Aj6UAvrYKxFA9e2C.png"},"ratchet-clank-em-uma-outra-dimensao":{"plat":"PS5","cor":"#2d436a","src":"https://image.api.playstation.com/vulcan/ap/rnd/202101/2921/fWiBmwK5WnQa5XG3K4aWeMpt.png"},"rayman-legends":{"plat":"PS4","cor":"#9d3631","src":"https://image.api.playstation.com/vulcan/img/cfn/11307EfasWbxB33-3AqY1YKO6soxEliac5YIuk0D9URQ-aWAVZbWOTd2Ge5QUI-KO_22neMhSvfH6s-dUBmZnvITlP8nHiE7.png"},"red-dead-redemption-2":{"plat":"PS4","cor":"#c1040f","src":"https://image.api.playstation.com/cdn/UP1004/CUSA03041_00/Hpl5MtwQgOVF9vJqlfui6SDB5Jl4oBSq.png"},"riders-republic":{"plat":"PS5","cor":"#ae875b","src":"https://image.api.playstation.com/vulcan/ap/rnd/202604/2218/fc8820f3fac783a3d1cf0d08ef96431b1f5a51bbfc282db3.png"},"rise-of-the-ronin":{"plat":"PS4","cor":"#2c82a6","src":"https://image.api.playstation.com/vulcan/ap/rnd/202105/1010/WZH3pextGCQEIdXzQKqBaI00.png"},"rise-of-the-tomb-raider":{"plat":"PS4","cor":"#9f4d2b","src":"https://image.api.playstation.com/cdn/UP0082/CUSA10938_00/yZNaslSOiVSXDwB5anYjFfU3x1AHBbPz.png"},"rock-of-ages-3":{"plat":"PS4","cor":"#77763e","src":"https://image.api.playstation.com/vulcan/ap/rnd/202007/0115/ot7twBoSGL0QzTD84JwCj0Vp.png"},"rocket-league":{"plat":"PS4","cor":"#181e2e","src":"https://image.api.playstation.com/vulcan/ap/rnd/202609/1706/a03b0fde2903545c6b1e1906841e5991b52a108f9eec2e0f.png"},"sackboy-uma-grande-aventura":{"plat":"PS5","cor":"#965c4e","src":"https://image.api.playstation.com/vulcan/img/rnd/202010/1614/QeorUUNJVInkK3jmwDkHgK9t.png"},"session-skate-sim":{"plat":"PS5","cor":"#e1e1e2","src":"https://image.api.playstation.com/vulcan/ap/rnd/202509/1909/16ba82c23d973f61c7d7c5e26cae95c8166c39899c28cba2.png"},"shadow-of-the-tomb-raider":{"plat":"PS4","cor":"#9f4d2b","src":"https://image.api.playstation.com/cdn/UP0082/CUSA10938_00/yZNaslSOiVSXDwB5anYjFfU3x1AHBbPz.png"},"skate":{"plat":"PS5","cor":"#c2b698","src":"https://image.api.playstation.com/vulcan/ap/rnd/202604/2122/41d5a3beff5a2b0b9ac56b9b23869dad7821df71a60f4b02.png"},"sonic-x-shadow-generations":{"plat":"PS5","cor":"#bb4851","src":"https://image.api.playstation.com/vulcan/ap/rnd/202405/2308/1efd5c197776d8dd5d5c79261559cd5947b0d52fc23e1174.png"},"south-park-a-fenda-que-abunda-forca":{"plat":"PS4","cor":"#707184","src":"https://image.api.playstation.com/cdn/UP0001/CUSA04311_00/kRlrY9gFl3jTJ6jErngQv3Z5jfQLfVTv.png"},"south-park-the-stick-of-truth":{"plat":"PS4","cor":"#3a2330","src":"https://image.api.playstation.com/cdn/UP0001/CUSA04768_00/f0OxJK5BCdsHkwAVvBPa994O1T1ZY9sY.png"},"spider-man-miles-morales":{"plat":"PS5","cor":"#222436","src":"https://image.api.playstation.com/vulcan/ap/rnd/202008/1020/T45iRN1bhiWcJUzST6UFGBvO.png"},"spongebob-battle-for-bikini-bottom":{"plat":"PS5","cor":"#091865","src":"https://image.api.playstation.com/vulcan/ap/rnd/202507/0107/3469f60bd3c16a2f89cf7d6039b7c736a83289792dea1ec5.png"},"star-wars-jedi-survivor":{"plat":"PS5","cor":"#a7615d","src":"https://image.api.playstation.com/vulcan/ap/rnd/202304/1016/47becbe467e18575f71429abbaec9af707865744b825f34d.png"},"star-wars-outlaws":{"plat":"PS5","cor":"#856c61","src":"https://image.api.playstation.com/vulcan/ap/rnd/202306/3020/bca42b94af09b7a7ffd27fcb76a7bb1e46b60ed0c5f99322.png"},"steep":{"plat":"PS4","cor":"#313b45","src":"https://image.api.playstation.com/cdn/UP0001/CUSA05489_00/gV7Pmv4iDwA0fnZRUbHapjIDxiMonKTv.png"},"stellar-blade":{"plat":"PS5","cor":"#3d4e67","src":"https://image.api.playstation.com/vulcan/ap/rnd/202401/2211/ea7360c5ba259dfdb9bce01a9651493b40f2807a1db974df.png"},"stranded-deep":{"plat":"PS4","cor":"#2875c8","src":"https://image.api.playstation.com/vulcan/img/rnd/202109/2216/t9XzGHGabQ2Ym0zbx4m0nEUC.png"},"stray":{"plat":"PS5","cor":"#541f23","src":"https://image.api.playstation.com/vulcan/ap/rnd/202206/0300/E2vZwVaDJbhLZpJo7Q10IyYo.png"},"sword-of-the-sea":{"plat":"PS5","cor":"#e5be98","src":"https://image.api.playstation.com/vulcan/ap/rnd/202506/0601/b80905acc0f6f97dc3b85a36f787eed88120e92afea56f34.png"},"tennis-world-tour-2":{"plat":"PS4","cor":"#c5915d","src":"https://image.api.playstation.com/vulcan/img/rnd/202009/1713/dEiyFOKlUIczcOFdXW4qQx4G.png"},"terra-media-sombras-da-guerra":{"plat":"PS4","cor":"#211717","src":"https://image.api.playstation.com/cdn/UP1018/CUSA04439_00/b4ZPp8mqfXSZ7QxKsF0povc9ODo6LCYj.png"},"the-first-descendant":{"plat":"PS5","cor":"#be0b07","src":"https://image.api.playstation.com/vulcan/ap/rnd/202608/2007/e1261f08c8722cadb4f52177b1de3ad1b558d1a47ca54ee7.png"},"the-last-guardian":{"plat":"PS4","cor":"#c4ccb7","src":"https://image.api.playstation.com/vulcan/img/rnd/202010/2318/3jnbbEumNaIlpdlyrq7pQUXe.png"},"the-last-of-us-left-behind":{"plat":"PS4","cor":"#232222","src":"https://image.api.playstation.com/cdn/UP9000/CUSA00553_00/cD5AHZbykr8FnShuY359Q6EFimjSRmB3.png"},"the-last-of-us-part-ii-remastered":{"plat":"PS4","cor":"#3f4c5b","src":"https://image.api.playstation.com/vulcan/img/rnd/202010/2618/w48z6bzefZPrRcJHc7L8SO66.png"},"the-last-of-us-remastered":{"plat":"PS4","cor":"#3f2c2b","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/1020/FKgazVvG7BcWouCr39mIiXkW.png"},"the-witcher-3-complete-edition":{"plat":"PS5","cor":"#bddbd7","src":"https://image.api.playstation.com/vulcan/ap/rnd/202609/1711/d851895118a16d07706b91e7b69b53ce27531269cad5e968.png"},"tomb-raider-definitive-edition":{"plat":"PS4","cor":"#999992","src":"https://image.api.playstation.com/cdn/UP0082/CUSA00107_00/jT7kkwSWEinafnaYWMZoReRr4LlmYmym.png"},"topspin-2k25":{"plat":"PS4","cor":"#9ee3e5","src":"https://image.api.playstation.com/vulcan/ap/rnd/202403/0618/5eb7a7431f949782b41e96f098f555ad492c2981d1156f18.png"},"trackmania-turbo":{"plat":"PS4","cor":"#a67b65","src":"https://image.api.playstation.com/cdn/UP0001/CUSA03008_00/alPSBD6kuHJkBlVJ4qIs0FiBJRyZIkMY.png"},"trials-fusion":{"plat":"PS4","cor":"#8cbce8","src":"https://image.api.playstation.com/cdn/UP0001/CUSA00304_00/dmefshg1MqDmUScZNLR7pOwZMHwYLHMf.png"},"ufl":{"plat":"PS5","cor":"#112544","src":"https://image.api.playstation.com/vulcan/ap/rnd/202608/2707/22d0d665d39c421f20df397272ec075ab437f851a1904990.png"},"uncharted-4":{"plat":"PS4","cor":"#9d2a2e","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/1018/SGqMZHd7WWmN4XIcLfYMxJsc.png"},"uncharted-colecao-legado-dos-ladroes":{"plat":"PS5","cor":"#ad8b64","src":"https://image.api.playstation.com/vulcan/ap/rnd/202111/2000/PV9y7Xq2mcDcx2PtpM8GYYO0.png"},"uncharted-the-lost-legacy":{"plat":"PS4","cor":"#20232a","src":"https://image.api.playstation.com/vulcan/img/rnd/202010/2813/h9Xc7ZhCEGUcS05YvpEcNT0D.png"},"uncharted-the-nathan-drake-collection":{"plat":"PS4","cor":"#9e4f3d","src":"https://image.api.playstation.com/vulcan/img/rnd/202011/1101/zC3kulm2Ho3ZE38ZUYHW7WMK.png"},"until-dawn":{"plat":"PS5","cor":"#1c2b36","src":"https://image.api.playstation.com/vulcan/ap/rnd/202401/2910/d48262b72a5a2daa3ca3aed6c8f42c44f3fdaf2902265a13.png"},"warframe":{"plat":"PS4","cor":"#192b3c","src":"https://image.api.playstation.com/vulcan/ap/rnd/202609/2317/7284a54c94849b7e3df4ea80e169175e6ad97d64bdf1ae4c.png"},"warhammer-40-000-space-marine-2":{"plat":"PS5","cor":"#1f2538","src":"https://image.api.playstation.com/vulcan/ap/rnd/202212/0711/MKweDX2LQpXiPcU6Jitg9KAg.png"},"zenless-zone-zero":{"plat":"PS5","cor":"#b69f97","src":"https://image.api.playstation.com/vulcan/ap/rnd/202608/3108/a326ff0cdbb523ce36a8e07ec3ddb3953032f6fdde1a6c33.png"},"zombie-army-4":{"plat":"PS4","cor":"#810f11","src":"https://image.api.playstation.com/vulcan/img/cfn/113078WW5dc2q094F9WZfTVTLY1jjR7PsFwhOqi9g7pxLCN4of8pxlq-X7gKL2NJDEy-CFXUMeboQL1zE0CHoSArZTM8vlmQ.png"}},"vitrine":[{"placa":"Os preferidos","caixas":[{"id":"gta6","nome":"GTA VI"},{"id":"007","nome":"007 First Light"},{"id":"mad-max","nome":"Mad Max"}]},{"placa":"God of War","caixas":[{"id":"god-of-war-iii-remastered","nome":"God of War III Remastered"},{"id":"god-of-war-2018","nome":"God of War (2018)"},{"id":"god-of-war-ragnarok","nome":"God of War Ragnarök"}]},{"placa":"Batman","caixas":[{"id":"batman-return-to-arkham-arkham-asylum","nome":"Batman: Return to Arkham – Arkham Asylum"},{"id":"batman-return-to-arkham-arkham-city","nome":"Batman: Return to Arkham – Arkham City"},{"id":"batman-arkham-knight","nome":"Batman: Arkham Knight"},{"id":"batman-the-telltale-series","nome":"Batman: The Telltale Series"},{"id":"batman-the-enemy-within","nome":"Batman: The Enemy Within"}]}]};</script>
+<script src="estante.js"></script>
+<script src="abertura.js"></script>
+</body>
+</html>

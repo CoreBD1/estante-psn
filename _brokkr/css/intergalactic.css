@@ -1,0 +1,757 @@
+/* ============================================================================
+   ARSENAL INTERGALACTIC  ·  Cassette Futurism / sci-fi vintage (Naughty Dog vibe)
+   Fonte canônica servida localmente. Inclua com:
+     <link rel="stylesheet" href="/arsenal/intergalactic.css">
+   DNA: tech analógica anos 80 num futuro distante — VFD, VU, CRT, cromado,
+        neon Blade Runner + vermelho/branco racing Porsche. Zero CDN.
+   ========================================================================== */
+
+@property --ig-angle{ syntax:"<angle>"; initial-value:0deg; inherits:false }
+
+/* fonte de dígitos VFD (DSEG7 Classic, licença OFL, self-host em /arsenal/fonts/ — zero CDN) */
+@font-face{ font-family:"DSEG7"; src:url("fonts/DSEG7Classic-Italic.woff2") format("woff2"); font-display:swap }
+.ig-digits{ font-family:"DSEG7", ui-monospace, monospace }
+
+:root{
+  /* fundo / espaço noir */
+  --ig-bg0:#050608; --ig-bg1:#0a0c11; --ig-bg2:#0e1118;
+  /* metal escovado / gabinete */
+  --ig-metal0:#0e0f14; --ig-metal1:#181a21; --ig-metal2:#23262f;
+  /* cromado */
+  --ig-chrome-hi:#e6e9ef; --ig-chrome-mid:#aeb4c0; --ig-chrome-lo:#5a606e;
+  /* âmbar quente (dominante vintage) */
+  --ig-amber:#E8AE5E; --ig-amber-soft:#F4C988; --ig-amber-deep:#C8862E;
+  /* teal/cyan neon (Blade Runner) */
+  --ig-teal:#2dd4bf; --ig-cyan:#6FD4E2; --ig-neon-cyan:#5EEAD4;
+  /* vermelho/branco racing (Porsche 984 Tempest NDX) */
+  --ig-red:#FF4D4D; --ig-red-deep:#C2362E; --ig-white:#F3F1EC;
+  /* VFD (visor) */
+  --ig-vfd:#FFC074; --ig-vfd-glow:rgba(255,176,74,.55); --ig-vfd-dim:rgba(255,176,74,.62);
+  /* texto */
+  --ig-ink:#F3F1EC; --ig-dim:#969cab; --ig-dim2:#5a6070;
+  --ig-line:rgba(255,255,255,.06);
+  /* glows */
+  --ig-glow-amber:rgba(232,174,94,.30);
+  --ig-glow-cyan:rgba(111,212,226,.28);
+  --ig-glow-red:rgba(255,77,77,.30);
+  /* sombras / motion */
+  --ig-shadow:0 26px 64px rgba(0,0,0,.6);
+  --ig-ease:cubic-bezier(.22,1,.36,1);
+  --ig-mono:"JetBrains Mono","SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --ig-sans:"Lexend",Inter,"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+
+/* ── gabinete / painel (cassette futurism) ──────────────────────────────── */
+.ig-panel{
+  position:relative; isolation:isolate; border-radius:14px;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 1px, transparent 1px 3px), /* grão escovado fino */
+    radial-gradient(130% 80% at 50% 0%, rgba(255,255,255,.05), transparent 55%),          /* sheen de luz no topo */
+    linear-gradient(180deg, var(--ig-metal2), var(--ig-metal1) 42%, var(--ig-metal0));
+  border:1px solid var(--ig-line);
+  box-shadow:var(--ig-shadow), inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 0 1px rgba(0,0,0,.4);
+}
+/* border beam — anel de luz girando (liga com .is-live)
+   ⚠ usa ::after — NÃO combine no mesmo elemento com .ig-scan-sweep (também ::after). */
+.ig-beam::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:1.5px;
+  pointer-events:none; z-index:6;
+  background:conic-gradient(from var(--ig-angle), transparent 52%, var(--ig-amber), var(--ig-cyan), transparent 92%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor;
+          mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);  mask-composite:exclude;
+  opacity:.32; animation:ig-beam 9s linear infinite; transition:opacity .6s ease;
+}
+.ig-beam.is-live::after{ opacity:.85 }
+
+/* parafusos */
+.ig-screw{ position:absolute; width:7px; height:7px; border-radius:50%; z-index:5;
+  background:radial-gradient(circle at 35% 30%, #4a4f59, #1b1d23 70%);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.6), 0 1px 1px rgba(255,255,255,.06) }
+.ig-screw::after{ content:""; position:absolute; inset:2px; border-top:1px solid rgba(0,0,0,.5); transform:rotate(35deg) }
+.ig-screw.tl{top:7px;left:7px} .ig-screw.tr{top:7px;right:7px}
+.ig-screw.bl{bottom:7px;left:7px} .ig-screw.br{bottom:7px;right:7px}
+
+/* ── ig-spacefield · cena sideral em camadas (deep-space noir) ───────────────
+   Aplique no <body> ou wrapper full-bleed ATRÁS do conteúdo (que deve ter z-index>0).
+   3 planos: estrelas (::before) · bruma volumétrica (::after) · nebulosa+bloom+vinheta (bg). */
+.ig-spacefield{ position:relative;
+  background:
+    radial-gradient(125% 95% at 50% 46%, transparent 32%, rgba(3,4,7,.42) 80%, #010204 100%),
+    radial-gradient(66% 86% at 110% 12%, rgba(232,174,94,.28), transparent 56%),
+    radial-gradient(62% 56% at 15% 6%, rgba(45,212,191,.17), transparent 60%),
+    radial-gradient(78% 66% at 85% 98%, rgba(99,110,205,.24), transparent 62%),
+    radial-gradient(130% 100% at 50% -10%, #0f1424, #080b14 64%, #020305) }
+.ig-spacefield::before{ content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-repeat:no-repeat; opacity:.95; animation:ig-drift 70s linear infinite;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px 1px at 70% 12%, rgba(200,230,255,.55), transparent),
+    radial-gradient(1.4px 1.4px at 42% 72%, rgba(255,236,200,.6), transparent),
+    radial-gradient(1px 1px at 88% 60%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1px 1px at 12% 84%, rgba(180,220,255,.45), transparent),
+    radial-gradient(1.2px 1.2px at 60% 48%, rgba(255,255,255,.4), transparent) }
+.ig-spacefield::after{ content:""; position:absolute; inset:-10%; z-index:0; pointer-events:none;
+  filter:blur(8px); opacity:.9; mix-blend-mode:screen; animation:ig-haze 24s ease-in-out infinite;
+  background:
+    radial-gradient(40% 30% at 22% 16%, rgba(45,212,191,.07), transparent 70%),
+    radial-gradient(45% 35% at 80% 88%, rgba(99,102,180,.09), transparent 72%) }
+@keyframes ig-drift{ from{transform:translate3d(0,0,0)} to{transform:translate3d(-2%,-1.4%,0)} }
+@keyframes ig-haze{ 0%,100%{opacity:.55; transform:scale(1)} 50%{opacity:.95; transform:scale(1.05)} }
+
+/* ── overlay CRT scanlines (aplique a qualquer container) ───────────────── */
+.ig-scanlines{ position:relative }
+.ig-scanlines::before{ content:""; position:absolute; inset:0; pointer-events:none; z-index:7; border-radius:inherit;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px); opacity:.5 }
+/* varredura de scanline descendo */
+.ig-scan-sweep::after{ content:""; position:absolute; left:0; right:0; height:18%; z-index:8; pointer-events:none;
+  background:linear-gradient(180deg, transparent, rgba(110,212,226,.07), transparent);
+  animation:ig-scan 6s linear infinite }
+
+/* ── tubo CRT (curvatura + aberração cromática R/C + phosphor) ───────────── */
+.ig-crt{ position:relative; overflow:hidden; border-radius:14px/10px; background:#05080a;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.9), inset 0 0 0 2px rgba(0,0,0,.6) }
+.ig-crt > *{ position:relative; z-index:2 }
+.ig-crt::before{ content:""; position:absolute; inset:0; z-index:3; pointer-events:none; border-radius:inherit;
+  mix-blend-mode:multiply;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px) }
+.ig-crt::after{ content:""; position:absolute; inset:0; z-index:4; pointer-events:none; border-radius:inherit;
+  background:
+    radial-gradient(70% 60% at 50% 36%, rgba(120,200,180,.06), transparent 60%),   /* phosphor/barriga */
+    radial-gradient(120% 120% at 50% 50%, transparent 54%, rgba(0,0,0,.62) 100%);   /* vinheta/curvatura */
+  box-shadow:inset 7px 0 18px -10px rgba(255,80,80,.3), inset -7px 0 18px -10px rgba(90,180,255,.3) }
+
+/* ── grão de filme (textura/atmosfera cinematográfica, estático = barato) ── */
+.ig-grain{ position:absolute; inset:0; z-index:7; pointer-events:none; border-radius:inherit;
+  opacity:.06; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:160px 160px }
+
+/* ── grid floor synthwave (fundo retro) ─────────────────────────────────── */
+.ig-grid-floor{ position:absolute; inset:auto 0 0 0; height:46%; pointer-events:none; z-index:0; overflow:hidden;
+  -webkit-mask:linear-gradient(180deg,transparent,#000); mask:linear-gradient(180deg,transparent,#000); opacity:.18 }
+.ig-grid-floor::before{ content:""; position:absolute; inset:-50% -50% 0 -50%; transform:perspective(220px) rotateX(62deg);
+  background-image:
+    linear-gradient(90deg, var(--ig-cyan) 1px, transparent 1px),
+    linear-gradient(0deg, var(--ig-cyan) 1px, transparent 1px);
+  background-size:26px 26px; animation:ig-grid 8s linear infinite }
+
+/* ── VFD display (visor vintage) ────────────────────────────────────────── */
+.ig-vfd{ position:relative; overflow:hidden; border-radius:8px;
+  padding:clamp(7px,1.6vmin,11px) clamp(10px,2.4vmin,14px);
+  background:linear-gradient(180deg,#14130e,#0b0a07);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 0 16px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.03), 0 0 16px var(--ig-vfd-glow) }
+/* reflexo de vidro no topo */
+.ig-vfd::before{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit; z-index:0;
+  background:linear-gradient(180deg, rgba(255,255,255,.07), transparent 28%) }
+/* grade dot-matrix + scanlines (pixels de VFD) — leve, sem multiply (não esmagar pro preto) */
+.ig-vfd::after{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px),
+    radial-gradient(rgba(0,0,0,.10) 38%, transparent 42%) 0 0 / 3px 3px }
+.ig-vfd-title,.ig-vfd-sub{ position:relative; z-index:1 }
+.ig-vfd-title{ display:inline-block; font-family:var(--ig-mono); font-weight:600;
+  font-size:clamp(13px,3vmin,16px); color:var(--ig-vfd); letter-spacing:.02em;
+  text-shadow:0 0 3px var(--ig-vfd-glow), 0 0 9px var(--ig-vfd-glow), 0 0 20px var(--ig-vfd-glow) }
+.ig-vfd-sub{ font-family:var(--ig-mono); font-size:clamp(10px,2.1vmin,12px); margin-top:3px;
+  color:var(--ig-vfd-dim); letter-spacing:.04em; text-shadow:0 0 5px var(--ig-vfd-glow) }
+/* variante ciano — VFD clássico verde-azulado (Blade Runner) */
+.ig-vfd--cyan{ --ig-vfd:#7FFBE6; --ig-vfd-glow:rgba(94,234,212,.5); --ig-vfd-dim:rgba(127,251,230,.6) }
+.ig-marquee{ overflow:hidden; white-space:nowrap }
+.ig-marquee .scroll{ animation:ig-marquee 11s linear infinite }
+
+/* ── VU meter (cassette deck) — horizontal e vertical ───────────────────── */
+.ig-vu{ display:flex; flex-direction:column; gap:3px }
+.ig-vu-ch{ height:5px; border-radius:2px; position:relative; overflow:hidden; background:#0a0b0e;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05) }
+.ig-vu-ch::before{ content:""; position:absolute; inset:0; transform-origin:left; transform:scaleX(.1);
+  background:linear-gradient(90deg,#3ad17a 0 52%, #e8c14e 52% 78%, var(--ig-red) 78% 100%);
+  box-shadow:inset -2px 0 0 rgba(255,255,255,.55);   /* cap de pico (borda viva) */
+  animation:ig-vuA 1.3s ease-in-out infinite; animation-play-state:paused }
+.ig-vu-ch.r::before{ animation:ig-vuB 1.05s ease-in-out infinite }
+.ig-vu-ch::after{ content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(90deg, transparent 0 5px, #0a0b0e 5px 6.5px) }
+.is-live .ig-vu-ch::before{ animation-play-state:running }
+
+/* vertical: barras que sobem (espectro) */
+.ig-vu-vert{ display:flex; align-items:flex-end; gap:clamp(2px,.8vmin,4px); height:100% }
+.ig-vu-vert .bar{ flex:1 1 0; min-width:3px; border-radius:2px 2px 0 0; position:relative; overflow:hidden;
+  height:100%; background:#0a0b0e; box-shadow:inset 0 0 0 1px rgba(255,255,255,.05) }
+.ig-vu-vert .bar::before{ content:""; position:absolute; inset:0; transform-origin:bottom; transform:scaleY(.12);
+  background:linear-gradient(0deg,#3ad17a 0 52%, #e8c14e 52% 80%, var(--ig-red) 80% 100%);
+  box-shadow:inset 0 3px 0 -1px rgba(255,255,255,.55);   /* cap de pico no topo da barra */
+  animation:ig-vv 1.2s ease-in-out infinite; animation-play-state:paused }
+.ig-vu-vert .bar::after{ content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(0deg, transparent 0 4px, #0a0b0e 4px 5.5px) }
+.ig-vu-vert .bar:nth-child(2)::before{ animation-duration:.95s; animation-delay:-.4s }
+.ig-vu-vert .bar:nth-child(3)::before{ animation-duration:1.4s; animation-delay:-.7s }
+.ig-vu-vert .bar:nth-child(4)::before{ animation-duration:1.05s; animation-delay:-.2s }
+.ig-vu-vert .bar:nth-child(5)::before{ animation-duration:1.25s; animation-delay:-.9s }
+.ig-vu-vert .bar:nth-child(6)::before{ animation-duration:.9s;  animation-delay:-.5s }
+.ig-vu-vert .bar:nth-child(7)::before{ animation-duration:1.5s; animation-delay:-.3s }
+.is-live .ig-vu-vert .bar::before{ animation-play-state:running }
+
+/* ── LED indicador ──────────────────────────────────────────────────────── */
+.ig-led{ width:9px; height:9px; border-radius:50%; flex:0 0 auto;
+  background:radial-gradient(circle at 35% 30%, #ff8b6b, var(--ig-amber-deep) 70%); box-shadow:0 0 10px var(--ig-glow-amber) }
+.ig-led.cyan{ background:radial-gradient(circle at 35% 30%,#7ef0d0,var(--ig-teal) 70%); box-shadow:0 0 12px var(--ig-glow-cyan) }
+.ig-led.red{ background:radial-gradient(circle at 35% 30%,#ff8f8f,var(--ig-red-deep) 70%); box-shadow:0 0 12px var(--ig-glow-red); animation:ig-blink 1.6s steps(1) infinite }
+
+/* ── botões físicos (chunky / cromados) ─────────────────────────────────── */
+.ig-btn{ font:inherit; color:var(--ig-ink); cursor:pointer; border:none; display:grid; place-items:center;
+  border-radius:50%; transition:transform .16s var(--ig-ease), box-shadow .25s, border-color .25s }
+.ig-btn:active{ transform:translateY(1px) scale(.95) }
+.ig-btn:focus-visible{ outline:2px solid var(--ig-cyan); outline-offset:3px }   /* a11y: anel de foco visível */
+.ig-btn--side{ width:clamp(44px,8vmin,48px); aspect-ratio:1; border:1px solid var(--ig-line);
+  background:radial-gradient(circle at 38% 28%, #34373f, #14151a 78%);
+  box-shadow:0 5px 11px rgba(0,0,0,.55), inset 0 1px 1px rgba(255,255,255,.1), inset 0 -2px 3px rgba(0,0,0,.5) }
+.ig-btn--side:hover{ transform:translateY(-2px); border-color:var(--ig-glow-cyan) }
+.ig-btn--side svg{ width:42%; height:42%; filter:drop-shadow(0 1px 1px rgba(0,0,0,.4)) }
+/* play = botão físico de transport (metal fosco + anel de luz, sem glossy) */
+.ig-btn--primary{ width:clamp(54px,11.5vmin,66px); aspect-ratio:1; color:var(--ig-amber-soft);
+  background:radial-gradient(circle at 50% 36%, #30333c, #15171c 72%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.14), inset 0 -4px 7px rgba(0,0,0,.6),
+    0 8px 20px rgba(0,0,0,.55), 0 0 0 2px rgba(232,174,94,.5), 0 0 18px rgba(232,174,94,.22) }
+.ig-btn--primary:hover{ transform:translateY(-2px);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.14), inset 0 -4px 7px rgba(0,0,0,.6),
+    0 12px 26px rgba(0,0,0,.55), 0 0 0 2px rgba(232,174,94,.85), 0 0 26px rgba(232,174,94,.4) }
+.is-live .ig-btn--primary{ color:var(--ig-neon-cyan);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.14), inset 0 -4px 7px rgba(0,0,0,.6),
+    0 8px 20px rgba(0,0,0,.55), 0 0 0 2px rgba(111,212,226,.6), 0 0 20px rgba(111,212,226,.3) }
+.ig-btn--primary svg{ width:36%; height:36%; filter:drop-shadow(0 0 6px currentColor) }
+.ig-btn svg{ fill:currentColor }
+
+/* ── slider / progress ──────────────────────────────────────────────────── */
+.ig-bar{ height:4px; border-radius:4px; background:rgba(255,255,255,.07); overflow:hidden }
+.ig-bar__fill{ height:100%; width:0%; border-radius:4px; transition:width 1s linear;
+  background:linear-gradient(90deg,var(--ig-amber),var(--ig-amber-soft)); box-shadow:0 0 8px var(--ig-glow-amber) }
+
+/* ── pill / chip neon ───────────────────────────────────────────────────── */
+.ig-chip{ display:inline-flex; align-items:center; gap:6px; font-family:var(--ig-mono);
+  font-size:clamp(9px,1.9vmin,11px); letter-spacing:.14em; padding:3px 9px; border-radius:9999px;
+  border:1px solid rgba(111,212,226,.3); color:var(--ig-cyan); background:rgba(111,212,226,.05) }
+
+/* ── texto neon (com flicker sutil) ─────────────────────────────────────── */
+.ig-neon{ color:var(--ig-amber-soft); text-shadow:0 0 6px var(--ig-glow-amber), 0 0 14px rgba(232,174,94,.15) }
+.ig-neon.cyan{ color:var(--ig-neon-cyan); text-shadow:0 0 6px var(--ig-glow-cyan), 0 0 14px rgba(94,234,212,.15) }
+.ig-neon.flicker{ animation:ig-flicker 5s steps(1) infinite }
+
+/* ── chrome / cromado utilitário ────────────────────────────────────────── */
+/* texto cromado com LINHA DE HORIZONTE (céu claro em cima / chão escuro embaixo) */
+.ig-chrome{ background:linear-gradient(180deg,
+    #ffffff 0 7%, var(--ig-chrome-hi) 17%, var(--ig-chrome-mid) 47%,
+    #4f5663 50%, var(--ig-chrome-lo) 66%, #9aa0ad 90%, #e9ecf2);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.12)) }
+/* placa cromada escovada (anisotrópica) — base pra dials/knobs/superfícies */
+.ig-chrome-plate{ position:relative; border-radius:8px;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 1px, transparent 1px 2px),
+    linear-gradient(180deg, #e9edf3, #aab0bd 46%, #4f5663 51%, #8d93a1 78%, #c8cdd8);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.6), inset 0 -2px 4px rgba(0,0,0,.4), 0 4px 10px rgba(0,0,0,.5) }
+
+/* ── knob / dial rotativo (cassette deck) ───────────────────────────────── */
+.ig-knob{ position:relative; width:clamp(34px,9vmin,46px); aspect-ratio:1; border-radius:50%; flex:0 0 auto;
+  background:radial-gradient(circle at 38% 30%, #2b2e35, #131419 72%);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 5px 12px rgba(0,0,0,.6), inset 0 1px 1px rgba(255,255,255,.12), inset 0 -3px 6px rgba(0,0,0,.55) }
+/* face cromada escovada */
+.ig-knob::before{ content:""; position:absolute; inset:20%; border-radius:50%;
+  background:conic-gradient(from 90deg, #cfd4dd, #7a808b 22%, #eef1f6 50%, #7a808b 78%, #cfd4dd);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.55), inset 0 -2px 4px rgba(0,0,0,.45) }
+/* entalhe indicador (acende âmbar; ciano ao vivo) */
+.ig-knob::after{ content:""; position:absolute; top:13%; left:50%; width:2.6px; height:24%; transform:translateX(-50%);
+  border-radius:2px; background:linear-gradient(180deg,var(--ig-amber-soft),var(--ig-amber-deep));
+  box-shadow:0 0 7px var(--ig-glow-amber) }
+.is-live .ig-knob::after{ background:linear-gradient(180deg,#bdfdf0,var(--ig-teal)); box-shadow:0 0 8px var(--ig-glow-cyan) }
+
+/* ── grade de alto-falante / respiro de painel ──────────────────────────── */
+.ig-grille{ border-radius:8px; border:1px solid var(--ig-line);
+  background:
+    radial-gradient(circle, rgba(0,0,0,.55) 38%, transparent 42%) 0 0 / 6px 6px,
+    linear-gradient(180deg,#15171d,#0c0e13);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05), inset 0 0 18px rgba(0,0,0,.6) }
+
+/* ── livery racing (faixa Porsche) com feixe de luz correndo ────────────── */
+.ig-stripe{ position:relative; height:3px; border-radius:2px; overflow:hidden;
+  background:linear-gradient(90deg, transparent, var(--ig-red) 18% 46%, var(--ig-white) 46% 54%, var(--ig-red) 54% 82%, transparent);
+  box-shadow:0 0 10px rgba(255,77,77,.35) }
+.ig-stripe::after{ content:""; position:absolute; top:0; bottom:0; left:0; width:30%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.95) 45%, var(--ig-cyan) 60%, transparent);
+  filter:blur(1.4px); animation:ig-stripe-scan 3.4s var(--ig-ease) infinite }
+@keyframes ig-stripe-scan{ 0%{ transform:translateX(-130%) } 55%,100%{ transform:translateX(430%) } }
+
+/* ── entrada cinematográfica (stagger) ──────────────────────────────────── */
+.ig-rise{ opacity:0; animation:ig-rise .7s var(--ig-ease) forwards }
+.ig-stagger > *{ opacity:0; animation:ig-rise .6s var(--ig-ease) forwards }
+.ig-stagger > *:nth-child(1){animation-delay:.04s} .ig-stagger > *:nth-child(2){animation-delay:.1s}
+.ig-stagger > *:nth-child(3){animation-delay:.16s} .ig-stagger > *:nth-child(4){animation-delay:.22s}
+.ig-stagger > *:nth-child(5){animation-delay:.28s} .ig-stagger > *:nth-child(6){animation-delay:.34s}
+.ig-levitate{ animation:ig-levitate 4s ease-in-out infinite }
+
+/* ── keyframes ──────────────────────────────────────────────────────────── */
+@keyframes ig-beam{ to{ --ig-angle:360deg } }
+@keyframes ig-spin{ to{ transform:rotate(360deg) } }
+@keyframes ig-rise{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+@keyframes ig-levitate{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+@keyframes ig-marquee{ 0%,12%{transform:translateX(0)} 88%,100%{transform:translateX(calc(-100% + 86vw))} }
+@keyframes ig-scan{ 0%{top:-20%} 100%{top:120%} }
+@keyframes ig-grid{ to{ background-position:0 26px } }
+@keyframes ig-blink{ 0%,60%{opacity:1} 61%,100%{opacity:.25} }
+@keyframes ig-flicker{ 0%,100%{opacity:1} 47%{opacity:1} 48%{opacity:.55} 49%{opacity:1} 92%{opacity:1} 93%{opacity:.4} 94%{opacity:1} }
+@keyframes ig-vuA{ 0%,100%{transform:scaleX(.32)} 25%{transform:scaleX(.72)} 50%{transform:scaleX(.5)} 75%{transform:scaleX(.88)} }
+@keyframes ig-vuB{ 0%,100%{transform:scaleX(.42)} 30%{transform:scaleX(.8)} 60%{transform:scaleX(.38)} 82%{transform:scaleX(.92)} }
+@keyframes ig-vv{ 0%,100%{transform:scaleY(.22)} 25%{transform:scaleY(.7)} 50%{transform:scaleY(.45)} 75%{transform:scaleY(.95)} }
+
+@media (prefers-reduced-motion:reduce){
+  .ig-beam::after,.ig-scan-sweep::after,.ig-grid-floor::before,
+  .ig-vu-ch::before,.ig-vu-vert .bar::before,.ig-neon.flicker,.ig-led.red,.ig-stripe::after,
+  .ig-spacefield::before,.ig-spacefield::after,.is-live .ig-btn--primary,
+  .ig-rise,.ig-stagger > *,.ig-levitate,.ig-marquee .scroll{ animation:none !important }
+  .ig-rise,.ig-stagger > *{ opacity:1; transform:none }
+}
+
+/* ═══════════════ MOTION · VIEW TRANSITIONS (metamorfose) ═══════════════
+   PADRÃO do Gustavo: toda troca de estado/rota/aba/modo usa View Transitions API com
+   shared-element morph — os objetos que persistem DESLIZAM/REDIMENSIONAM (a tela NÃO recarrega).
+   USO (2 passos):
+   1) JS — envolva a mudança de estado:
+        window.igMorph ||= (fn)=> (document.startViewTransition ? document.startViewTransition(fn) : fn());
+        igMorph(() => { ... muda o DOM/estado ... });
+   2) CSS — dê a CADA objeto que persiste um nome ÚNICO e estável (use as classes abaixo, 1 de cada
+      por tela), e o navegador morpha posição+tamanho entre os estados.
+   Fallback gracioso embutido; respeita prefers-reduced-motion. */
+@media (prefers-reduced-motion:no-preference){
+  .vt-hero{ view-transition-name:vt-hero }      /* peça central que morpha (mídia, card→detalhe) */
+  .vt-title{ view-transition-name:vt-title }    /* letreiro/título */
+  .vt-bar{ view-transition-name:vt-bar }        /* barra de controle/ação */
+  .vt-rail{ view-transition-name:vt-rail }      /* faixa/stripe/divisor */
+  .vt-panel{ view-transition-name:vt-panel }    /* painel/superfície */
+  .vt-nav{ view-transition-name:vt-nav }        /* navegação */
+  ::view-transition-group(vt-hero),::view-transition-group(vt-title),
+  ::view-transition-group(vt-bar),::view-transition-group(vt-rail),
+  ::view-transition-group(vt-panel),::view-transition-group(vt-nav){
+    animation-duration:.6s; animation-timing-function:cubic-bezier(.2,.7,.2,1) }
+  ::view-transition-old(root),::view-transition-new(root){
+    animation-duration:.45s; animation-timing-function:cubic-bezier(.2,.7,.2,1) }
+}
+@media (prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){ animation:none !important }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIQUID-METAL FUSION  ·  Apple Liquid Glass 26 × Material 3 Expressive × cassette
+   ---------------------------------------------------------------------------
+   Turbina o arsenal fundindo 3 correntes (pesquisa jun/2026, evidência abaixo):
+   • Apple Liquid Glass (iOS 26 / macOS Tahoe, WWDC25): refração real por LENSING
+     (dobra a luz, não espalha como blur), specular highlight reagindo ao movimento,
+     borda com aberração cromática. → classes .ig-glass / .ig-glass--refract / --lens
+   • Google Material 3 Expressive (Google I/O 25): motion por MOLA (spring) — spatial
+     com overshoot, effects sem bounce — + shape-morph (squircle↔círculo) e press
+     elástico. → tokens --ig-spring* e classes .ig-press / .ig-morph
+   • Nosso Intergalactic: continua a base (metal/VFD/neon); o vidro é camada de
+     destaque (abordagem híbrida — padrão de produção 2026).
+   Refração SVG é Chromium-only (Wave/Electron = ✓; Safari/FF caem no frosted).
+   Mantém legibilidade (scrim WCAG) e respeita prefers-reduced-motion/transparency.
+   Fontes: apple.com/newsroom 2025-06 · kube.io/blog/liquid-glass-css-svg ·
+           m3.material.io (Expressive motion) · MDN backdrop-filter/feDisplacementMap
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root{
+  /* MOLAS (M3 Expressive traduzidas p/ CSS linear()) ----------------------- */
+  --ig-spring:        linear(0,.008,.031 2.2%,.129,.257 6.7%,.671 13%,.862,.99 19.7%,1.043,1.077,1.09 25%,1.088,1.077 28.5%,1.041 32%,1.013 35.5%,.996,.99 41%,.992 46.5%,1.001 56%,1.004 65%,1); /* spatial — overshoot leve ~1.09 */
+  --ig-spring-bounce: linear(0,.011,.043 2.1%,.176,.348 6.6%,.906 13.1%,1.146,1.243 19.4%,1.27,1.273,1.259 25.4%,1.196 30.5%,1.092 36.1%,1.026 41.2%,.996,.99 49.6%,.998 60.5%,1.003 73%,1); /* playful — overshoot ~1.27 */
+  --ig-ease-emph:   cubic-bezier(.2,0,0,1);    /* M3 "emphasized" */
+  --ig-ease-effect: cubic-bezier(.3,0,.2,1);   /* effects (cor/opacity) — sem bounce */
+  --ig-dur-quick:.2s; --ig-dur:.4s; --ig-dur-slow:.6s;
+  /* vidro */
+  --ig-glass-tint:rgba(36,40,50,.42); --ig-glass-blur:16px; --ig-glass-sat:180%;
+  --ig-glass-border:rgba(255,255,255,.18); --ig-glass-scrim:rgba(8,10,16,.26);
+}
+
+/* ── molas / metamorfose (M3 Expressive) ──────────────────────────────────── */
+.ig-press{ transition:transform var(--ig-dur) var(--ig-spring), box-shadow var(--ig-dur-quick) var(--ig-ease-effect) }
+.ig-press:active{ transform:scale(.94) }                 /* solta voltando com mola */
+.ig-press-bounce{ transition:transform var(--ig-dur-slow) var(--ig-spring-bounce) }
+/* shape-morph: squircle <-> círculo (transição elástica do raio) */
+.ig-morph{ border-radius:16px;
+  transition:border-radius var(--ig-dur) var(--ig-spring), transform var(--ig-dur) var(--ig-spring) }
+.ig-morph:hover{ border-radius:50% }
+/* entrada "expressiva" (overshoot suave) — alternativa playful ao .ig-rise */
+.ig-rise-spring{ opacity:0; animation:ig-rise-spring var(--ig-dur-slow) var(--ig-spring) forwards }
+@keyframes ig-rise-spring{ from{opacity:0;transform:translateY(14px) scale(.96)} to{opacity:1;transform:none} }
+
+/* ── vidro líquido fundido (Apple Liquid Glass × cassette) ─────────────────── */
+.ig-glass{ position:relative; isolation:isolate; border-radius:18px; color:var(--ig-ink);
+  background:linear-gradient(180deg, var(--ig-glass-tint), rgba(16,18,25,.5));
+  -webkit-backdrop-filter:blur(var(--ig-glass-blur)) saturate(var(--ig-glass-sat));
+          backdrop-filter:blur(var(--ig-glass-blur)) saturate(var(--ig-glass-sat));
+  border:1px solid var(--ig-glass-border);
+  box-shadow:0 22px 56px -26px rgba(0,0,0,.72),
+             inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 1px rgba(0,0,0,.3) }
+/* SCRIM — estabiliza o contraste do texto sobre fundo movimentado (legibilidade) */
+.ig-glass::before{ content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit;
+  background:var(--ig-glass-scrim) }
+/* SPECULAR — brilho que SEGUE o cursor (Apple "responds to motion"); --mx/--my via JS,
+   default no canto sup-esq pra parecer luz de cena. Diagonal fixa garante o rim. */
+.ig-glass::after{ content:""; position:absolute; inset:0; pointer-events:none; z-index:3;
+  border-radius:inherit; mix-blend-mode:screen; opacity:.55;
+  background:
+    radial-gradient(130% 90% at var(--mx,28%) var(--my,10%), rgba(255,255,255,.5), transparent 46%),
+    linear-gradient(135deg, rgba(255,255,255,.28), transparent 38%, transparent 62%, rgba(255,255,255,.10));
+  transition:background-position .2s var(--ig-ease-effect) }
+/* LENS — anel refrativo de borda (rim light frio do Liquid Glass) */
+.ig-glass--lens{ box-shadow:0 22px 56px -26px rgba(0,0,0,.72),
+  inset 0 1px 0 rgba(255,255,255,.4), inset 0 0 0 1px rgba(255,255,255,.10),
+  inset 0 0 24px -7px rgba(180,235,255,.4) }
+.ig-glass-card{ padding:clamp(16px,3vw,24px) }
+
+/* REFRAÇÃO real + aberração cromática — só onde o backdrop aceita filtro SVG
+   (Chromium/Electron = Wave ✓). Precisa colar o <svg> do fim deste arquivo 1x. */
+@supports (backdrop-filter:url(#x)) or (-webkit-backdrop-filter:url(#x)){
+  .ig-glass--refract{
+    -webkit-backdrop-filter:url(#bd1-ig-refract) blur(8px) saturate(var(--ig-glass-sat));
+            backdrop-filter:url(#bd1-ig-refract) blur(8px) saturate(var(--ig-glass-sat)) }
+}
+
+/* ── acessibilidade (não-negociável) ──────────────────────────────────────── */
+@media (prefers-reduced-transparency:reduce){
+  .ig-glass{ background:rgba(18,20,26,.95); -webkit-backdrop-filter:none; backdrop-filter:none }
+  .ig-glass--refract{ -webkit-backdrop-filter:none; backdrop-filter:none }
+  .ig-glass::before{ background:transparent } .ig-glass::after{ opacity:.22 }
+}
+@media (prefers-reduced-motion:reduce){
+  .ig-press,.ig-press-bounce,.ig-morph,.ig-rise-spring{ transition:none !important; animation:none !important }
+  .ig-rise-spring{ opacity:1; transform:none }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SVG do filtro de refração — cole UMA vez no <body> p/ ativar .ig-glass--refract.
+   Aberração cromática: separa R/G/B e desloca cada canal com escala diferente
+   (rim colorido = assinatura do Liquid Glass). Suba/baixe os scale p/ +/- líquido.
+
+   <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+     <filter id="bd1-ig-refract" x="-30%" y="-30%" width="160%" height="160%"
+             color-interpolation-filters="sRGB">
+       <feTurbulence type="fractalNoise" baseFrequency="0.005 0.007"
+                     numOctaves="2" seed="11" result="noise"/>
+       <feGaussianBlur in="noise" stdDeviation="2.2" result="soft"/>
+       <feColorMatrix in="SourceGraphic" type="matrix"
+         values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/>
+       <feColorMatrix in="SourceGraphic" type="matrix"
+         values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+       <feColorMatrix in="SourceGraphic" type="matrix"
+         values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
+       <feDisplacementMap in="r" in2="soft" scale="26" xChannelSelector="R" yChannelSelector="G" result="rd"/>
+       <feDisplacementMap in="g" in2="soft" scale="22" xChannelSelector="R" yChannelSelector="G" result="gd"/>
+       <feDisplacementMap in="b" in2="soft" scale="18" xChannelSelector="R" yChannelSelector="G" result="bd"/>
+       <feBlend in="rd" in2="gd" mode="screen" result="rg"/>
+       <feBlend in="rg" in2="bd" mode="screen"/>
+     </filter>
+   </defs></svg>
+
+   Specular que segue o cursor (opcional) — 1x por elemento .ig-glass:
+     el.addEventListener('pointermove', e=>{ const r=el.getBoundingClientRect();
+       el.style.setProperty('--mx', 100*(e.clientX-r.left)/r.width +'%');
+       el.style.setProperty('--my', 100*(e.clientY-r.top)/r.height+'%'); });
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BD1 CENTRAL HARMONY  ·  upgrade 2026-06-22 (ADITIVO — nada acima foi tocado)
+   ---------------------------------------------------------------------------
+   Harmoniza o arsenal com o design "BD1 Central" (frosted-glass cinematográfico):
+   Hanken Grotesk wt300 nos títulos, Space Mono nos labels HUD, superfície data-card
+   cujo vidro usa um TRIPLO RGB (--ig-sfc) — trocar esse triplo INVERTE light/dark
+   sem reescrever regra (mecânica idêntica à fn applyMode do Central). Tudo continua
+   cassette por baixo: o âmbar segue dominante, VFD/VU/CRT intactos, o vidro é só a
+   superfície de leitura. Componentes novos: data-card, HUD header, tab pills com
+   indicador deslizante (FLIP/morph), health orb, fire-list, item-row, timeline.
+   Paletas-âncora do Central: warm #FF8A3D · teal #5EEAD4 · fire #FF5147 · ok #46D17A.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── tokens BD1 Central (aliases — não substituem nada, só adicionam) ──────── */
+:root{
+  /* tipografia Central (self-host em /arsenal/fonts/ — zero CDN; ver NOTAS) */
+  --ig-display:"Hanken Grotesk",var(--ig-sans);   /* títulos leves wt300 */
+  --ig-label:"Space Mono",var(--ig-mono);         /* labels HUD uppercase */
+  /* âncoras de cor do Central, mapeadas ao DNA do arsenal */
+  --ig-warm:#FF8A3D;        /* accent quente do Central (vizinho do --ig-amber) */
+  --ig-tahoe:#FFB061;       /* atmosfera Tahoe */
+  --ig-cristal:#6FE0DA;     /* atmosfera Cristal (irmã do --ig-cyan) */
+  --ig-data:#5EEAD4;        /* dados/métricas/hover (== --ig-neon-cyan) */
+  --ig-fire:#FF5147;        /* alertas (irmão mais vivo do --ig-red) */
+  --ig-ok:#46D17A;          /* saudável */
+  /* feixe tricolor da borda Central (conic) */
+  --ig-beam-a:#FF8A3D; --ig-beam-b:#5B8CFF; --ig-beam-c:#A472FF;
+  /* SUPERFÍCIE como TRIPLO RGB — a chave do light/dark do Central:
+     no escuro o vidro nasce de branco a baixa opacidade; trocar p/ um triplo
+     escuro (ver .ig-mode-light) inverte tudo sem reescrever as regras. */
+  --ig-sfc:255,255,255;
+  --ig-card-tint:.05;       /* opacidade do tint do vidro data-card */
+  --ig-card-blur:26px; --ig-card-sat:1.6;
+  --ig-card-radius:22px;
+  --ig-elev:0 30px 70px -34px rgba(0,0,0,.72);    /* elevação cinematográfica */
+}
+
+/* MODE LIGHT — espelha a fn applyMode do Central: o triplo da superfície vira
+   escuro, então o MESMO vidro lê como claro. Aplique .ig-mode-light no wrapper. */
+.ig-mode-light{
+  --ig-sfc:14,16,24;        /* superfície escura => modo claro */
+  --ig-card-tint:.92;
+  --ig-ink:#10131c; --ig-dim:#4a5060;
+}
+
+/* ── tipografia harmonizada (Central) ─────────────────────────────────────── */
+/* título cinematográfico: Hanken leve, NUNCA bold (regra do Central) */
+.ig-display{ font-family:var(--ig-display); font-weight:300; line-height:1.04;
+  letter-spacing:-.01em; color:var(--ig-ink) }
+.ig-hero{ font-family:var(--ig-display); font-weight:300; line-height:1.02;
+  font-size:clamp(28px,5vw,46px); letter-spacing:-.015em; color:var(--ig-ink) }
+/* label HUD: Space Mono uppercase, tracking largo (.22–.32em) */
+.ig-label{ font-family:var(--ig-label); text-transform:uppercase; font-weight:400;
+  font-size:clamp(9px,1.8vmin,11px); letter-spacing:.26em; color:var(--ig-dim) }
+.ig-label--tight{ letter-spacing:.22em } .ig-label--wide{ letter-spacing:.32em }
+
+/* ── data-card · superfície de leitura (vidro Central, espírito cassette) ──── */
+.ig-data-card{ position:relative; isolation:isolate; border-radius:var(--ig-card-radius);
+  color:var(--ig-ink); padding:clamp(16px,2.6vw,22px);
+  background:
+    linear-gradient(150deg,
+      rgba(var(--ig-sfc),calc(var(--ig-card-tint) + .03)),
+      rgba(var(--ig-sfc),var(--ig-card-tint)) 46%,
+      rgba(var(--ig-sfc),calc(var(--ig-card-tint) - .01)));
+  border:1px solid rgba(var(--ig-sfc),.14);
+  -webkit-backdrop-filter:blur(var(--ig-card-blur)) saturate(var(--ig-card-sat));
+          backdrop-filter:blur(var(--ig-card-blur)) saturate(var(--ig-card-sat));
+  box-shadow:var(--ig-elev),
+    inset 0 1px 0 rgba(var(--ig-sfc),.22),        /* highlight superior (luz de cena) */
+    inset 0 0 0 1px rgba(0,0,0,.22);
+  transition:transform var(--ig-dur) var(--ig-spring),
+             border-color var(--ig-dur-quick) var(--ig-ease-effect),
+             box-shadow var(--ig-dur-quick) var(--ig-ease-effect) }
+.ig-data-card:hover{ transform:translateY(-2px); border-color:rgba(94,234,212,.34);
+  box-shadow:var(--ig-elev), inset 0 1px 0 rgba(var(--ig-sfc),.26),
+    inset 0 0 0 1px rgba(0,0,0,.22), 0 0 26px -6px var(--ig-glow-cyan) }
+/* tampa de luz no topo (sheen sutil, fonte de luz coerente) */
+.ig-data-card::before{ content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  border-radius:inherit;
+  background:radial-gradient(120% 70% at 50% 0%, rgba(var(--ig-sfc),.10), transparent 60%) }
+
+/* border-beam tricolor do Central (variante do --ig-angle já existente)
+   ⚠ usa ::after — não combine com .ig-scan-sweep no mesmo elemento. */
+.ig-beam--tri::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; padding:1.5px;
+  pointer-events:none; z-index:6;
+  background:conic-gradient(from var(--ig-angle),
+    transparent 48%, var(--ig-beam-a), var(--ig-beam-b), var(--ig-beam-c), transparent 92%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor;
+          mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);  mask-composite:exclude;
+  opacity:.5; animation:ig-beam 11s linear infinite }
+
+/* ── HUD header (dot + caps + anel de ano + relógio) ──────────────────────── */
+.ig-hud{ display:flex; align-items:center; gap:clamp(10px,2vw,16px) }
+.ig-hud__dot{ width:9px; height:9px; border-radius:50%; flex:0 0 auto;
+  background:radial-gradient(circle at 35% 30%, var(--ig-tahoe), var(--ig-warm) 72%);
+  box-shadow:0 0 12px rgba(255,138,61,.55) }
+.ig-hud__caps{ font-family:var(--ig-label); text-transform:uppercase;
+  letter-spacing:.3em; font-size:clamp(9px,1.7vmin,11px); color:var(--ig-dim) }
+.ig-hud__clock{ margin-left:auto; font-family:var(--ig-label); letter-spacing:.18em;
+  font-size:clamp(11px,2vmin,13px); color:var(--ig-ink) }
+.ig-hud__ring{ position:relative; width:26px; height:26px; border-radius:50%; flex:0 0 auto;
+  border:1.5px solid rgba(var(--ig-sfc),.18) }
+.ig-hud__ring::after{ content:""; position:absolute; inset:-1.5px; border-radius:50%;
+  border:1.5px solid transparent; border-top-color:var(--ig-warm);
+  animation:ig-spin 7s linear infinite }
+
+/* ── tab bar (pills + indicador deslizante) ───────────────────────────────── */
+/* o indicador desliza via FLIP/View Transitions — dê .vt-bar ao .ig-tabs__ink
+   e envolva a troca em igMorph() para o morph power3.inOut do Central. */
+.ig-tabs{ position:relative; display:inline-flex; gap:4px; padding:5px; border-radius:9999px;
+  background:rgba(var(--ig-sfc),.05); border:1px solid rgba(var(--ig-sfc),.10);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px) }
+.ig-tabs__tab{ position:relative; z-index:1; border:none; cursor:pointer; background:transparent;
+  font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.18em;
+  font-size:clamp(9px,1.7vmin,11px); color:var(--ig-dim);
+  padding:8px clamp(12px,2.4vw,18px); border-radius:9999px;
+  transition:color var(--ig-dur-quick) var(--ig-ease-effect) }
+.ig-tabs__tab:hover{ color:var(--ig-ink) }
+.ig-tabs__tab[aria-selected="true"],.ig-tabs__tab.is-active{ color:#0c0e13 }
+.ig-tabs__tab:focus-visible{ outline:2px solid var(--ig-cyan); outline-offset:3px }
+/* pílula que desliza por trás do tab ativo (posicione via JS/left+width) */
+.ig-tabs__ink{ position:absolute; z-index:0; top:5px; bottom:5px; left:5px; width:80px;
+  border-radius:9999px;
+  background:linear-gradient(180deg, var(--ig-tahoe), var(--ig-warm));
+  box-shadow:0 6px 16px -6px rgba(255,138,61,.6), inset 0 1px 0 rgba(255,255,255,.35);
+  transition:left var(--ig-dur) var(--ig-ease-emph), width var(--ig-dur) var(--ig-ease-emph) }
+/* badge no tab (contador) */
+.ig-tabs__badge{ display:inline-grid; place-items:center; min-width:16px; height:16px; padding:0 4px;
+  margin-left:6px; border-radius:9999px; font-family:var(--ig-label); font-size:9px;
+  background:var(--ig-fire); color:#fff; box-shadow:0 0 10px rgba(255,81,71,.5) }
+
+/* ── health orb (anel + miolo) + chips de status ──────────────────────────── */
+.ig-orb{ position:relative; width:clamp(72px,16vmin,108px); aspect-ratio:1; border-radius:50%;
+  display:grid; place-items:center;
+  background:radial-gradient(circle at 50% 38%, rgba(var(--ig-sfc),.10), rgba(0,0,0,.3) 78%);
+  box-shadow:inset 0 0 26px rgba(0,0,0,.55), 0 0 30px -10px var(--ig-glow-cyan) }
+.ig-orb::before{ content:""; position:absolute; inset:-3px; border-radius:50%;
+  border:2px solid transparent;
+  border-top-color:var(--ig-ok); border-right-color:var(--ig-data);
+  animation:ig-spin 9s linear infinite }
+.ig-orb__val{ font-family:var(--ig-display); font-weight:300;
+  font-size:clamp(20px,4.4vmin,30px); color:var(--ig-ink); line-height:1 }
+.ig-orb--warn::before{ border-top-color:var(--ig-warm); border-right-color:var(--ig-tahoe) }
+.ig-orb--crit::before{ border-top-color:var(--ig-fire); border-right-color:#ff8f8f }
+/* chip de status semântico (saudável / atenção / alerta) */
+.ig-stat{ display:inline-flex; align-items:center; gap:7px; padding:5px 11px; border-radius:9999px;
+  font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.16em;
+  font-size:clamp(9px,1.7vmin,11px) }
+.ig-stat::before{ content:""; width:7px; height:7px; border-radius:50%; flex:0 0 auto;
+  background:currentColor; box-shadow:0 0 9px currentColor }
+.ig-stat--ok{ color:var(--ig-ok);   background:rgba(70,209,122,.10); border:1px solid rgba(70,209,122,.3) }
+.ig-stat--warn{ color:var(--ig-warm); background:rgba(255,138,61,.10); border:1px solid rgba(255,138,61,.3) }
+.ig-stat--crit{ color:var(--ig-fire); background:rgba(255,81,71,.10); border:1px solid rgba(255,81,71,.32) }
+
+/* ── glass buttons (Central) — botão de ação com dot quente ───────────────── */
+.ig-gbtn{ display:inline-flex; align-items:center; gap:9px; cursor:pointer;
+  font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.16em;
+  font-size:clamp(10px,1.9vmin,12px); color:var(--ig-ink);
+  padding:10px clamp(14px,2.6vw,20px); border-radius:14px;
+  background:rgba(var(--ig-sfc),.06); border:1px solid rgba(var(--ig-sfc),.14);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  box-shadow:inset 0 1px 0 rgba(var(--ig-sfc),.2);
+  transition:transform var(--ig-dur) var(--ig-spring),
+             border-color var(--ig-dur-quick) var(--ig-ease-effect),
+             background-color var(--ig-dur-quick) var(--ig-ease-effect) }
+.ig-gbtn:hover{ transform:translateY(-2px); border-color:rgba(94,234,212,.4);
+  background:rgba(var(--ig-sfc),.10) }
+.ig-gbtn:active{ transform:translateY(0) scale(.97) }
+.ig-gbtn:focus-visible{ outline:2px solid var(--ig-cyan); outline-offset:3px }
+.ig-gbtn__dot{ width:7px; height:7px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, var(--ig-tahoe), var(--ig-warm) 72%);
+  box-shadow:0 0 10px rgba(255,138,61,.6) }
+.ig-gbtn--primary{ color:#0c0e13; border-color:transparent;
+  background:linear-gradient(180deg, var(--ig-tahoe), var(--ig-warm));
+  box-shadow:0 10px 24px -10px rgba(255,138,61,.7), inset 0 1px 0 rgba(255,255,255,.4) }
+.ig-gbtn--primary:hover{ background:linear-gradient(180deg, #ffc07a, var(--ig-warm)) }
+.ig-gbtn--primary .ig-gbtn__dot{ background:#0c0e13; box-shadow:none }
+
+/* ── fire-list (cartões de alerta vermelhos) ──────────────────────────────── */
+.ig-fire-list{ display:flex; flex-direction:column; gap:10px }
+.ig-fire-item{ position:relative; display:flex; align-items:center; gap:12px;
+  padding:13px 15px; border-radius:14px; color:var(--ig-ink);
+  background:linear-gradient(150deg, rgba(255,81,71,.12), rgba(255,81,71,.05));
+  border:1px solid rgba(255,81,71,.28);
+  box-shadow:0 16px 34px -22px rgba(255,40,40,.5), inset 0 1px 0 rgba(255,255,255,.08);
+  transition:transform var(--ig-dur) var(--ig-spring), border-color var(--ig-dur-quick) var(--ig-ease-effect) }
+.ig-fire-item:hover{ transform:translateX(2px); border-color:rgba(255,81,71,.5) }
+.ig-fire-item::before{ content:""; position:absolute; left:0; top:14%; bottom:14%; width:3px;
+  border-radius:0 3px 3px 0; background:var(--ig-fire); box-shadow:0 0 12px var(--ig-fire) }
+
+/* ── item-row (linha de lista + chevron) ──────────────────────────────────── */
+.ig-row{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:13px;
+  color:var(--ig-ink); cursor:pointer;
+  background:rgba(var(--ig-sfc),.03); border:1px solid rgba(var(--ig-sfc),.08);
+  transition:background-color var(--ig-dur-quick) var(--ig-ease-effect),
+             border-color var(--ig-dur-quick) var(--ig-ease-effect),
+             transform var(--ig-dur) var(--ig-spring) }
+.ig-row:hover{ background:rgba(var(--ig-sfc),.07); border-color:rgba(94,234,212,.28); transform:translateX(2px) }
+.ig-row:focus-visible{ outline:2px solid var(--ig-cyan); outline-offset:2px }
+.ig-row__body{ flex:1 1 auto; min-width:0 }
+.ig-row__title{ font-family:var(--ig-sans); font-size:clamp(13px,2.4vmin,15px); color:var(--ig-ink) }
+.ig-row__meta{ font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.16em;
+  font-size:clamp(8px,1.5vmin,10px); color:var(--ig-dim); margin-top:2px }
+.ig-row__chevron{ flex:0 0 auto; color:var(--ig-dim);
+  transition:transform var(--ig-dur) var(--ig-spring), color var(--ig-dur-quick) var(--ig-ease-effect) }
+.ig-row:hover .ig-row__chevron{ transform:translateX(3px); color:var(--ig-data) }
+
+/* ── timeline (grade) ─────────────────────────────────────────────────────── */
+.ig-timeline{ display:grid; grid-template-columns:auto 1fr; gap:0 16px }
+.ig-timeline__mark{ position:relative; display:grid; place-items:start center; padding-top:3px }
+.ig-timeline__mark::before{ content:""; width:11px; height:11px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, var(--ig-tahoe), var(--ig-warm) 70%);
+  box-shadow:0 0 12px rgba(255,138,61,.5); z-index:1 }
+.ig-timeline__mark::after{ content:""; position:absolute; top:14px; bottom:-6px; width:1.5px;
+  background:linear-gradient(180deg, rgba(255,138,61,.4), rgba(var(--ig-sfc),.08)) }
+.ig-timeline__item:last-child .ig-timeline__mark::after{ display:none }
+.ig-timeline__body{ padding:0 0 18px }
+.ig-timeline__time{ font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.18em;
+  font-size:clamp(8px,1.5vmin,10px); color:var(--ig-dim) }
+
+/* ── pre / phosphor (bloco técnico de log) ────────────────────────────────── */
+.ig-pre{ font-family:var(--ig-mono); font-size:clamp(11px,2vmin,13px); line-height:1.5;
+  color:var(--ig-neon-cyan); background:#05080a; border-radius:12px;
+  padding:clamp(12px,2.4vw,18px); overflow:auto;
+  border:1px solid rgba(94,234,212,.14);
+  text-shadow:0 0 6px rgba(94,234,212,.25);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.7) }
+
+/* ── toast (notificação flutuante) ────────────────────────────────────────── */
+.ig-toast{ display:flex; align-items:center; gap:11px; padding:13px 16px; border-radius:14px;
+  color:var(--ig-ink); font-family:var(--ig-sans); font-size:clamp(12px,2.2vmin,14px);
+  background:linear-gradient(150deg, rgba(var(--ig-sfc),.10), rgba(var(--ig-sfc),.04));
+  border:1px solid rgba(var(--ig-sfc),.16);
+  -webkit-backdrop-filter:blur(20px) saturate(1.5); backdrop-filter:blur(20px) saturate(1.5);
+  box-shadow:0 24px 50px -24px rgba(0,0,0,.7), inset 0 1px 0 rgba(var(--ig-sfc),.22) }
+
+/* ── theme-card (cartão de tema/preset) ───────────────────────────────────── */
+.ig-theme-card{ position:relative; overflow:hidden; border-radius:16px; cursor:pointer;
+  border:1px solid rgba(var(--ig-sfc),.12);
+  background:linear-gradient(150deg, rgba(var(--ig-sfc),.06), rgba(var(--ig-sfc),.02));
+  transition:transform var(--ig-dur) var(--ig-spring),
+             border-color var(--ig-dur-quick) var(--ig-ease-effect) }
+.ig-theme-card:hover{ transform:translateY(-3px); border-color:rgba(94,234,212,.4) }
+.ig-theme-card.is-active{ border-color:var(--ig-warm);
+  box-shadow:0 0 0 1px var(--ig-warm), 0 0 28px -8px rgba(255,138,61,.5) }
+.ig-theme-card__swatch{ height:64px;
+  background:linear-gradient(135deg, var(--ig-warm), var(--ig-data) 60%, var(--ig-beam-c)) }
+
+/* ── gear FAB (botão flutuante de config) ─────────────────────────────────── */
+.ig-fab{ position:fixed; right:clamp(16px,3vw,28px); bottom:clamp(16px,3vw,28px); z-index:50;
+  width:clamp(46px,8vmin,54px); aspect-ratio:1; border-radius:50%; cursor:pointer; border:none;
+  display:grid; place-items:center; color:var(--ig-ink);
+  background:rgba(var(--ig-sfc),.08); border:1px solid rgba(var(--ig-sfc),.16);
+  -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+  box-shadow:0 14px 30px -12px rgba(0,0,0,.6), inset 0 1px 0 rgba(var(--ig-sfc),.22);
+  transition:transform var(--ig-dur) var(--ig-spring),
+             border-color var(--ig-dur-quick) var(--ig-ease-effect) }
+.ig-fab:hover{ transform:translateY(-2px) rotate(35deg); border-color:rgba(255,138,61,.5) }
+.ig-fab:active{ transform:scale(.94) }
+.ig-fab:focus-visible{ outline:2px solid var(--ig-cyan); outline-offset:3px }
+
+/* ── porsche stripe respirando (variante do .ig-stripe com glow pulsante) ──── */
+.ig-stripe--breathe{ animation:ig-breathe 4.5s var(--ig-ease) infinite }
+@keyframes ig-breathe{ 0%,100%{ box-shadow:0 0 10px rgba(255,77,77,.35) }
+  50%{ box-shadow:0 0 22px rgba(255,77,77,.6) } }
+
+/* ── scan-sweep diagonal "scan-sweep" do Central (varredura leve de entrada) ──
+   Use numa superfície separada (não combine ::after com .ig-beam). */
+.ig-sweep{ position:relative; overflow:hidden }
+.ig-sweep::before{ content:""; position:absolute; inset:0; pointer-events:none; z-index:5;
+  background:linear-gradient(115deg, transparent 30%, rgba(var(--ig-sfc),.14) 48%, transparent 60%);
+  transform:translateX(-120%); animation:ig-sweep 5.5s var(--ig-ease) infinite }
+@keyframes ig-sweep{ 0%{ transform:translateX(-120%) } 55%,100%{ transform:translateX(120%) } }
+
+/* ── light/dark via View Transitions (metamorfose de modo, padrão Central) ──
+   Envolva o toggle do .ig-mode-light em igMorph() — a troca do triplo --ig-sfc
+   anima por root crossfade; objetos com .vt-* morpham posição/tamanho. */
+
+/* ── acessibilidade do bloco Central (não-negociável) ─────────────────────── */
+@media (prefers-reduced-transparency:reduce){
+  .ig-data-card,.ig-tabs,.ig-gbtn,.ig-toast,.ig-fab{
+    -webkit-backdrop-filter:none; backdrop-filter:none;
+    background:rgba(16,18,26,.96) }
+  .ig-mode-light .ig-data-card,.ig-mode-light .ig-tabs,
+  .ig-mode-light .ig-gbtn,.ig-mode-light .ig-toast,.ig-mode-light .ig-fab{
+    background:rgba(238,240,246,.97) }
+}
+@media (prefers-reduced-motion:reduce){
+  .ig-beam--tri::after,.ig-hud__ring::after,.ig-orb::before,
+  .ig-stripe--breathe,.ig-sweep::before{ animation:none !important }
+  .ig-data-card,.ig-tabs__ink,.ig-gbtn,.ig-row,.ig-row__chevron,
+  .ig-theme-card,.ig-fab,.ig-fire-item{ transition:none !important }
+}
+
+/* @font-face — fontes self-hosted do look BD1 Central (zero CDN) */
+@font-face{font-family:'Hanken Grotesk';src:url('fonts/HankenGrotesk.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Space Mono';src:url('fonts/SpaceMono-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Space Mono';src:url('fonts/SpaceMono-700.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}

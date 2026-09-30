@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sessão em curso</title>
+<style>
+/* =========================================================================
+   SESSÃO EM CURSO — mecanismo de fita (cassete-futurismo, 1980)
+
+   LEI DE ILUMINAÇÃO — uma única fonte, no alto à esquerda:
+     peça SALIENTE  -> crista de luz na aba superior-esquerda e
+                       sombra projetada para baixo-e-direita;
+     peça REBAIXADA -> sombra na aba superior-esquerda e
+                       luz na inferior-direita (exatamente o inverso).
+   Todo deslocamento de sombra neste arquivo é POSITIVO em x e y. Sem exceção.
+   Toda geometria é ESCRITA já na orientação final (nunca rotacionada por
+   transform), para que os gradientes de caixa continuem apontando a 135°.
+   ========================================================================= */
+
+:root{
+  --ambar:#E8AE5E;
+  --teal:#5EEAD4;
+  --tinta:#f3e6d2;
+  --luz:243,230,210;                 /* cor da luz: branco morno */
+  --serif:"DejaVu Sans Condensed","Liberation Sans Narrow","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","DejaVu Sans Mono","Liberation Mono",Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+
+body{
+  background:#050608;
+  background-image:radial-gradient(135% 100% at 28% 12%, #0e1217 0%, #07090c 42%, #030405 100%);
+  color:var(--tinta);
+  font-family:var(--serif);
+  display:grid; place-items:center;
+  overflow:hidden;
+}
+/* grão fotográfico: o objeto parece registrado, não desenhado */
+body::after{
+  content:""; position:fixed; inset:-40px; pointer-events:none; z-index:99;
+  opacity:.07; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='170' height='170'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' seed='11'/><feColorMatrix type='saturate' values='0'/></filter><rect width='170' height='170' filter='url(%23g)'/></svg>");
+}
+
+/* ---------------------------------------------------------------- a placa */
+.placa{
+  position:relative;
+  width:min(100vw - 16px, 1180px);
+  height:calc(100dvh - 16px);
+  border-radius:20px;
+  padding:clamp(19px,3vw,28px) clamp(15px,2.4vw,26px) clamp(22px,3.4vw,32px);
+  display:grid;
+  gap:clamp(9px,1.4vh,18px);
+  grid-template-areas:"aro" "transporte" "coluna";
+  grid-template-rows:auto minmax(0,1fr) auto;
+  background:linear-gradient(135deg,#3a424c 0%,#262c34 24%,#1a1f25 58%,#11151a 100%);
+  box-shadow:
+    inset 1.5px 1.5px 0 rgba(var(--luz),.22),      /* crista alto-esquerda */
+    inset 6px 6px 22px rgba(var(--luz),.05),
+    inset -1.5px -1.5px 0 rgba(0,0,0,.88),         /* aba baixo-direita */
+    inset -16px -18px 38px rgba(0,0,0,.52),
+    18px 26px 56px rgba(0,0,0,.8),                 /* sombra projetada */
+    5px 8px 16px rgba(0,0,0,.62);
+}
+/* veio escovado: textura de usinagem, nunca faixa de brilho */
+.placa::before{
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  pointer-events:none; opacity:.95; mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='460' height='460'><filter id='v'><feTurbulence type='fractalNoise' baseFrequency='0.005 2.2' numOctaves='2' seed='5'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.26'/></feComponentTransfer></filter><rect width='460' height='460' filter='url(%23v)'/></svg>");
+}
+
+.parafuso{position:absolute;width:16px;height:16px;pointer-events:none;z-index:2}
+.parafuso.a{top:7px;left:7px}    .parafuso.b{top:7px;right:7px}
+.parafuso.c{bottom:7px;left:7px} .parafuso.d{bottom:7px;right:7px}
+
+/* ------------------------------------------------------------------- aro */
+.aro{
+  grid-area:aro;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:0 6px 9px;
+  border-bottom:1px solid rgba(0,0,0,.75);     /* sulco gravado: escuro em cima */
+  box-shadow:0 1px 0 rgba(var(--luz),.11);     /*                luz embaixo    */
+}
+.marca{
+  padding-left:4px;
+  font-size:clamp(9px,1.5vw,11.5px); letter-spacing:.40em; text-transform:uppercase;
+  color:rgba(232,174,94,.88); text-shadow:0 1px 0 rgba(0,0,0,.95);
+}
+.tally{
+  display:flex; align-items:center; gap:9px; white-space:nowrap;
+  font-size:clamp(8px,1.3vw,10.5px); letter-spacing:.30em; text-transform:uppercase;
+  color:rgba(94,234,212,.66); text-shadow:0 1px 0 rgba(0,0,0,.95);
+}
+.tally i{
+  display:block; width:24px; height:8px; border-radius:2px; position:relative;
+  background:#060d0c;
+  box-shadow:inset 1.5px 1.5px 0 rgba(0,0,0,.92), inset -1px -1px 0 rgba(var(--luz),.13);
+}
+.tally i::after{
+  content:""; position:absolute; inset:2px; border-radius:1px;
+  background:var(--teal); animation:respira 7.5s ease-in-out infinite;
+}
+@keyframes respira{0%,100%{opacity:.26}50%{opacity:.85}}
+
+/* ------------------------------------------------------- baía do mecanismo */
+.transporte{
+  grid-area:transporte;
+  position:relative; width:100%; min-height:0;
+  border-radius:14px;
+  background:linear-gradient(135deg,#0a0d11 0%,#0f1317 50%,#171c22 100%);
+  box-shadow:
+    inset 2px 3px 13px rgba(0,0,0,.96),
+    inset 1.5px 1.5px 0 rgba(0,0,0,1),
+    inset -1.5px -1.5px 0 rgba(var(--luz),.12),
+    inset -9px -10px 24px rgba(var(--luz),.03);
+  overflow:hidden;
+}
+.transporte svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* --------------------------------------------------------- coluna de leitura */
+.coluna{grid-area:coluna;container-type:inline-size;display:flex;flex-direction:column;justify-content:center;gap:clamp(9px,1.6vh,20px);min-width:0}
+
+.janela{
+  position:relative; width:100%; border-radius:10px;
+  padding:clamp(8px,1.5vh,18px) clamp(12px,3vw,26px) clamp(17px,2.4vh,26px);
+  display:flex; align-items:baseline; justify-content:center; gap:.14em;
+  background:linear-gradient(135deg,#04060a 0%,#070a0e 55%,#0b1015 100%);
+  box-shadow:
+    inset 2.5px 3.5px 15px rgba(0,0,0,.98),
+    inset 1.5px 1.5px 0 rgba(0,0,0,1),
+    inset -1.5px -1.5px 0 rgba(var(--luz),.14),
+    0 1px 0 rgba(var(--luz),.08);
+}
+.hm{
+  font-family:var(--mono); font-variant-numeric:tabular-nums;
+  font-size:clamp(64px,21vw,138px);   /* alternativa p/ navegador sem container query */
+  font-size:min(23.5cqw,170px);
+  line-height:.92; letter-spacing:-.045em;
+  color:var(--tinta);
+  text-shadow:0 0 32px rgba(232,174,94,.17), 0 0 3px rgba(243,230,210,.26), 0 2px 0 rgba(0,0,0,.85);
+}
+.hm .dp{color:rgba(232,174,94,.92); text-shadow:0 0 20px rgba(232,174,94,.34)}
+.ss{
+  font-family:var(--mono); font-variant-numeric:tabular-nums;
+  font-size:clamp(25px,7.4vw,48px);
+  font-size:min(8.2cqw,58px);
+  line-height:1; letter-spacing:-.03em;
+  color:rgba(232,174,94,.82);
+  text-shadow:0 0 18px rgba(232,174,94,.2), 0 1px 0 rgba(0,0,0,.85);
+}
+.rotulo{
+  position:absolute; left:clamp(14px,3.2vw,28px); bottom:clamp(6px,1vh,10px);
+  font-size:clamp(7.5px,1.2vw,9.5px); letter-spacing:.46em; text-transform:uppercase;
+  color:rgba(232,174,94,.44);
+}
+.miolo{display:flex;flex-direction:column;justify-content:center;gap:clamp(9px,1.6vh,20px);min-width:0}
+/* filete gravado: delimita a seção do painel (escuro em cima, luz embaixo) */
+.escriba{display:none;height:2px;border-radius:1px;
+  background:linear-gradient(to bottom, rgba(0,0,0,.8) 0 1px, rgba(var(--luz),.09) 1px 2px);}
+.regua{width:100%}
+.regua svg{width:100%;height:auto;display:block}
+
+/* ------------------------------------------------------ paisagem / desktop */
+@media (min-aspect-ratio:1/1){
+  .placa{
+    height:auto;
+    grid-template-areas:"aro aro" "transporte coluna";
+    grid-template-columns:1.35fr 1fr;
+    grid-template-rows:auto auto;
+    column-gap:clamp(18px,2.6vw,40px);
+  }
+  .coluna{justify-content:space-between;gap:clamp(14px,3vh,30px)}
+  .miolo{flex:1;justify-content:center;gap:clamp(16px,3.4vh,36px)}
+  .escriba{display:block}
+  .janela{padding-top:clamp(14px,3vh,30px);padding-bottom:clamp(24px,4vh,40px)}
+  .transporte{aspect-ratio:640/472}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .tally i::after{animation:none;opacity:.62}
+}
+</style>
+</head>
+<body>
+
+<div class="placa">
+  <svg class="parafuso a" viewBox="0 0 16 16"><use href="#parafuso" transform="rotate(18 8 8)"/></svg>
+  <svg class="parafuso b" viewBox="0 0 16 16"><use href="#parafuso" transform="rotate(-37 8 8)"/></svg>
+  <svg class="parafuso c" viewBox="0 0 16 16"><use href="#parafuso" transform="rotate(62 8 8)"/></svg>
+  <svg class="parafuso d" viewBox="0 0 16 16"><use href="#parafuso" transform="rotate(-9 8 8)"/></svg>
+
+  <header class="aro">
+    <span class="marca" id="marca">sessão em curso</span>
+    <span class="tally"><i></i>gravando</span>
+  </header>
+
+  <section class="transporte" id="baia"></section>
+
+  <section class="coluna">
+    <div class="escriba"></div>
+    <div class="miolo">
+    <div class="janela">
+      <span class="hm" id="hm">00<span class="dp">:</span>00</span>
+      <span class="ss" id="ss">00</span>
+      <span class="rotulo">decorrido</span>
+    </div>
+    <div class="regua" id="regua"></div>
+    </div>
+    <div class="escriba"></div>
+  </section>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gConcavo" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#000" stop-opacity=".95"/>
+    <stop offset=".46" stop-color="#000" stop-opacity="0"/>
+    <stop offset=".58" stop-color="#f3e6d2" stop-opacity="0"/>
+    <stop offset="1" stop-color="#f3e6d2" stop-opacity=".24"/>
+  </linearGradient>
+  <linearGradient id="gCabeca" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#4c545f"/><stop offset="1" stop-color="#14181c"/>
+  </linearGradient>
+  <!-- parafuso: furo rebaixado + cabeça saliente -->
+  <g id="parafuso">
+    <circle cx="8" cy="8" r="7.2" fill="#07090c"/>
+    <circle cx="8" cy="8" r="6.4" fill="none" stroke="url(#gConcavo)" stroke-width="1.9"/>
+    <circle cx="8" cy="8" r="4.7" fill="url(#gCabeca)"/>
+    <circle cx="8" cy="8" r="4.7" fill="none" stroke="rgba(0,0,0,.6)" stroke-width=".8"/>
+    <rect x="3.1" y="7.25" width="9.8" height="1.4" rx=".6" fill="#04060a"/>
+    <rect x="3.1" y="8.65" width="9.8" height=".62" rx=".3" fill="rgba(243,230,210,.15)"/>
+  </g>
+</defs></svg>
+
+<script>
+/* ===========================================================================
+   1. TEMPO — único ponto de verdade
+   =========================================================================== */
+/* A sessão real manda o instante de início no hash: #t=<epoch ms>&j=<jogo>.
+   Sem hash (abrindo o arquivo solto), assume agora. */
+const PARAMS = new URLSearchParams(location.hash.slice(1));
+const START = Number(PARAMS.get("t")) || Date.now();
+const NOME  = (PARAMS.get("j") || "").trim();
+const DURACAO = 120*60*1000;           // 120 min = fita cheia
+const T_SEG = DURACAO/1000;
+
+/* ===========================================================================
+   2. O CARRETEL (mesmas medidas nas duas orientações, para que a física
+      não mude quando o aparelho é girado)
+   =========================================================================== */
+const R_CHEIO=126, R_VAZIO=48;                 // raios do pacote de fita
+const R_CUBO=42, R_FLANGE=130, R_POCO=147;     // cubo, aro do carretel, poço
+const AREA = R_CHEIO*R_CHEIO - R_VAZIO*R_VAZIO;    // constante de conservação
+const LARG_FITA = 9;
+
+/* Velocidade linear da fita — constante, imposta pelo capstan.
+   É ela que faz o carretel fornecedor ACELERAR ao esvaziar: ω = v/r. */
+const R_MEIO = Math.sqrt((R_CHEIO*R_CHEIO + R_VAZIO*R_VAZIO)/2);
+const V = (2*Math.PI/26) * R_MEIO;     // ~26 s por volta na metade da sessão
+const K = 2*V*T_SEG/AREA;              // rad por unidade de raio (integral fechada)
+
+/* Estado físico no instante `agora`.
+   Conservação de fita:  r_forn² + r_recol² = const   (área bobinada constante)
+   Ângulo:  θ = ∫ v/r dt  =  (2vT/A)·Δr                (forma fechada)          */
+function estado(agora){
+  const tseg = (agora - START)/1000;
+  const f = Math.min(1, Math.max(0, tseg/T_SEG));
+  const rf = Math.sqrt(R_CHEIO*R_CHEIO - AREA*f);   // fornecedor encolhe
+  const rr = Math.sqrt(R_VAZIO*R_VAZIO + AREA*f);   // recolhedor cresce
+  let angF = K*(R_CHEIO - rf), angR = K*(rr - R_VAZIO);
+  if(tseg > T_SEG){                  // passado o fim, a fita fica cheia e só gira
+    const extra = tseg - T_SEG;
+    angF += (V/R_VAZIO)*extra;
+    angR += (V/R_CHEIO)*extra;
+  }
+  return {tseg, f, rf, rr, angF, angR};
+}
+
+/* ===========================================================================
+   3. GEOMETRIA — duas plantas do mesmo mecanismo.
+      Retrato: carretéis empilhados, fita descendo pela direita.
+      Paisagem: carretéis lado a lado, fita correndo por baixo.
+   =========================================================================== */
+const PLANTA = {
+  h:{ W:640, H:472, vert:false,
+      f:{x:155,y:180}, r:{x:485,y:180},          // fornecedor / recolhedor
+      g1:{x:80,y:354,r:20}, g2:{x:560,y:354,r:20},
+      s1:+1, s2:-1, aR:Math.PI/2,                // sinais da tangente / ângulo do trecho reto
+      mordidas:[[200,376.5],[320,376.5]],        // a fita abaula sobre cada cabeça
+      cap:{x:430,y:353.5,r:16}, pin:{x:430,y:410.5,r:32} },
+  v:{ W:452, H:678, vert:true,
+      f:{x:152,y:160}, r:{x:152,y:467},
+      g1:{x:352,y:56,r:20}, g2:{x:352,y:620,r:20},
+      s1:-1, s2:+1, aR:0,
+      mordidas:[[374.5,160],[374.5,310]],
+      cap:{x:351.5,y:467,r:16}, pin:{x:406.5,y:467,r:30} }
+};
+let P = PLANTA.h;                                   // planta em uso
+
+/* ===========================================================================
+   4. CAMINHO DA FITA — tangentes reais, refeitas a cada quadro.
+      O ponto em que a fita deixa o pacote depende do raio do pacote: a
+      tangente gira de verdade conforme a fita migra de um carretel ao outro.
+   =========================================================================== */
+function tangente(c1,r1, c2,r2, sinal){
+  const dx=c2.x-c1.x, dy=c2.y-c1.y, L=Math.hypot(dx,dy);
+  const a=Math.atan2(dy,dx);
+  const b=Math.acos(Math.max(-1,Math.min(1,(r1-r2)/L)));
+  const t=a+sinal*b, nx=Math.cos(t), ny=Math.sin(t);
+  return {p1:[c1.x+r1*nx, c1.y+r1*ny], p2:[c2.x+r2*nx, c2.y+r2*ny], ang:t};
+}
+/* Recua a ponta desenhada até o aro do carretel: a fita some por baixo do
+   aro, como num aparelho real, em vez de cruzar o vão aberto do carretel. */
+function apara(p1,p2,c,R){
+  const dx=p2[0]-p1[0], dy=p2[1]-p1[1];
+  const fx=p1[0]-c.x, fy=p1[1]-c.y;
+  const a=dx*dx+dy*dy, b=2*(fx*dx+fy*dy), cc=fx*fx+fy*fy-R*R;
+  const disc=b*b-4*a*cc;
+  if(disc<=0) return p1;
+  const t=(-b+Math.sqrt(disc))/(2*a);
+  return (t>0 && t<1) ? [p1[0]+t*dx, p1[1]+t*dy] : p1;
+}
+function arco(g,a0,a1,n){
+  let d="";
+  const delta=((a1-a0+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
+  for(let i=1;i<=n;i++){
+    const a=a0+delta*i/n;
+    d+=` L ${(g.x+g.r*Math.cos(a)).toFixed(2)} ${(g.y+g.r*Math.sin(a)).toFixed(2)}`;
+  }
+  return d;
+}
+function caminhoFita(rf, rr){
+  const tF=tangente(P.f,rf, P.g1,P.g1.r, P.s1);
+  const tR=tangente(P.r,rr, P.g2,P.g2.r, P.s2);
+  const a=apara(tF.p1,tF.p2,P.f,R_FLANGE+1);
+  const b=apara(tR.p1,tR.p2,P.r,R_FLANGE+1);
+  const e1=[P.g2.x+P.g2.r*Math.cos(P.aR), P.g2.y+P.g2.r*Math.sin(P.aR)];
+  return `M ${a[0].toFixed(2)} ${a[1].toFixed(2)} L ${tF.p2[0].toFixed(2)} ${tF.p2[1].toFixed(2)}`
+       + arco(P.g1, tF.ang, P.aR, 11)
+       + P.mordidas.map(m=>` L ${m[0]} ${m[1]}`).join("")
+       + ` L ${e1[0].toFixed(2)} ${e1[1].toFixed(2)}`
+       + arco(P.g2, P.aR, tR.ang, 11)
+       + ` L ${b[0].toFixed(2)} ${b[1].toFixed(2)}`;
+}
+
+/* ===========================================================================
+   5. DESENHO
+   =========================================================================== */
+/* Camadas da fita bobinada: espaçamento FIXO, independente do raio.
+   É isso que faz o pacote parecer fita enrolada, e não um anel chapado. */
+function camadas(){
+  let s="";
+  for(let r=R_CUBO+1.6,i=0; r<=R_CHEIO+0.5; r+=2.15,i++){
+    const forte=(i%9===0);
+    s+=`<circle r="${r.toFixed(2)}" fill="none" stroke="rgba(243,230,210,${forte?.105:.052})" stroke-width="${forte?1:.68}"/>`;
+  }
+  return s;
+}
+/* Emenda em espiral: a descontinuidade discreta de um rolo real — o único
+   sinal de rotação dentro do próprio pacote. */
+function espiral(){
+  let d="";
+  for(let i=0;i<=280;i++){
+    const t=i/280, a=t*3.4*2*Math.PI, r=R_CUBO+2.5+t*(R_CHEIO-R_CUBO-4);
+    d+=(i?" L ":"M ")+(r*Math.cos(a)).toFixed(2)+" "+(r*Math.sin(a)).toFixed(2);
+  }
+  return `<path d="${d}" fill="none" stroke="rgba(243,230,210,.058)" stroke-width="1.8"/>`;
+}
+
+/* POÇO: bolso de alumínio usinado. É o contraste claro dele que deixa
+   evidente, à distância, quanta fita ainda resta no carretel. */
+function poco(c){
+  const marcas=[0,1,2,3,4,5,6].map(i=>
+    `<circle cx="${c.x}" cy="${c.y}" r="${R_FLANGE+2+i*2.6}" fill="none" stroke="rgba(0,0,0,.3)" stroke-width=".8"/>`).join("");
+  const indice=Array.from({length:48},(_,i)=>{
+    const a=i*7.5*Math.PI/180, R1=R_POCO-13, R2=R_POCO-(i%4?8:4.5);
+    return `<line x1="${(c.x+R1*Math.cos(a)).toFixed(1)}" y1="${(c.y+R1*Math.sin(a)).toFixed(1)}"
+                  x2="${(c.x+R2*Math.cos(a)).toFixed(1)}" y2="${(c.y+R2*Math.sin(a)).toFixed(1)}"
+                  stroke="rgba(0,0,0,.55)" stroke-width="1"/>`;}).join("");
+  return `<g>
+    <circle cx="${c.x}" cy="${c.y}" r="${R_POCO}" fill="url(#gPoco)"/>
+    ${marcas}${indice}
+    <circle cx="${c.x}" cy="${c.y}" r="${R_POCO-1.3}" fill="none" stroke="url(#gConcavoF)" stroke-width="3.2"/>
+    <circle cx="${c.x}" cy="${c.y}" r="${R_POCO+1.5}" fill="none" stroke="url(#gConvexoF)" stroke-width="1.7"/>
+  </g>`;
+}
+
+/* CARRETEL: pacote + aranha de 3 braços + cubo. Desenhado por ÚLTIMO, de modo
+   que a ponta da fita desapareça de fato por baixo do aro. */
+function carretel(id, c){
+  const braco=`<path d="M -12 -34 C -14.5 -74, -9 -104, -7 -${R_FLANGE-4}
+                        L 7 -${R_FLANGE-4} C 9 -104, 14.5 -74, 12 -34 Z"/>`;
+  const furos=[0,1,2].map(i=>{
+    const a=(i*120+60)*Math.PI/180, r=R_FLANGE-17;
+    return `<g transform="translate(${(r*Math.cos(a)).toFixed(1)} ${(r*Math.sin(a)).toFixed(1)})">
+      <circle r="7" fill="#06080b"/><circle r="6.2" fill="none" stroke="url(#gConcavoF)" stroke-width="1.8"/></g>`;}).join("");
+  const dentes=Array.from({length:14},(_,i)=>{
+    const a=i*(360/14)*Math.PI/180, co=Math.cos(a), si=Math.sin(a);
+    return `<line x1="${((R_CUBO-7)*co).toFixed(1)}" y1="${((R_CUBO-7)*si).toFixed(1)}"
+                  x2="${((R_CUBO+5)*co).toFixed(1)}" y2="${((R_CUBO+5)*si).toFixed(1)}"
+                  stroke="#1c2026" stroke-width="5.4" stroke-linecap="round"/>`;}).join("");
+  return `<g transform="translate(${c.x} ${c.y})">
+    <circle class="pkSombra-${id}" r="${R_CHEIO}" fill="#000" opacity=".72" filter="url(#fMedia)" transform="translate(6 8)"/>
+
+    <g clip-path="url(#clip-${id})">
+      <g class="pkGiro-${id}">
+        <circle r="${(R_CUBO+R_CHEIO)/2}" fill="none" stroke="url(#gFita)" stroke-width="${R_CHEIO-R_CUBO}"/>
+        ${camadas()}${espiral()}
+      </g>
+      <circle r="${R_CUBO+14}" fill="none" stroke="#000" stroke-width="28" opacity=".55"
+              filter="url(#fCurta)" transform="translate(5 6.5)"/>
+    </g>
+    <circle class="pkBorda-${id}"  r="${R_CHEIO}" fill="none" stroke="url(#gConvexoF)" stroke-width="2.3"/>
+    <circle class="pkBorda2-${id}" r="${R_CHEIO-1.8}" fill="none" stroke="rgba(0,0,0,.55)" stroke-width="1.5"/>
+
+    <g class="arGiro-${id}">
+      <g opacity=".72" filter="url(#fMedia)" transform="translate(6 8)" fill="#000">
+        <g>${braco}</g><g transform="rotate(120)">${braco}</g><g transform="rotate(240)">${braco}</g>
+        <circle r="${R_FLANGE-3}" fill="none" stroke="#000" stroke-width="8"/>
+      </g>
+      <g fill="url(#gBraco)" stroke="rgba(0,0,0,.68)" stroke-width=".8">
+        <g>${braco}</g><g transform="rotate(120)">${braco}</g><g transform="rotate(240)">${braco}</g>
+      </g>
+      <g fill="none" stroke="url(#gConvexoF)" stroke-width="1.8">
+        <g>${braco}</g><g transform="rotate(120)">${braco}</g><g transform="rotate(240)">${braco}</g>
+      </g>
+      <circle r="${R_FLANGE-3}" fill="none" stroke="url(#gAro)" stroke-width="7.6"/>
+      <circle r="${R_FLANGE+1.1}" fill="none" stroke="url(#gConvexoF)" stroke-width="1.8"/>
+      <circle r="${R_FLANGE-6.9}" fill="none" stroke="url(#gConcavoF)" stroke-width="1.4"/>
+      ${furos}
+    </g>
+
+    <g class="cbGiro-${id}">
+      <circle r="${R_CUBO+5}" fill="#000" opacity=".7" filter="url(#fMedia)" transform="translate(5.5 7)"/>
+      <g>${dentes}</g>
+      <circle r="${R_CUBO+1}" fill="url(#gCubo)"/>
+      <circle r="${R_CUBO+1}" fill="none" stroke="url(#gConvexoF)" stroke-width="2.1"/>
+      <circle r="${R_CUBO-7}" fill="none" stroke="rgba(0,0,0,.5)" stroke-width="2.6"/>
+      <circle r="${R_CUBO-9}" fill="url(#gCubo2)"/>
+      <circle r="${R_CUBO-9}" fill="none" stroke="url(#gConvexoF)" stroke-width="1.6"/>
+      <circle r="14" fill="url(#gCubo)"/>
+      <circle r="14" fill="none" stroke="url(#gConvexoF)" stroke-width="1.6"/>
+      <circle r="6.6" fill="#05070a"/>
+      <circle r="6.6" fill="none" stroke="url(#gConcavoF)" stroke-width="1.8"/>
+      ${[25,145,265].map(d=>{const a=d*Math.PI/180, r=R_CUBO-17;
+        return `<g transform="translate(${(r*Math.cos(a)).toFixed(1)} ${(r*Math.sin(a)).toFixed(1)}) scale(.52) translate(-8 -8)"><use href="#parafuso"/></g>`;}).join("")}
+    </g>
+  </g>`;
+}
+
+/* Rolete de guia. Como num aparelho real, a fita corre na canaleta ENTRE
+   dois flanges: o flange inferior aparece como um anel, e o superior — maior
+   que o raio da fita — esconde a volta. Sobram só os trechos retos. */
+function guia(g){        // flange inferior (desenhado antes da fita)
+  return `<g>
+    <circle cx="${g.x}" cy="${g.y}" r="${g.r+11}" fill="#000" opacity=".7" filter="url(#fMedia)" transform="translate(5.5 7)"/>
+    <circle cx="${g.x}" cy="${g.y}" r="${g.r+11}" fill="url(#gCubo2)"/>
+    <circle cx="${g.x}" cy="${g.y}" r="${g.r+11}" fill="none" stroke="url(#gConvexoF)" stroke-width="1.9"/>
+  </g>`;
+}
+function guiaTopo(g){    // flange superior (desenhado depois da fita)
+  const furos=[0,1,2].map(i=>{
+    const a=(i*120+30)*Math.PI/180, r=g.r-6;
+    return `<circle cx="${(g.x+r*Math.cos(a)).toFixed(1)}" cy="${(g.y+r*Math.sin(a)).toFixed(1)}" r="2.6" fill="#07090c"/>
+            <circle cx="${(g.x+r*Math.cos(a)).toFixed(1)}" cy="${(g.y+r*Math.sin(a)).toFixed(1)}" r="2.3" fill="none" stroke="url(#gConcavoF)" stroke-width="1.1"/>`;}).join("");
+  return `<g>
+    <circle cx="${g.x}" cy="${g.y}" r="${g.r+6}" fill="#000" opacity=".66" filter="url(#fCurta)" transform="translate(4 5)"/>
+    <circle cx="${g.x}" cy="${g.y}" r="${g.r+6}" fill="url(#gCubo)"/>
+    <circle cx="${g.x}" cy="${g.y}" r="${g.r+6}" fill="none" stroke="url(#gConvexoF)" stroke-width="1.9"/>
+    <circle cx="${g.x}" cy="${g.y}" r="${g.r-1}" fill="none" stroke="url(#gConcavoF)" stroke-width="1.2"/>
+    ${furos}
+    <circle cx="${g.x}" cy="${g.y}" r="6" fill="url(#gCubo2)"/>
+    <circle cx="${g.x}" cy="${g.y}" r="6" fill="none" stroke="url(#gConvexoF)" stroke-width="1.3"/>
+    <circle cx="${g.x}" cy="${g.y}" r="2.6" fill="#07090c"/>
+  </g>`;
+}
+function parafusinho(x,y,e){
+  return `<g transform="translate(${x} ${y}) scale(${e}) translate(-8 -8)"><use href="#parafuso"/></g>`;
+}
+
+/* CABEÇA — bloco usinado encostado na fita. A face de contato é levemente
+   convexa, como numa cabeça real, e o entreferro é gravado no meio. */
+function cabecaH(cx,larg,alt,gap){        // encosta por baixo do trecho reto
+  const x0=cx-larg/2, y0=P.g1.y+P.g1.r+LARG_FITA/2-1.5, y1=y0+alt;
+  const d=`M ${x0} ${y0+8} Q ${cx} ${y0-3} ${x0+larg} ${y0+8}
+           L ${x0+larg} ${y1-5} Q ${x0+larg} ${y1} ${x0+larg-5} ${y1}
+           L ${x0+5} ${y1} Q ${x0} ${y1} ${x0} ${y1-5} Z`;
+  return `<g>
+    <path d="${d}" fill="#000" opacity=".72" filter="url(#fMedia)" transform="translate(6 8)"/>
+    <path d="${d}" fill="url(#gBloco)"/>
+    <path d="${d}" fill="none" stroke="url(#gConvexoF)" stroke-width="1.9"/>
+    <path d="M ${x0+4} ${y0+11} Q ${cx} ${y0+.5} ${x0+larg-4} ${y0+11}" fill="none" stroke="rgba(243,230,210,.22)" stroke-width="1.7"/>
+    <path d="M ${x0+4} ${y0+13.4} Q ${cx} ${y0+2.9} ${x0+larg-4} ${y0+13.4}" fill="none" stroke="rgba(0,0,0,.62)" stroke-width="1.3"/>
+    ${gap?`<line x1="${cx-.9}" y1="${y0+3}" x2="${cx-.9}" y2="${y1-14}" stroke="rgba(0,0,0,.88)" stroke-width="1.8"/>
+           <line x1="${cx+1.1}" y1="${y0+4}" x2="${cx+1.1}" y2="${y1-14}" stroke="rgba(243,230,210,.14)" stroke-width="1"/>`:``}
+    ${parafusinho(x0+11,y1-11,.6)}${parafusinho(x0+larg-11,y1-11,.6)}
+  </g>`;
+}
+function cabecaV(cy,alt,prof,gap){        // encosta pela direita do trecho reto
+  const x0=P.g1.x+P.g1.r+LARG_FITA/2-1.5, x1=x0+prof, y0=cy-alt/2;
+  const d=`M ${x0+8} ${y0} Q ${x0-3} ${cy} ${x0+8} ${y0+alt}
+           L ${x1-5} ${y0+alt} Q ${x1} ${y0+alt} ${x1} ${y0+alt-5}
+           L ${x1} ${y0+5} Q ${x1} ${y0} ${x1-5} ${y0} Z`;
+  return `<g>
+    <path d="${d}" fill="#000" opacity=".72" filter="url(#fMedia)" transform="translate(6 8)"/>
+    <path d="${d}" fill="url(#gBloco)"/>
+    <path d="${d}" fill="none" stroke="url(#gConvexoF)" stroke-width="1.9"/>
+    <path d="M ${x0+11} ${y0+4} Q ${x0+.5} ${cy} ${x0+11} ${y0+alt-4}" fill="none" stroke="rgba(243,230,210,.22)" stroke-width="1.7"/>
+    <path d="M ${x0+13.4} ${y0+4} Q ${x0+2.9} ${cy} ${x0+13.4} ${y0+alt-4}" fill="none" stroke="rgba(0,0,0,.62)" stroke-width="1.3"/>
+    ${gap?`<line x1="${x0+3}" y1="${cy-.9}" x2="${x1-14}" y2="${cy-.9}" stroke="rgba(0,0,0,.88)" stroke-width="1.8"/>
+           <line x1="${x0+4}" y1="${cy+1.1}" x2="${x1-14}" y2="${cy+1.1}" stroke="rgba(243,230,210,.14)" stroke-width="1"/>`:``}
+    ${parafusinho(x1-11,y0+11,.6)}${parafusinho(x1-11,y0+alt-11,.6)}
+  </g>`;
+}
+
+function montarTransporte(){
+  const v=P.vert;
+  /* ponte de sustentação das cabeças */
+  const ponte = v
+    ? {x:412,y:108,w:32,h:432, l:[428,126,428,522]}
+    : {x:150,y:394,w:330,h:44, l:[168,416,462,416]};
+  const cabecas = v
+    ? cabecaV(160,76,58,false)+cabecaV(310,100,68,true)
+    : cabecaH(200,72,54,false)+cabecaH(320,100,62,true);
+  /* seta de sentido da fita, gravada na chapa */
+  const seta = v
+    ? `<g transform="translate(325 313)"><path d="M -6 -9 L 0 2 L 6 -9" fill="none" stroke="rgba(0,0,0,.66)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M -5 -9 L 1 2 L 7 -9" fill="none" stroke="rgba(243,230,210,.1)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></g>`
+    : `<g transform="translate(320 60)"><path d="M -9 -6 L 2 0 L -9 6" fill="none" stroke="rgba(0,0,0,.66)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M -9 -5 L 2 1 L -9 7" fill="none" stroke="rgba(243,230,210,.1)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+
+  return `
+<svg viewBox="0 0 ${P.W} ${P.H}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <defs>
+    <!-- iluminação: todos os gradientes correm no eixo 135° da fonte -->
+    <linearGradient id="gConvexoF" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3e6d2" stop-opacity=".44"/>
+      <stop offset=".37" stop-color="#f3e6d2" stop-opacity="0"/>
+      <stop offset=".58" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".88"/>
+    </linearGradient>
+    <linearGradient id="gConcavoF" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity=".94"/>
+      <stop offset=".44" stop-color="#000" stop-opacity="0"/>
+      <stop offset=".60" stop-color="#f3e6d2" stop-opacity="0"/>
+      <stop offset="1" stop-color="#f3e6d2" stop-opacity=".28"/>
+    </linearGradient>
+    <linearGradient id="gPoco" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1c2127"/><stop offset=".5" stop-color="#242a32"/>
+      <stop offset="1" stop-color="#2e353e"/>
+    </linearGradient>
+    <linearGradient id="gFita" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#231e18"/><stop offset=".5" stop-color="#181410"/>
+      <stop offset="1" stop-color="#0c0a08"/>
+    </linearGradient>
+    <linearGradient id="gBraco" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6b737e"/><stop offset=".42" stop-color="#383e47"/>
+      <stop offset="1" stop-color="#1b1f24"/>
+    </linearGradient>
+    <linearGradient id="gAro" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#787f8a"/><stop offset=".5" stop-color="#363c45"/>
+      <stop offset="1" stop-color="#16191e"/>
+    </linearGradient>
+    <linearGradient id="gCubo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#737b87"/><stop offset=".46" stop-color="#383e47"/>
+      <stop offset="1" stop-color="#181c21"/>
+    </linearGradient>
+    <linearGradient id="gCubo2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4e555f"/><stop offset="1" stop-color="#131619"/>
+    </linearGradient>
+    <linearGradient id="gBloco" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#676f7a"/><stop offset=".48" stop-color="#2f353d"/>
+      <stop offset="1" stop-color="#14171c"/>
+    </linearGradient>
+    <linearGradient id="gPonte" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#444b55"/><stop offset=".5" stop-color="#272d34"/>
+      <stop offset="1" stop-color="#13171b"/>
+    </linearGradient>
+    <linearGradient id="gBorracha" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2e323a"/><stop offset=".5" stop-color="#17191d"/>
+      <stop offset="1" stop-color="#0a0b0d"/>
+    </linearGradient>
+    <filter id="fMedia" x="-70%" y="-70%" width="260%" height="260%"><feGaussianBlur stdDeviation="6.5"/></filter>
+    <filter id="fCurta" x="-70%" y="-70%" width="260%" height="260%"><feGaussianBlur stdDeviation="3.4"/></filter>
+    <filter id="fFita"  x="-70%" y="-70%" width="260%" height="260%"><feGaussianBlur stdDeviation="3.4"/></filter>
+    <clipPath id="clip-f"><circle id="clipcf" r="${R_CHEIO}"/></clipPath>
+    <clipPath id="clip-r"><circle id="clipcr" r="${R_VAZIO}"/></clipPath>
+  </defs>
+
+  <!-- sulcos gravados na chapa da baía (escuro em cima, luz embaixo) -->
+  <g>
+    <line x1="24" y1="20" x2="${P.W-24}" y2="20" stroke="rgba(0,0,0,.55)" stroke-width="1"/>
+    <line x1="24" y1="21" x2="${P.W-24}" y2="21" stroke="rgba(243,230,210,.06)" stroke-width="1"/>
+    <line x1="24" y1="${P.H-20}" x2="${P.W-24}" y2="${P.H-20}" stroke="rgba(0,0,0,.55)" stroke-width="1"/>
+    <line x1="24" y1="${P.H-19}" x2="${P.W-24}" y2="${P.H-19}" stroke="rgba(243,230,210,.06)" stroke-width="1"/>
+    ${seta}
+    ${v ? parafusinho(330,122,1)+parafusinho(330,558,1)
+        : parafusinho(62,426,1)+parafusinho(578,426,1)}
+  </g>
+
+  ${poco(P.f)}${poco(P.r)}
+
+  <!-- ponte das cabeças -->
+  <g>
+    <rect x="${ponte.x}" y="${ponte.y}" width="${ponte.w}" height="${ponte.h}" rx="7" fill="#000" opacity=".64" filter="url(#fMedia)" transform="translate(6 8)"/>
+    <rect x="${ponte.x}" y="${ponte.y}" width="${ponte.w}" height="${ponte.h}" rx="7" fill="url(#gPonte)"/>
+    <rect x="${ponte.x}" y="${ponte.y}" width="${ponte.w}" height="${ponte.h}" rx="7" fill="none" stroke="url(#gConvexoF)" stroke-width="1.8"/>
+    <line x1="${ponte.l[0]}" y1="${ponte.l[1]}" x2="${ponte.l[2]}" y2="${ponte.l[3]}" stroke="rgba(0,0,0,.45)" stroke-width="1"/>
+    <line x1="${ponte.l[0]+(v?1:0)}" y1="${ponte.l[1]+(v?0:1)}" x2="${ponte.l[2]+(v?1:0)}" y2="${ponte.l[3]+(v?0:1)}" stroke="rgba(243,230,210,.07)" stroke-width="1"/>
+    ${v ? parafusinho(428,124,.6)+parafusinho(428,524,.6)
+        : parafusinho(168,416,.62)+parafusinho(462,416,.62)}
+  </g>
+
+  ${guia(P.g1)}${guia(P.g2)}
+  ${cabecas}
+
+  <!-- rolete de pressão: borracha fosca, gira com a fita -->
+  <g>
+    <circle cx="${P.pin.x}" cy="${P.pin.y}" r="${P.pin.r}" fill="#000" opacity=".72" filter="url(#fMedia)" transform="translate(6.5 8.5)"/>
+    <circle cx="${P.pin.x}" cy="${P.pin.y}" r="${P.pin.r}" fill="url(#gBorracha)"/>
+    <circle cx="${P.pin.x}" cy="${P.pin.y}" r="${P.pin.r}" fill="none" stroke="url(#gConvexoF)" stroke-width="2.1" opacity=".85"/>
+    <g id="giroPinca">
+      <line x1="0" y1="-${P.pin.r-3}" x2="0" y2="${P.pin.r-3}" stroke="rgba(243,230,210,.075)" stroke-width="1.4"/>
+    </g>
+    <circle cx="${P.pin.x}" cy="${P.pin.y}" r="11" fill="url(#gCubo)"/>
+    <circle cx="${P.pin.x}" cy="${P.pin.y}" r="11" fill="none" stroke="url(#gConvexoF)" stroke-width="1.7"/>
+    <circle cx="${P.pin.x}" cy="${P.pin.y}" r="4" fill="#07090c"/>
+    <circle cx="${P.pin.x}" cy="${P.pin.y}" r="4" fill="none" stroke="url(#gConcavoF)" stroke-width="1.3"/>
+  </g>
+
+  <!-- FITA — sanduíche de traços deslocados: a aba superior-esquerda recebe a
+       luz, a inferior-direita escurece. Nenhuma faixa varrida de brilho. -->
+  <path id="fitaSombra" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="${LARG_FITA+3}" stroke-linecap="round" filter="url(#fFita)" transform="translate(5 6.5)"/>
+  <path id="fitaEscura" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="${LARG_FITA+1.5}" stroke-linecap="round" transform="translate(1 1.3)"/>
+  <path id="fitaLuz"    fill="none" stroke="rgba(243,230,210,.17)" stroke-width="${LARG_FITA+1.2}" stroke-linecap="round" transform="translate(-.85 -1.1)"/>
+  <path id="fitaCorpo"  fill="none" stroke="#1f1913" stroke-width="${LARG_FITA}" stroke-linecap="round"/>
+
+  <!-- capstan: eixo de aço; o anel teal marca o acionamento engatado -->
+  <g>
+    <circle cx="${P.cap.x}" cy="${P.cap.y}" r="${P.cap.r}" fill="#000" opacity=".68" filter="url(#fCurta)" transform="translate(4.5 6)"/>
+    <circle cx="${P.cap.x}" cy="${P.cap.y}" r="${P.cap.r}" fill="url(#gCubo)"/>
+    <circle cx="${P.cap.x}" cy="${P.cap.y}" r="${P.cap.r}" fill="none" stroke="url(#gConvexoF)" stroke-width="2"/>
+    <circle cx="${P.cap.x}" cy="${P.cap.y}" r="${P.cap.r-5}" fill="none" stroke="rgba(94,234,212,.42)" stroke-width="1.4"/>
+    <circle cx="${P.cap.x}" cy="${P.cap.y}" r="4.4" fill="#07090c"/>
+    <circle cx="${P.cap.x}" cy="${P.cap.y}" r="4.4" fill="none" stroke="url(#gConcavoF)" stroke-width="1.4"/>
+  </g>
+
+  ${guiaTopo(P.g1)}${guiaTopo(P.g2)}
+  ${carretel("f", P.f)}${carretel("r", P.r)}
+</svg>`;
+}
+
+function montarRegua(){
+  const W=600,H=52,x0=16,x1=W-16;
+  let t="";
+  for(let i=0;i<=24;i++){
+    const x=x0+(x1-x0)*i/24, maior=(i%6===0);
+    t+=`<line x1="${x.toFixed(1)}" y1="14" x2="${x.toFixed(1)}" y2="${maior?32:25}" stroke="rgba(0,0,0,.8)" stroke-width="${maior?1.9:1.2}"/>
+        <line x1="${(x+1.1).toFixed(1)}" y1="14" x2="${(x+1.1).toFixed(1)}" y2="${maior?32:25}" stroke="rgba(243,230,210,${maior?.10:.055})" stroke-width="1"/>`;
+  }
+  return `
+<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="gCanal" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#000" stop-opacity=".62"/><stop offset="1" stop-color="#000" stop-opacity=".08"/>
+  </linearGradient></defs>
+  <rect x="${x0-8}" y="9" width="${x1-x0+16}" height="28" rx="4" fill="url(#gCanal)"/>
+  <rect x="${x0-8}" y="9" width="${x1-x0+16}" height="28" rx="4" fill="none" stroke="rgba(0,0,0,.72)" stroke-width="1"/>
+  <rect x="${x0-8}" y="10.2" width="${x1-x0+16}" height="28" rx="4" fill="none" stroke="rgba(243,230,210,.08)" stroke-width="1"/>
+  ${t}
+  <line x1="${x0}" y1="13" x2="${x1}" y2="14" stroke="rgba(0,0,0,.6)" stroke-width="1.2"/>
+  <line id="preenche" x1="${x0}" y1="15.2" x2="${x0}" y2="15.2" stroke="rgba(232,174,94,.58)" stroke-width="2"/>
+  <g id="indice">
+    <line x1="0" y1="6" x2="0" y2="37" stroke="#5EEAD4" stroke-opacity=".9" stroke-width="1.7"/>
+    <path d="M -4.5 4 L 4.5 4 L 0 10 Z" fill="#5EEAD4" fill-opacity=".9"/>
+  </g>
+  <text x="${x0-2}" y="49" fill="rgba(232,174,94,.52)" font-family="DejaVu Sans Condensed, Arial, sans-serif" font-size="9" letter-spacing="1.8">0</text>
+  <text x="${x1+2}" y="43" text-anchor="end" fill="rgba(232,174,94,.5)" font-family="DejaVu Sans Condensed, Arial, sans-serif" font-size="9" letter-spacing="1.8">120 MIN</text>
+</svg>`;
+}
+
+/* ===========================================================================
+   6. MONTAGEM E LAÇO
+   =========================================================================== */
+const baia = document.getElementById("baia");
+const q = s => document.querySelector(s);
+let el = {};
+
+function construir(){
+  P = matchMedia("(min-aspect-ratio: 1/1)").matches ? PLANTA.h : PLANTA.v;
+  baia.style.aspectRatio = P.vert ? "auto" : `${P.W}/${P.H}`;
+  baia.innerHTML = montarTransporte();
+  el = {
+    clipF:document.getElementById("clipcf"), clipR:document.getElementById("clipcr"),
+    pkGiroF:q(".pkGiro-f"), pkGiroR:q(".pkGiro-r"),
+    arGiroF:q(".arGiro-f"), arGiroR:q(".arGiro-r"),
+    cbGiroF:q(".cbGiro-f"), cbGiroR:q(".cbGiro-r"),
+    somF:q(".pkSombra-f"), somR:q(".pkSombra-r"),
+    bdF:q(".pkBorda-f"),   bdR:q(".pkBorda-r"),
+    bd2F:q(".pkBorda2-f"), bd2R:q(".pkBorda2-r"),
+    fita:["fitaSombra","fitaEscura","fitaLuz","fitaCorpo"].map(i=>document.getElementById(i)),
+    pinca:document.getElementById("giroPinca")
+  };
+  pinta(Date.now());
+}
+
+document.getElementById("regua").innerHTML = montarRegua();
+const hm=document.getElementById("hm"), ss=document.getElementById("ss");
+const indice=document.getElementById("indice"), preenche=document.getElementById("preenche");
+
+const REDUZIDO = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const GRAU = 180/Math.PI, RX0=16, RX1=584;
+const p2 = n => String(n).padStart(2,"0");
+
+function leitura(tseg){
+  const tot=Math.max(0,Math.floor(tseg));
+  hm.innerHTML = `${p2(Math.floor(tot/3600))}<span class="dp">:</span>${p2(Math.floor(tot/60)%60)}`;
+  ss.textContent = p2(tot%60);
+}
+
+function pinta(agora){
+  const e = estado(agora);
+
+  /* raios dos pacotes — a conservação garante rf² + rr² = const */
+  el.clipF.setAttribute("r", e.rf.toFixed(2));  el.clipR.setAttribute("r", e.rr.toFixed(2));
+  el.somF.setAttribute("r", e.rf.toFixed(2));   el.somR.setAttribute("r", e.rr.toFixed(2));
+  el.bdF.setAttribute("r", e.rf.toFixed(2));    el.bdR.setAttribute("r", e.rr.toFixed(2));
+  el.bd2F.setAttribute("r",(e.rf-1.8).toFixed(2)); el.bd2R.setAttribute("r",(e.rr-1.8).toFixed(2));
+
+  /* mesmo sentido de giro nos dois carretéis, velocidades diferentes: ω = v/r */
+  const gf=`rotate(${(-e.angF*GRAU).toFixed(3)})`, gr=`rotate(${(-e.angR*GRAU).toFixed(3)})`;
+  el.pkGiroF.setAttribute("transform",gf); el.pkGiroR.setAttribute("transform",gr);
+  el.arGiroF.setAttribute("transform",gf); el.arGiroR.setAttribute("transform",gr);
+  el.cbGiroF.setAttribute("transform",gf); el.cbGiroR.setAttribute("transform",gr);
+  el.pinca.setAttribute("transform",
+    `translate(${P.pin.x} ${P.pin.y}) rotate(${((V/P.pin.r)*e.tseg*GRAU)%360})`);
+
+  const d = caminhoFita(e.rf, e.rr);
+  el.fita.forEach(p=>p.setAttribute("d", d));
+
+  leitura(e.tseg);
+  const x = RX0 + (RX1-RX0)*e.f;
+  indice.setAttribute("transform",`translate(${x.toFixed(2)} 0)`);
+  preenche.setAttribute("x2", x.toFixed(2));
+}
+
+construir();
+/* troca de planta ao girar o aparelho */
+/* Remonta quando o tamanho muda de verdade (girar o aparelho, mas também
+   quando o quadro só ganha altura ao ser exibido). Com folga pra não
+   remontar a cada tremida da barra do navegador no celular. */
+let medidaAnterior = innerWidth+"x"+innerHeight, remontaT=null;
+addEventListener("resize", ()=>{
+  clearTimeout(remontaT);
+  remontaT = setTimeout(()=>{
+    const agora = innerWidth+"x"+innerHeight;
+    if(agora === medidaAnterior) return;
+    const [lv,av] = medidaAnterior.split("x").map(Number);
+    medidaAnterior = agora;
+    /* só remonta se mudou o bastante pra alterar a planta */
+    if(Math.abs(innerWidth-lv) > 24 || Math.abs(innerHeight-av) > 24) construir();
+  }, 120);
+});
+
+/* nome do jogo no lugar do rótulo genérico */
+if(NOME) document.getElementById("marca").textContent = NOME;
+/* avisa a tela de fora que o mecanismo está de pé */
+try{ parent.postMessage("deck-pronto","*"); }catch(e){}
+
+if(REDUZIDO){
+  setInterval(()=>leitura(estado(Date.now()).tseg), 1000);   /* mecanismo congelado */
+}else{
+  /* o laço dorme quando a tela sai de vista e acorda no lugar certo:
+     o tempo vem sempre de START, então nada dessincroniza. */
+  let vivo=false;
+  function laco(){ if(!vivo) return; pinta(Date.now()); requestAnimationFrame(laco); }
+  function acorda(){ if(!vivo){ vivo=true; requestAnimationFrame(laco); } }
+  document.addEventListener("visibilitychange", ()=>{
+    if(document.visibilityState==="visible") acorda(); else vivo=false;
+  });
+  pinta(Date.now());
+  acorda();
+}
+</script>
+</body>
+</html>

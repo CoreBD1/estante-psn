@@ -1,0 +1,7 @@
+/* O mínimo que a moldura precisa por cima do arsenal. O resto é do intergalactic.css. */
+html,body.bk{ background:var(--ig-bg0,#050608); color:var(--ig-ink,#E9ECF1); margin:0 }
+body.bk{ font:15px/1.5 "Hanken Grotesk",system-ui,sans-serif; min-height:100vh }
+.bk-nicho{ width:184px; height:184px; margin:32px auto 0; border-radius:50%;
+  box-shadow:inset 0 2px 3px rgba(0,0,0,.55), inset 0 -1px 0 rgba(255,255,255,.06) }
+.bk-nicho canvas{ width:100%; height:100% }
+:focus-visible{ outline:2px solid var(--ig-neon-cyan,#5EEAD4); outline-offset:3px }

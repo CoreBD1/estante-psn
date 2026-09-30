@@ -1,0 +1,133 @@
+/* Brokkr · camada Líquida (23/09/2026). Fonte: componentes Liquid e Bead do design system
+   Intergalactic (claude.ai/artifact/TQ1CNh1bmgA11P7hc18Aac). A lente SVG é injetada pelo brokkr.js. */
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIQUID — a camada líquida nossa (23/09/2026, pedido do Core)
+   O Liquid Glass da Apple traduzido pro Intergalactic. Três ideias só:
+   1. VIDRO TINGIDO — a cor da peça se MISTURA ao vidro (--lq-tint + --lq-mix) e
+      assenta no fundo, como líquido num copo; a sombra projeta a mesma cor.
+   2. ARO DE LUZ FIXO — o reflexo é da BORDA, vindo da luz única alta à esquerda,
+      e sai fraco pelo canto oposto (a mesma luz atravessando). Nunca segue o
+      cursor, nunca cruza a tela.
+   3. GOTA NEON — a bolinha de estado é uma gota de vidro com o neon dentro:
+      respira quando está ao vivo, faz onda quando é crítico, pinga ao trocar.
+   Refração (lente) só em Chromium/Electron; o resto cai no vidro fosco.
+   Fontes: kube.io/blog/liquid-glass-css-svg · developer.apple.com (Liquid Glass)
+   ═══════════════════════════════════════════════════════════════════════════ */
+@property --lq-mix{ syntax:"<percentage>"; inherits:true; initial-value:14% }
+:root{ --ig-lq-blur:var(--liquid-blur,10px); --ig-lq-sat:var(--liquid-sat,190%);
+  --ig-lq-scrim:linear-gradient(rgba(8,10,16,.46),rgba(8,10,16,.46)) }
+.ig-mode-light{ --ig-lq-scrim:linear-gradient(rgba(250,250,247,.55),rgba(250,250,247,.55)) }
+
+.ig-lq{ --lq-tint:rgb(var(--ig-sfc)); --lq-mix:10%;
+  position:relative; isolation:isolate; color:var(--ig-ink);
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--lq-tint) calc(var(--lq-mix) * .6), transparent),
+      color-mix(in oklab, var(--lq-tint) calc(var(--lq-mix) * 1.5), transparent)),
+    var(--ig-lq-scrim);                                       /* scrim: segura o texto sobre fundo claro */
+  -webkit-backdrop-filter:blur(var(--ig-lq-blur)) saturate(var(--ig-lq-sat));
+          backdrop-filter:blur(var(--ig-lq-blur)) saturate(var(--ig-lq-sat));
+  border:1px solid color-mix(in oklab, var(--lq-tint) 34%, rgba(var(--ig-sfc),.16));
+  box-shadow:
+    0 14px 30px -16px color-mix(in oklab, var(--lq-tint) 55%, rgba(0,0,0,.75)),  /* sombra tingida */
+    inset 0 -10px 18px -12px color-mix(in oklab, var(--lq-tint) 70%, transparent), /* cor assentada no fundo */
+    inset 0 1px 0 rgba(255,255,255,.38),
+    inset 0 -1px 1px rgba(0,0,0,.28);
+  transition:--lq-mix var(--ig-dur-quick) var(--ig-ease-effect),
+             transform var(--ig-dur) var(--ig-spring),
+             box-shadow var(--ig-dur-quick) var(--ig-ease-effect) }
+/* ARO DE LUZ — anel de 1.5px; forte no alto-esquerda, some no meio, volta fraco embaixo-direita */
+.ig-lq::after{ content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  padding:1.5px; z-index:2;
+  background:linear-gradient(135deg,
+    rgba(255,255,255,.95) 0%, rgba(255,255,255,.28) 22%, transparent 46%,
+    transparent 64%, rgba(255,255,255,.22) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude }
+/* LENTE — o vidro dobra de leve o que está atrás (Chromium/Electron; cole o <svg> do fim 1x) */
+@supports (backdrop-filter:url(#x)) or (-webkit-backdrop-filter:url(#x)){
+  .ig-lq--lens{
+    -webkit-backdrop-filter:url(#bd1-lq-lens) blur(var(--ig-lq-blur)) saturate(var(--ig-lq-sat));
+            backdrop-filter:url(#bd1-lq-lens) blur(var(--ig-lq-blur)) saturate(var(--ig-lq-sat)) }
+}
+/* tintas — a cor da peça, sempre um token */
+.ig-lq--cyan{ --lq-tint:var(--ig-neon-cyan); --lq-mix:14% }
+.ig-lq--amber{ --lq-tint:var(--ig-amber); --lq-mix:16% }
+.ig-lq--ok{ --lq-tint:var(--ig-ok); --lq-mix:14% }
+.ig-lq--fire{ --lq-tint:var(--ig-fire); --lq-mix:16% }
+/* primário: líquido quente quase cheio — texto ink-on-warm (contraste medido 9.4:1) */
+.ig-lq--warm{ --lq-tint:var(--ig-warm); --lq-mix:62%; color:#0c0e13;
+  background:linear-gradient(180deg,
+    color-mix(in oklab, var(--ig-tahoe) 88%, transparent),
+    color-mix(in oklab, var(--ig-warm) 94%, transparent)) }
+
+/* BOTÃO LÍQUIDO — acende a cor no hover, espreme como gota ao apertar, volta com mola */
+.ig-lq-btn{ display:inline-flex; align-items:center; gap:9px; cursor:pointer;
+  font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.16em;
+  font-size:clamp(10px,1.9vmin,12px); padding:11px clamp(16px,2.8vw,22px); border-radius:9999px }
+.ig-lq-btn:hover{ --lq-mix:24%; transform:translateY(-2px) }
+.ig-lq-btn.ig-lq--warm:hover{ --lq-mix:70% }
+.ig-lq-btn:active{ transform:translateY(1px) scale(1.035,.93); transition-duration:.12s }
+.ig-lq-btn:focus-visible{ outline:2px solid var(--ig-cyan); outline-offset:3px }
+
+/* PÍLULA LÍQUIDA — o chip de estado com a gota dentro */
+.ig-lq-pill{ display:inline-flex; align-items:center; gap:8px; padding:6px 13px 6px 10px;
+  border-radius:9999px; font-family:var(--ig-label); text-transform:uppercase;
+  letter-spacing:.16em; font-size:clamp(9px,1.7vmin,11px) }
+
+/* GOTA NEON — bolinha de estado: vidro por fora, neon por dentro */
+.ig-bead{ --bead:var(--ig-ok); position:relative; flex:0 0 auto; width:11px; height:11px;
+  border-radius:50%;
+  background:radial-gradient(circle at 50% 62%,
+    color-mix(in oklab, var(--bead) 70%, white) 0 22%, var(--bead) 48%,
+    color-mix(in oklab, var(--bead) 55%, black) 100%);
+  box-shadow:0 0 0 1px color-mix(in oklab, var(--bead) 45%, transparent),
+             0 0 7px var(--bead),
+             0 0 16px color-mix(in oklab, var(--bead) 45%, transparent),
+             inset 0 -2px 2px rgba(0,0,0,.35) }
+/* a luz única pega o alto-esquerda da gota: um lábio pequeno, não um orb brilhante */
+.ig-bead::after{ content:""; position:absolute; left:20%; top:10%; width:44%; height:30%;
+  border-radius:50%; transform:rotate(-24deg);
+  background:linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,0)) }
+/* halo que respira — só quando há dado chegando */
+.ig-bead::before{ content:""; position:absolute; inset:-5px; border-radius:50%; opacity:0;
+  background:radial-gradient(circle, color-mix(in oklab, var(--bead) 60%, transparent), transparent 70%) }
+.ig-bead--warn{ --bead:var(--ig-warm) }
+.ig-bead--crit{ --bead:var(--ig-fire) }
+.ig-bead--cyan{ --bead:var(--ig-neon-cyan) }
+.ig-bead--off{ --bead:var(--ig-dim2); box-shadow:inset 0 -2px 2px rgba(0,0,0,.35), 0 0 0 1px rgba(var(--ig-sfc),.12) }
+.ig-bead--off::before{ display:none }
+.is-live .ig-bead::before,.ig-bead.is-live::before{ animation:ig-bead-breathe 2.6s var(--ig-ease-effect) infinite }
+.ig-bead--crit::before{ inset:-2px; background:none; border:1.5px solid var(--bead);
+  animation:ig-bead-ripple 1.5s var(--ig-ease-emph) infinite }
+.ig-bead.is-drop{ animation:ig-bead-drop .62s var(--ig-spring) }
+@keyframes ig-bead-breathe{ 0%,100%{opacity:.25;transform:scale(.8)} 50%{opacity:.9;transform:scale(1.25)} }
+@keyframes ig-bead-ripple{ 0%{opacity:.9;transform:scale(1)} 100%{opacity:0;transform:scale(2.4)} }
+@keyframes ig-bead-drop{ 0%{transform:scale(1)} 25%{transform:scale(1.4,.68)} 55%{transform:scale(.86,1.18)} 100%{transform:scale(1)} }
+
+@media (prefers-reduced-transparency:reduce){
+  .ig-lq{ -webkit-backdrop-filter:none; backdrop-filter:none;
+    background:color-mix(in oklab, var(--lq-tint) var(--lq-mix), rgb(18,20,26)) }
+  .ig-lq--warm{ background:linear-gradient(180deg, var(--ig-tahoe), var(--ig-warm)) }
+}
+@media (prefers-reduced-motion:reduce){
+  .ig-lq,.ig-lq-btn{ transition:none !important }
+  .ig-bead::before,.ig-bead.is-drop{ animation:none !important }
+  .ig-bead--crit::before{ opacity:.6 }
+}
+
+/* CARTÃO LÍQUIDO — o terceiro mais usado. Vidro grosso, tinta fraca: o dado precisa de fundo calmo */
+.ig-lq-card{ --lq-mix:7%; border-radius:22px; padding:clamp(16px,3vw,22px);
+  display:flex; flex-direction:column; gap:6px }
+.ig-lq-card--abre{ cursor:pointer }
+.ig-lq-card--abre:hover{ --lq-mix:14%; transform:translateY(-2px) }
+.ig-lq-card--abre:active{ transform:translateY(1px) scale(.99) }
+.ig-lq-card--abre:focus-visible{ outline:2px solid var(--ig-cyan); outline-offset:3px }
+.ig-lq-card__rotulo{ font-family:var(--ig-label,"Space Mono",monospace); text-transform:uppercase;
+  letter-spacing:.26em; font-size:11px; color:var(--ig-dim) }
+.ig-lq-card__valor{ font-family:var(--ig-display,"Hanken Grotesk",sans-serif); font-weight:300;
+  font-size:clamp(26px,5vw,34px); line-height:1; color:var(--ig-ink); margin-top:6px;
+  font-variant-numeric:tabular-nums }
+.ig-lq-card__regua{ font-size:13px; color:var(--ig-dim) }
+.ig-lq-card .ig-lq-pill{ align-self:flex-start; margin-top:6px }
+@media (prefers-reduced-motion:reduce){ .ig-lq-card{ transition:none !important } }

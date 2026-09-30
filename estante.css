@@ -1,0 +1,766 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   BIBLIOTECA PSN · v3 — O RACK
+   Consome o Intergalactic atual (intergalactic.css = components/bundle.css).
+   Peças do sistema: Chassi, Nicho, Visor, Lente, Mostrador, Sede, Janela,
+   Lâmpada, VU de células, Gravado, Liquid, Bead.
+   Peça nova desta tela: ESTANTE (a parede de lombadas).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* dígitos de visor de verdade: DSEG7 Classic, self-host (zero CDN) */
+@font-face{ font-family:"DSEG7 Classic"; src:url("dseg7.woff2") format("woff2");
+  font-weight:400; font-style:italic; font-display:swap }
+
+:root{ --surface-space:#050608; --ink:#f3f1ec; --dim:#969cab; --dim-2:#5a6070;
+  --line:rgba(255,255,255,.06) }
+*{box-sizing:border-box}
+html{ -webkit-text-size-adjust:100% }
+html{ background:var(--surface-space) }
+body{ margin:0; color:var(--ink); font-family:var(--ig-sans); font-size:15px; line-height:1.5;
+  padding:clamp(18px,4vw,44px) clamp(14px,3vw,26px) calc(72px + env(safe-area-inset-bottom,0px));
+  -webkit-tap-highlight-color:transparent;
+  /* a parede onde o rack está: grão, luz única alta à esquerda, chão escuro */
+  background:
+    var(--ig-grao),
+    radial-gradient(130% 62% at 50% 112%, rgba(0,0,0,.75), transparent 64%),
+    linear-gradient(180deg, #0e1017 0%, #090a11 44%, #040507 100%);
+  background-attachment:fixed }
+body::before{ content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(120% 70% at 8% -10%, rgba(232,174,94,.10), transparent 55%) }
+img{max-width:100%}
+[hidden]{display:none!important}
+:focus-visible{ outline:2px solid var(--ig-cyan); outline-offset:3px }
+
+/* ── o rack ───────────────────────────────────────────────────────────────── */
+.rack{ max-width:860px; margin:0 auto; display:flex; flex-direction:column; gap:clamp(16px,2.6vw,24px) }
+.un{ display:flex; flex-direction:column; gap:16px }
+/* o metal lê os tokens do tema do jogo, em vez do cinza fixo do arsenal */
+.ig-chassi{ border-radius:22px; padding:clamp(18px,3.4vw,28px);
+  background:var(--ig-grao),
+  /* fio usinado nas duas laterais: a chapa tem espessura */
+  linear-gradient(90deg, rgba(255,255,255,.07) 0 1.5px, rgba(0,0,0,.45) 1.5px 3px,
+    transparent 3px calc(100% - 3px), rgba(0,0,0,.45) calc(100% - 3px) calc(100% - 1.5px),
+    rgba(255,255,255,.05) calc(100% - 1.5px) 100%),
+  repeating-linear-gradient(90deg, rgba(255,255,255,.024) 0 1px, transparent 1px 3px),
+  linear-gradient(180deg, var(--ig-metal2), var(--ig-metal1) 44%, var(--ig-metal0));
+  box-shadow:0 44px 80px -30px rgba(0,0,0,.9), 0 4px 0 -1px rgba(0,0,0,.6),
+             inset 0 1px 0 rgba(255,255,255,.11), inset 0 0 0 1px rgba(0,0,0,.5) }
+.ig-nicho{ border-radius:16px }
+.ig-lente{ border-radius:12px }
+.ig-nicho > .ig-visor, .ig-nicho > .registrador{ border-radius:12px }
+.un-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
+.un-top .ig-gravado{ display:flex; align-items:center; gap:9px }
+.un-top .ig-gravado b{ color:var(--ig-amber); font-weight:400; opacity:.85 }
+.sulco{ height:1px; border:0; margin:2px 0;
+  background:linear-gradient(90deg, transparent, rgba(0,0,0,.6) 12%, rgba(0,0,0,.6) 88%, transparent);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) }
+
+h1{ font-family:var(--ig-display); font-weight:300; font-size:clamp(27px,6vw,40px); line-height:1.04;
+  letter-spacing:-.015em; margin:4px 0 4px; text-wrap:balance }
+h2{ font-family:var(--ig-display); font-weight:300; font-size:21px; line-height:1.05; margin:0 }
+.lede{ color:var(--ig-dim); margin:0; font-size:13.5px; max-width:52ch }
+
+/* ── UNIDADE 01 · a janela do aparelho ────────────────────────────────────── */
+.janela-nicho{ position:relative }
+.cena{ position:relative; height:clamp(150px,32vw,228px); border-radius:12px 12px 0 0; overflow:hidden;
+  background:#07080b }
+.cena svg.scene{ position:absolute; inset:0; width:100%; height:100%; display:none }
+.cena svg.scene.def{ display:block }
+body[data-game="mafia-oc"] .scene.def, body[data-game="gta6"] .scene.def,
+body[data-game="mad-max"] .scene.def{ display:none }
+body[data-game="mafia-oc"] .scene.mafia{display:block}
+body[data-game="gta6"] .scene.gta{display:block}
+body[data-game="mad-max"] .scene.waste{display:block}
+/* a moldura do vidro escurece as bordas da cena: ela está DENTRO do aparelho */
+.cena::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(130% 120% at 22% 8%, transparent 42%, rgba(0,0,0,.55) 100%) }
+.selo{ position:absolute; top:11px; left:11px; z-index:3 }
+.janela-nicho .ig-visor{ border-radius:0 0 12px 12px; padding:13px 16px 14px }
+.vis-linha{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px }
+.ig-visor__num.timer{ font-size:clamp(30px,8.4vw,50px); letter-spacing:.01em }
+.vis-sub{ position:relative; z-index:1; margin-top:9px; font-family:var(--ig-mono); font-size:11px;
+  letter-spacing:.08em; color:var(--fos); opacity:.72; text-shadow:0 0 6px var(--fos-glow) }
+.deck:not(.is-live) .ig-visor__num.timer{ opacity:.5 }
+.deck:not(.is-live) .vis-sub{ opacity:.55 }
+
+.un-id{ display:flex; align-items:flex-end; justify-content:space-between; gap:14px; flex-wrap:wrap }
+.sel{ display:flex; min-width:0 }
+select,input{ font:inherit; font-size:13.5px; color:var(--ink); background:linear-gradient(180deg,#05060a,#0c0e13);
+  border:1px solid rgba(255,255,255,.07); border-radius:13px; padding:10px 13px; max-width:100%;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.85), inset 0 -1px 0 rgba(255,255,255,.07) }
+select{ max-width:min(52vw,230px) }
+input[type=search]{ flex:1; min-width:150px }
+
+.transport{ position:relative; isolation:isolate; display:flex; align-items:center;
+  gap:clamp(13px,2.6vw,22px); flex-wrap:wrap; border-radius:18px;
+  padding:clamp(16px,3vw,22px) clamp(16px,3vw,24px);
+  background:radial-gradient(135% 160% at 16% -14%, #2d323e, #13151c 74%);
+  box-shadow:inset 0 3px 7px rgba(0,0,0,.82), inset 0 -1px 0 rgba(255,255,255,.07),
+             0 1px 0 rgba(255,255,255,.05) }
+/* A GRELHA · é ela que o vidro dobra. Sem textura atrás, líquido vira plástico —
+   medido em 29/09, com o arsenal e com a lente de deslocamento de verdade. */
+.grelha{ position:absolute; inset:0; border-radius:inherit; z-index:0; pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,.34) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(0deg,  rgba(255,255,255,.035) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(0deg,  rgba(0,0,0,.30) 0 1px, transparent 1px 5px);
+  -webkit-mask:radial-gradient(58% 190% at 16% 50%, #000 32%, transparent 100%);
+          mask:radial-gradient(58% 190% at 16% 50%, #000 32%, transparent 100%) }
+/* TECLA DE VIDRO · o corpo é vidro de verdade (liquid-glass.js); o aro é a luz única */
+.vkey{ position:relative; z-index:1; flex:none; border:0; padding:0; cursor:pointer;
+  border-radius:50%; display:grid; place-items:center; background:transparent;
+  width:clamp(62px,15vw,84px); height:clamp(62px,15vw,84px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42), inset 0 -12px 20px -16px rgba(0,0,0,.75),
+             0 0 0 1px rgba(255,255,255,.08), 0 18px 28px -15px rgba(0,0,0,.95);
+  transition:transform .11s, box-shadow .11s, opacity .3s }
+.vkey::after{ content:""; position:absolute; inset:0; border-radius:inherit; z-index:1;
+  pointer-events:none;
+  background:linear-gradient(158deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 34%,
+    transparent 58%, rgba(255,255,255,.05)) }
+.vkey svg{ position:relative; z-index:2; width:clamp(19px,4.4vw,25px); height:auto; fill:#e9edf4;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.75)) }
+.vkey:active{ transform:translateY(3px) scale(.985);
+  box-shadow:inset 0 3px 7px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06),
+             0 5px 9px -7px rgba(0,0,0,.9) }
+.vkey[disabled]{ opacity:.34; cursor:default; pointer-events:none }
+.tkey{ position:relative; z-index:1; display:grid; justify-items:center; gap:7px }
+.tkey .ig-gravado{ font-size:9px; letter-spacing:.3em }
+/* o play tem lâmpada âmbar acesa por dentro do vidro */
+.vkey--play{ box-shadow:inset 0 1px 0 rgba(255,255,255,.5),
+  0 0 0 1px color-mix(in oklab, var(--ig-amber) 48%, transparent),
+  0 0 30px -6px var(--ig-glow-amber), 0 18px 28px -15px rgba(0,0,0,.95) }
+.vkey--play::before{ content:""; position:absolute; inset:21%; border-radius:50%; z-index:1;
+  background:radial-gradient(circle at 42% 32%, var(--ig-amber-soft), var(--ig-amber) 46%, var(--ig-amber-deep));
+  box-shadow:0 0 18px -4px var(--ig-glow-amber) }
+.vkey--play svg{ fill:#1b1206; filter:none }
+.deck.is-live .vkey--play::before{ opacity:.28 }
+
+/* ── TECLA DE PAINEL ───────────────────────────────────────────────────────
+   Medido em 29/09: vidro líquido sobre chapa lisa não tem o que refratar e
+   vira plástico. Controle que mora no metal é TECLA: assenta numa sede
+   fresada, afunda ao apertar e acende quando está ligada. O líquido fica só
+   onde tem cena atrás. */
+.tecla{ font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.14em;
+  font-size:10.5px; line-height:1; color:#c3c9d4; cursor:pointer; border:0;
+  padding:11px 16px; border-radius:13px;
+  background:linear-gradient(180deg,#30343e,#212530 48%,#171a22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 -2px 3px rgba(0,0,0,.55),
+             0 2px 0 rgba(0,0,0,.6), 0 7px 14px -8px rgba(0,0,0,.95);
+  text-shadow:0 -1px 0 rgba(0,0,0,.8), 0 1px 0 rgba(255,255,255,.07);
+  transition:transform .09s, box-shadow .09s, color .25s var(--ig-ease-effect) }
+.tecla:hover{ color:#e7ebf2 }
+.tecla:active{ transform:translateY(2px);
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.85), inset 0 -1px 0 rgba(255,255,255,.05) }
+/* acesa: a tecla ligada tem lâmpada atrás dela */
+.tecla.acesa{ color:#0c0e13; text-shadow:none;
+  background:linear-gradient(180deg,var(--ig-amber-soft),var(--ig-amber) 52%,var(--ig-amber-deep));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45), inset 0 -2px 4px rgba(0,0,0,.28),
+             0 2px 0 rgba(0,0,0,.55), 0 0 18px -3px var(--ig-glow-amber) }
+.tecla.acesa-perigo{ color:#1a0705; text-shadow:none;
+  background:linear-gradient(180deg,#ff9b90,#ff5147 52%,#b62b22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 4px rgba(0,0,0,.3),
+             0 2px 0 rgba(0,0,0,.55), 0 0 18px -3px var(--ig-glow-red) }
+
+/* ── A GUIA · o aparelho diz a próxima jogada ─────────────────────────────── */
+.guia{ margin:0; flex:1; min-width:190px; font-size:13.5px; line-height:1.45; color:var(--ig-dim) }
+.guia b{ display:block; color:var(--ig-ink); font-weight:500; font-size:16px; margin-bottom:1px }
+/* placa de primeira vez: some depois da primeira sessão e nunca mais volta */
+.primeira{ display:grid; gap:9px; padding:16px 18px; border-radius:15px;
+  background:linear-gradient(180deg, rgba(0,0,0,.4), rgba(0,0,0,.14));
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.6), inset 0 -1px 0 rgba(255,255,255,.06) }
+.primeira ol{ margin:0; padding:0; list-style:none; display:grid; gap:7px }
+.primeira li{ display:flex; gap:11px; align-items:baseline; font-size:14.5px; color:var(--ig-dim) }
+.primeira li b{ flex:none; width:19px; height:19px; border-radius:50%; display:grid; place-items:center;
+  font-family:var(--ig-mono); font-size:10px; font-weight:400; color:var(--ig-amber);
+  background:radial-gradient(circle at 50% 35%,#0d0f14,#05060a);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.9), 0 0 8px -3px var(--ig-glow-amber) }
+.primeira li span{ min-width:0 }
+
+/* ── A PLACA · o nome do jogo gravado na chapa ────────────────────────────── */
+.placa{ flex:1; padding:14px 17px 15px; border-radius:15px; min-width:0;
+  background:linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,.10));
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.55), inset 0 -1px 0 rgba(255,255,255,.055),
+             0 1px 0 rgba(255,255,255,.05) }
+.placa h1{ color:#d9dee7; text-shadow:0 -1px 0 rgba(0,0,0,.85), 0 1px 0 rgba(255,255,255,.08) }
+.ig-lq-btn[disabled]{ opacity:.32; cursor:default; pointer-events:none }
+.research{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+.research .count{ font-family:var(--ig-mono); font-size:15px; color:var(--ig-neon-cyan) }
+.research.over .count,.research.over .research-note{ color:#ff8b83 }
+.research-note{ font-size:12.5px; color:var(--ig-dim) }
+
+/* ── UNIDADE 02 · mostradores ─────────────────────────────────────────────── */
+.grade3{ display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:14px }
+.grade3 .ig-visor{ padding:12px 14px 11px }
+.grade3 .ig-visor__num{ font-size:clamp(26px,5vw,34px) }
+.mostr-topo{ display:flex; align-items:baseline; justify-content:space-between; gap:8px }
+.mostr-topo .pct{ font-family:var(--ig-mono); font-size:11px; color:var(--fos); opacity:.7;
+  text-shadow:0 0 6px var(--fos-glow) }
+.ig-regua-gravada{ display:block; line-height:1.35 }
+
+/* ── o registrador de fita (14 dias) ──────────────────────────────────────── */
+.registrador{ display:block; width:100%; height:clamp(104px,22vw,132px); border-radius:10px;
+  background:radial-gradient(120% 100% at 45% 30%, #14130f, #090a08 74%);
+  box-shadow:inset 0 0 22px rgba(0,0,0,.85) }
+.registrador svg{ display:block; width:100%; height:100% }
+.dias{ display:grid; grid-template-columns:repeat(14,1fr); gap:3px; margin-top:7px }
+.dias span{ font-family:var(--ig-mono); font-size:9.5px; color:#8f95a3; text-align:center;
+  text-shadow:0 -1px 0 rgba(0,0,0,.7), 0 1px 0 rgba(255,255,255,.06) }
+.dias span.hoje{ color:var(--ig-amber) }
+.previsao{ margin:0; font-size:14px; color:var(--ig-dim); line-height:1.55 }
+.previsao b{ color:var(--ig-ink); font-weight:500 }
+.previsao .cab{ display:block; font-family:var(--ig-display); font-weight:300; font-size:20px;
+  color:var(--ig-ink); line-height:1.15; margin-bottom:4px }
+.chips{ display:flex; flex-wrap:wrap; gap:7px; align-items:center }
+
+/* ── UNIDADE 03 · A ESTANTE ───────────────────────────────────────────────── */
+/* A peça agora é do arsenal: .ig-estante / .ig-lombada. Aqui só o que é desta tela. */
+.estante-ctl{ display:flex; gap:9px; align-items:center; flex-wrap:wrap }
+
+/* ══════════ A SALA · a prateleira é a porta de entrada          (30/09/2026) ══════════
+   O móvel copia um que existe: o cubo KALLAX preto-marrom da IKEA, com uma vitrine
+   de vidro no alto no espírito da DETOLF, a estante de colecionador. Os preferidos
+   ficam de frente, atrás do vidro, com a fita de luz quente no alto. A estante
+   inteira (as lombadas) mora no cubo de baixo. O aparelho fica a um toque.
+   Luz única, alta à esquerda: a sombra das caixas cai pra baixo e pra direita. */
+body[data-vista="sala"] .rack{ display:none }
+body[data-vista="aparelho"] .sala{ display:none }
+.sala{ max-width:860px; margin:0 auto; display:flex; flex-direction:column; gap:clamp(14px,2.4vw,20px) }
+.sala-cab{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px 16px; flex-wrap:wrap; padding:0 4px }
+.sala-tit{ margin:2px 0 3px }
+.sala-lede{ margin:0; color:var(--ig-dim); font-size:14.5px }
+#vaiAparelho, #vaiSala{ display:inline-flex; align-items:center; gap:8px }
+#vaiSala svg{ width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round }
+.rack-volta{ display:flex }
+
+/* ══════════ O MÓVEL EM 3D (30/09/2026) ══════════
+   O móvel é um objeto de verdade: cada cubo tem fundo, teto, piso e duas paredes que vão
+   para trás. As caixas ficam de pé lá dentro, com frente, lateral e topo. A câmera é o olho
+   de quem olha: desce e sobe com a rolagem da página e, no computador, segue o mouse.
+   Regra do Safari: nada de overflow, filter ou opacity nos elementos que carregam o 3D
+   (só nas faces, que são folhas). Luz única, alta à esquerda; a fita de luz fica no teto. */
+.movel{ --fundo:clamp(74px, 15vw, 128px); position:relative; border-radius:5px; padding:clamp(11px,2.2vw,15px);
+  display:flex; flex-direction:column; gap:clamp(11px,2.2vw,15px);
+  perspective:clamp(620px, 140vw, 1150px); perspective-origin:50% 38%;
+  background:
+    var(--ig-grao),
+    repeating-linear-gradient(180deg, rgba(255,214,170,.026) 0 1px, transparent 1px 4px, rgba(0,0,0,.10) 4px 5px, transparent 5px 9px, rgba(255,214,170,.014) 9px 10px, transparent 10px 17px),
+    linear-gradient(104deg, #2c1f16, #1b130e 42%, #0e0a07);
+  box-shadow:0 50px 90px -34px rgba(0,0,0,.95), 0 3px 0 -1px rgba(0,0,0,.7),
+    inset 0 1px 0 rgba(255,226,190,.16), inset 1px 0 0 rgba(255,226,190,.07), inset 0 -1px 0 rgba(0,0,0,.6) }
+/* cada cubo é uma caixa aberta na frente; a boca ganha um fio de luz em cima e à esquerda */
+.vitrine, .acervo{ position:relative; border-radius:2px; transform-style:preserve-3d; background:none;
+  box-shadow:inset 0 1px 0 rgba(0,0,0,.9), inset 1px 0 0 rgba(0,0,0,.7) }
+
+/* as cinco chapas do cubo. O veio da madeira segue cada chapa */
+.c3{ position:absolute; pointer-events:none; display:block }
+.c3::after{ content:""; position:absolute; inset:0; background:var(--ig-grao) }
+.c3-fundo{ inset:0; transform:translateZ(calc(-1 * var(--fundo))) }
+.c3-teto{ left:0; right:0; top:0; height:var(--fundo); transform-origin:50% 0; transform:rotateX(-90deg) }
+.c3-piso{ left:0; right:0; bottom:0; height:var(--fundo); transform-origin:50% 100%; transform:rotateX(90deg) }
+.c3-esq{ left:0; top:0; bottom:0; width:var(--fundo); transform-origin:0 50%; transform:rotateY(90deg) }
+.c3-dir{ right:0; top:0; bottom:0; width:var(--fundo); transform-origin:100% 50%; transform:rotateY(-90deg) }
+
+/* a vitrine: a fita de luz no teto banha o fundo; quem pega mais luz é a parede da direita,
+   que está virada para a luz alta da esquerda */
+.vitrine{ --vpx:clamp(10px,2.6vw,20px); padding:24px var(--vpx) 14px; pointer-events:none }
+/* no 3D, quem está mais perto pega o toque, até moldura transparente. A vitrine não pega nada;
+   só as caixas pegam (senão a moldura da frente engole o toque que era da caixa lá dentro) */
+.vitrine .vit-cx{ pointer-events:auto }
+.vitrine .c3-fundo{ background:
+    radial-gradient(90% 55% at 24% 0%, rgba(255,196,120,.26), transparent 72%),
+    linear-gradient(180deg, #1a120c, #0b0806 78%) }
+.vitrine .c3-teto{ background:linear-gradient(180deg, #2b1e14, #0f0a07) }
+.vitrine .c3-piso{ background:linear-gradient(0deg, #2a1d13, #120c08) }
+.vitrine .c3-esq{ background:linear-gradient(90deg, #1d140d, #0c0806),
+    linear-gradient(180deg, rgba(255,200,130,.10), transparent 60%); background-blend-mode:screen }
+.vitrine .c3-dir{ background:linear-gradient(270deg, #3a2819, #160f0a),
+    linear-gradient(180deg, rgba(255,200,130,.16), transparent 60%); background-blend-mode:screen }
+/* a fita de luz: presa no teto, perto da boca, virada para baixo */
+.vit-led{ position:absolute; left:12px; right:12px; top:9px; height:5px; border-radius:2px; pointer-events:none;
+  background:linear-gradient(90deg, #ffe6ba, #ffd296 55%, #e9b46a);
+  box-shadow:0 0 9px 1px rgba(255,202,132,.6), 0 8px 26px 8px rgba(255,190,110,.16) }
+
+.vit-prats{ display:flex; flex-direction:column; gap:16px; transform-style:preserve-3d }
+.vit-prat{ position:relative; display:flex; flex-direction:column; transform-style:preserve-3d }
+/* as caixas ficam no meio da profundidade, de pé em cima do vidro */
+.vit-fila{ display:flex; gap:clamp(6px,1.8vw,14px); align-items:flex-end; justify-content:center; padding:0 2px;
+  transform-style:preserve-3d; transform:translateZ(calc(var(--fundo) * -.46)) }
+/* a prateleira de vidro vai de parede a parede (com 2 px de folga: encostada, o Chrome deixa a parede
+   tapar a ponta do vidro) e do fundo até a boca; só o aro da frente brilha */
+.vit-tampo{ position:relative; display:block; height:6px; margin:0 calc(-1 * var(--vpx) + 2px); transform-style:preserve-3d;
+  background:linear-gradient(180deg, rgba(222,240,246,.36), rgba(205,228,236,.12));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34), 0 6px 10px -5px rgba(0,0,0,.8) }
+.vit-tampo::before{ content:""; position:absolute; left:0; right:0; top:0; height:var(--fundo);
+  transform-origin:50% 0; transform:rotateX(-90deg);
+  background:linear-gradient(180deg, rgba(210,232,240,.20), rgba(205,228,236,.05)) }
+.vit-placa{ align-self:center; margin-top:7px; padding:2px 9px; border-radius:2px;
+  font-family:var(--ig-label); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:rgba(236,214,178,.72); background:linear-gradient(180deg, #2a1f16, #1a130d);
+  box-shadow:inset 0 1px 0 rgba(0,0,0,.6), 0 1px 0 rgba(255,226,190,.08) }
+/* o vidro da porta: tinta leve e o aro fixo da luz no alto à esquerda, sem reflexo */
+.vit-vidro{ position:absolute; inset:0; pointer-events:none; border-radius:2px; transform:translateZ(1px);
+  background:linear-gradient(180deg, rgba(190,215,235,.035), rgba(190,215,235,.012));
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.13), inset -1px -1px 0 rgba(0,0,0,.4) }
+
+/* a caixa de verdade: frente (a capa), duas laterais (a lombada impressa), topo e a sombra no vidro */
+.vit-cx{ --cor:#333; --esp:clamp(8px,1.5vw,13px); --lev:0px; --puxa:0px;
+  position:relative; flex:1 1 0; min-width:0; max-width:132px; aspect-ratio:1/1.26;
+  display:block; padding:0; border:0; background:none; cursor:pointer; transform-style:preserve-3d;
+  transform:translate3d(0, var(--lev), var(--puxa));
+  transition:transform .42s var(--ig-spring) }
+.vit-cx:hover, .vit-cx:focus-visible{ --lev:-3px; --puxa:calc(var(--fundo) * .30) }
+.vit-cx:active{ --lev:0px; --puxa:calc(var(--fundo) * .18); transition-duration:.1s }
+.vit-cx.saiu{ visibility:hidden }
+.cx3{ position:absolute; display:block; pointer-events:none }
+.cx3-frente{ inset:0; display:flex; flex-direction:column; overflow:hidden; border-radius:3px; pointer-events:auto;
+  background:color-mix(in oklab, var(--cor) 40%, #07080b); transform:translateZ(calc(var(--esp) / 2));
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.24), inset -1px -1px 0 rgba(0,0,0,.55) }
+.cx3-esq, .cx3-dir{ top:1px; bottom:1px; width:var(--esp) }
+.cx3-esq{ left:0; transform-origin:0 50%; transform:translateZ(calc(var(--esp) / -2)) rotateY(-90deg);
+  background:linear-gradient(90deg, color-mix(in oklab, var(--cor) 70%, #fff 8%), color-mix(in oklab, var(--cor) 60%, #000)) }
+.cx3-dir{ right:0; transform-origin:100% 50%; transform:translateZ(calc(var(--esp) / -2)) rotateY(90deg);
+  background:linear-gradient(270deg, color-mix(in oklab, var(--cor) 55%, #000), color-mix(in oklab, var(--cor) 30%, #000)) }
+.cx3-topo{ left:1px; right:1px; top:0; height:var(--esp); transform-origin:50% 0;
+  transform:translateZ(calc(var(--esp) / -2)) rotateX(90deg);
+  background:linear-gradient(0deg, #2f3440, #1a1e27); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06) }
+.vit-cx[data-plat="PS4"] .cx3-topo{ background:linear-gradient(0deg, #2a5bc2, #123a8f) }
+.vit-cx[data-plat="PS5"] .cx3-topo{ background:linear-gradient(0deg, #eef0f4, #c9ccd4) }
+/* a sombra deitada no vidro: cai para trás e para a direita, longe da luz */
+.cx3-sombra{ left:-4%; right:-18%; bottom:0; height:calc(var(--fundo) * .5); transform-origin:50% 100%;
+  transform:translateZ(calc(var(--esp) / -2)) rotateX(90deg);
+  background:radial-gradient(60% 90% at 44% 100%, rgba(0,0,0,.62), transparent 72%) }
+.cx3-frente .banda{ flex:none; height:11%; display:grid; place-items:center;
+  font-family:var(--ig-label); font-size:clamp(6.5px,1.6vw,8px); font-weight:600; letter-spacing:.08em }
+.cx3-frente .banda[data-plat="PS5"]{ color:#10131a; background:linear-gradient(180deg,#f6f7f9,#d6d9e0); box-shadow:inset 0 -1px 0 rgba(0,0,0,.35) }
+.cx3-frente .banda[data-plat="PS4"]{ color:#eef3ff; background:linear-gradient(180deg,#2a63d4,#123a8f); box-shadow:inset 0 -1px 0 rgba(0,0,0,.45) }
+.cx3-frente img, .cx3-frente svg{ display:block; width:100%; flex:1; min-height:0; object-fit:cover }
+.vit-selo{ position:absolute; right:5px; bottom:6px; padding:2px 5px; border-radius:2px;
+  font-family:var(--ig-mono); font-size:9.5px; color:#2a1406;
+  background:linear-gradient(180deg,#ffe38a,#f1bd45); box-shadow:0 1px 2px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.55) }
+
+/* o cubo de baixo: a estante inteira, com a mesma madeira e uma luz mais fraca */
+.acervo{ display:flex; flex-direction:column; gap:12px; padding:14px clamp(10px,2.4vw,16px) 12px }
+.acervo .c3-fundo{ background:radial-gradient(70% 60% at 14% 0%, rgba(255,196,120,.08), transparent 72%),
+    linear-gradient(180deg, #120d09, #0a0706) }
+.acervo .c3-teto{ background:linear-gradient(180deg, #1f160f, #0c0806) }
+.acervo .c3-piso{ background:linear-gradient(0deg, #231910, #100b07) }
+.acervo .c3-esq{ background:linear-gradient(90deg, #18110b, #0a0705) }
+.acervo .c3-dir{ background:linear-gradient(270deg, #2c1f14, #120c08) }
+.acervo > :not(.c3){ position:relative; transform:translateZ(1px) }
+@media (max-width:480px){ .vit-prats{ gap:13px } .vitrine{ padding-top:22px } }
+@media (prefers-reduced-motion:reduce){ .vit-cx{ transition:none } }
+
+/* ── UNIDADE 04 · diário ──────────────────────────────────────────────────── */
+.dia{ display:flex; flex-direction:column }
+.dia-cab{ display:flex; justify-content:space-between; align-items:baseline; padding:0 3px 7px }
+.linha{ display:flex; align-items:center; gap:12px; padding:10px 4px;
+  border-top:1px solid rgba(255,255,255,.055); box-shadow:0 -1px 0 rgba(0,0,0,.45) }
+.linha .hora{ font-family:var(--ig-mono); font-size:11.5px; letter-spacing:.02em; color:#7d8390;
+  white-space:nowrap; flex:none }
+.linha .nome{ flex:1; min-width:0; font-size:14px; color:var(--ig-dim);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.linha .dur{ font-family:var(--ig-mono); color:var(--ig-neon-cyan); font-size:13.5px;
+  white-space:nowrap; flex:none }
+.x{ width:27px; height:27px; border-radius:50%; border:1px solid rgba(255,255,255,.09);
+  background:transparent; color:var(--dim-2); cursor:pointer; flex:none; font-size:15px; line-height:1 }
+.x:hover{ color:#ff8b83; border-color:rgba(255,81,71,.45) }
+.vazio{ padding:16px 18px; color:var(--ig-dim); font-size:14px; border-radius:14px;
+  background:rgba(255,255,255,.02); border:1px solid var(--line) }
+.manual{ display:flex; flex-wrap:wrap; gap:8px; align-items:center }
+.manual input[type=number]{ width:88px }
+.link{ font:inherit; font-size:12px; color:var(--ig-neon-cyan); background:none; border:none;
+  cursor:pointer; padding:4px 0; text-decoration:underline; text-underline-offset:3px }
+
+/* ── rodapé, toast ────────────────────────────────────────────────────────── */
+.rodape{ font-size:12px; color:#7d8390; line-height:1.65; padding:0 4px;
+  text-shadow:0 -1px 0 rgba(0,0,0,.7), 0 1px 0 rgba(255,255,255,.05) }
+.toast{ position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  transform:translateX(-50%) translateY(20px); opacity:0; padding:11px 16px; font-size:14px;
+  border-radius:14px; z-index:80; pointer-events:none; max-width:calc(100% - 32px);
+  background:rgba(10,12,17,.92); border:1px solid rgba(255,255,255,.1); color:var(--ink);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  box-shadow:0 22px 46px -20px rgba(0,0,0,.9);
+  transition:opacity .35s, transform .35s cubic-bezier(.22,1,.36,1) }
+.toast.on{ opacity:1; transform:translateX(-50%) }
+@media (prefers-reduced-motion:reduce){ .toast{transition:none} }
+
+@media (max-width:480px){
+  .un-id{ gap:10px } .sel{ width:100% } select{ max-width:100% }
+}
+
+/* ═══════════════ TEMAS POR JOGO ═══════════════
+   O tema troca a matéria do aparelho: a liga do metal, o fósforo do visor e a
+   tinta do líquido. A luz continua única, alta à esquerda, em todos eles. */
+
+/* --- Mafia: Sicília, virada do século --- */
+body[data-game="mafia-oc"]{
+  --surface-space:#0c0806; --ink:#f1e8d6; --dim:#a89a82; --dim-2:#6e604c; --line:rgba(241,232,214,.08);
+  --ig-ink:#f1e8d6; --ig-dim:#a89a82;
+  --ig-metal0:#100b07; --ig-metal1:#1d1510; --ig-metal2:#2e2319;
+  --ig-amber:#c9a45c; --ig-amber-soft:#ead6a4; --ig-amber-deep:#8a6a2e;
+  --ig-neon-cyan:#e3cf9d; --ig-data:#e3cf9d; --ig-cyan:#c9a45c; --ig-glow-cyan:rgba(201,164,92,.25);
+  --ig-warm:#b3261e; --ig-tahoe:#d24a3d; --ig-glow-amber:rgba(201,164,92,.30);
+  --ig-vfd:#f3dcaa; --ig-vfd-glow:rgba(243,200,120,.45); --ig-vfd-dim:rgba(243,220,170,.62);
+  --ig-beam-a:#b3261e; --ig-beam-b:#c9a45c; --ig-beam-c:#6b7a3a;
+}
+body[data-game="mafia-oc"]::before{ background:
+  radial-gradient(110% 70% at 10% -10%, rgba(201,140,70,.16), transparent 55%),
+  radial-gradient(140% 100% at 50% 120%, rgba(0,0,0,.6), transparent 60%) }
+body[data-game="mafia-oc"] h1,body[data-game="mafia-oc"] .previsao .cab{
+  font-family:"Playfair Display",Georgia,serif; font-style:italic; font-weight:400; letter-spacing:0 }
+
+/* --- GTA VI: Leonida ao entardecer --- */
+body[data-game="gta6"]{
+  --surface-space:#0a0514; --ink:#fff4fb; --dim:#b39cc4; --dim-2:#6f5a85; --line:rgba(255,255,255,.07);
+  --ig-ink:#fff4fb; --ig-dim:#b39cc4;
+  --ig-metal0:#0d0818; --ig-metal1:#1b1230; --ig-metal2:#2e2050;
+  --ig-amber:#ff2e88; --ig-amber-soft:#ff9fd2; --ig-amber-deep:#b0105a;
+  --ig-neon-cyan:#2ee6ff; --ig-data:#2ee6ff; --ig-cyan:#2ee6ff; --ig-glow-cyan:rgba(46,230,255,.30);
+  --ig-warm:#ff5ea8; --ig-tahoe:#ffb347; --ig-glow-amber:rgba(255,46,136,.35);
+  --ig-vfd:#8ff8ff; --ig-vfd-glow:rgba(46,230,255,.5); --ig-vfd-dim:rgba(143,248,255,.65);
+  --ig-beam-a:#ff2e88; --ig-beam-b:#2ee6ff; --ig-beam-c:#ffb347;
+}
+body[data-game="gta6"]::before{ background:
+  radial-gradient(90% 60% at 20% -10%, rgba(255,46,136,.20), transparent 60%),
+  radial-gradient(80% 60% at 100% 110%, rgba(46,230,255,.12), transparent 60%) }
+body[data-game="gta6"] h1{ font-family:"Bebas Neue",Impact,sans-serif; font-weight:400;
+  letter-spacing:.03em; text-transform:uppercase; font-size:clamp(38px,9vw,60px); line-height:.92 }
+
+/* --- Mad Max: deserto ao entardecer --- */
+body[data-game="mad-max"]{
+  --surface-space:#0a0704; --ink:#f3e6d2; --dim:#b09a7e; --dim-2:#6e5a42; --line:rgba(243,230,210,.08);
+  --ig-ink:#f3e6d2; --ig-dim:#b09a7e;
+  --ig-metal0:#100a05; --ig-metal1:#1d140b; --ig-metal2:#2f2113;
+  --ig-amber:#E8AE5E; --ig-amber-soft:#f3d29a; --ig-amber-deep:#a86a24;
+  --ig-neon-cyan:#5EEAD4; --ig-data:#5EEAD4; --ig-cyan:#5EEAD4; --ig-glow-cyan:rgba(94,234,212,.22);
+  --ig-warm:#c2410c; --ig-tahoe:#E8AE5E; --ig-glow-amber:rgba(232,174,94,.30);
+  --ig-vfd:#f3d29a; --ig-vfd-glow:rgba(232,174,94,.45); --ig-vfd-dim:rgba(243,210,154,.62);
+  --ig-beam-a:#c2410c; --ig-beam-b:#E8AE5E; --ig-beam-c:#5EEAD4;
+}
+body[data-game="mad-max"]::before{ background:
+  radial-gradient(120% 70% at 12% -10%, rgba(232,174,94,.16), transparent 55%),
+  radial-gradient(140% 100% at 50% 120%, rgba(0,0,0,.55), transparent 60%) }
+
+@keyframes sway{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
+.palm{ transform-box:fill-box; transform-origin:50% 100%; animation:sway 6s ease-in-out infinite }
+.palm.b{ animation-duration:7.5s; animation-delay:-2s }
+@keyframes shimmer{0%,100%{opacity:.35}50%{opacity:.8}}
+.glint{ animation:shimmer 3.2s ease-in-out infinite } .glint:nth-child(2n){ animation-delay:-1.4s }
+@keyframes haze{0%,100%{transform:translateX(0)}50%{transform:translateX(12px)}}
+.haze{ animation:haze 14s ease-in-out infinite }
+@keyframes faro{0%,100%{opacity:.45}50%{opacity:.9}}
+.faro{ animation:faro 5.5s ease-in-out infinite }
+@media (prefers-reduced-motion:reduce){ .palm,.glint,.haze,.faro{animation:none} }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   A LOCADORA · v4 — a caixa sai da estante                        (30/09/2026)
+   Tocar numa lombada puxa o estojo pra fora da prateleira: ele vem até você
+   virando da lombada pra capa. Na mão, arrasta pro lado e ele gira (o verso
+   tem a sinopse). Toque e a tampa abre na dobradiça: encarte à esquerda,
+   disco à direita. Toque no disco e ele sobe, gira e o jogo começa.
+   Estojo de verdade: 6 faces em 3D, luz única alta à esquerda — a face que
+   olha pra luz é mais clara, a que foge dela é mais escura.
+   Regra do WebKit (iPhone/iPad): nada de filter, opacity ou overflow nos
+   elementos que carregam o 3D, senão o Safari achata a caixa.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* passar o mouse puxa a lombada meio pra fora, como numa prateleira de verdade */
+.ig-lombada{ transition:filter .3s var(--ig-ease-effect), transform .34s var(--ig-spring) }
+.ig-estante__trilho:not(.arrastando) .ig-lombada:hover{ filter:brightness(1.3); --pull:-15px }
+.ig-estante__trilho:not(.arrastando) .ig-lombada.is-atual:hover{ --pull:-36px }
+.ig-lombada.saiu{ visibility:hidden }
+
+/* a lombada com a cor do próprio jogo e a faixa da plataforma no topo */
+.ig-lombada.tem-cor{ background:
+    linear-gradient(90deg, rgba(255,255,255,.16) 0 1px, transparent 1px 3px),
+    linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,.02) 38%, rgba(0,0,0,.42)),
+    linear-gradient(180deg, color-mix(in oklab, var(--cor) 58%, #0b0c12), color-mix(in oklab, var(--cor) 34%, #06070b)) }
+.ig-lombada.tem-cor .ig-lombada__nome{ color:#eef1f6; text-shadow:0 1px 2px rgba(0,0,0,.85) }
+.ig-lombada[data-plat] .ig-lombada__faixa{ height:22px; display:grid; place-items:center;
+  font-family:var(--ig-label); font-size:7.5px; font-weight:600; letter-spacing:.06em }
+.ig-lombada[data-plat="PS5"] .ig-lombada__faixa{ color:#10131a;
+  background:linear-gradient(180deg,#f6f7f9,#d6d9e0); box-shadow:inset 0 -1px 0 rgba(0,0,0,.35) }
+.ig-lombada[data-plat="PS4"] .ig-lombada__faixa{ color:#eef3ff;
+  background:linear-gradient(180deg,#2a63d4,#123a8f); box-shadow:inset 0 -1px 0 rgba(0,0,0,.45) }
+.ig-lombada[data-plat] .ig-lombada__nome{ top:28px }
+.ig-lombada.is-atual[data-plat] .ig-lombada__faixa{ height:22px;
+  box-shadow:inset 0 -2px 0 var(--ig-amber), 0 0 12px -2px var(--ig-glow-amber) }
+
+/* ── a cena: o quarto escurece e a luz do jogo acende atrás ──────────────── */
+.cxcena{ position:fixed; inset:0; z-index:70; overflow-y:auto; overflow-x:hidden;
+  overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  padding:max(10px, env(safe-area-inset-top,0px)) clamp(12px,3vw,28px) calc(28px + env(safe-area-inset-bottom,0px));
+  background:rgba(3,4,6,0); transition:background-color .55s var(--ig-ease-effect) }
+.cxcena.on{ background:rgba(3,4,6,.955) }
+.cxfundo{ position:fixed; inset:-12%; z-index:0; pointer-events:none; opacity:0;
+  background:#050608 var(--arte, none) center/cover no-repeat;
+  filter:blur(56px) saturate(1.25); transition:opacity .9s var(--ig-ease-effect) }
+.cxcena.on .cxfundo{ opacity:.26 }
+/* o que não é a caixa entra depois dela, pra caixa chegar primeiro */
+.cxcena .cxlado > :not(.cxpalco), .cxcena .encarte, .cxfechar{ opacity:0; transform:translateY(8px);
+  transition:opacity .45s var(--ig-ease-effect), transform .45s var(--ig-ease-effect) }
+.cxcena.on .cxlado > :not(.cxpalco), .cxcena.on .encarte, .cxcena.on .cxfechar{ opacity:1; transform:none;
+  transition-delay:.55s }
+.cxfechar{ position:fixed; top:max(12px, env(safe-area-inset-top,0px)); right:max(12px, env(safe-area-inset-right,0px)); z-index:6;
+  width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,255,255,.14);
+  background:rgba(10,12,17,.86); color:#c3c9d4; font-size:20px; line-height:1; cursor:pointer }
+.cxfechar:hover{ color:#fff; border-color:rgba(255,255,255,.32) }
+
+.cxmesa{ position:relative; z-index:1; max-width:1040px; margin:0 auto; display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr); gap:clamp(14px,3vw,34px); align-items:center;
+  min-height:calc(100svh - 40px) }
+@media (max-width:860px), (orientation:portrait){
+  .cxmesa{ grid-template-columns:minmax(0,1fr); align-items:start; justify-items:center; min-height:0 }
+  .cxmesa .encarte{ max-width:560px }
+}
+.cxlado{ width:100%; display:grid; gap:12px; justify-items:center }
+
+/* o palco: a perspectiva mora aqui; o arrasto pro lado gira, o pra cima rola a página */
+.cxpalco{ position:relative; width:100%; max-width:600px; height:clamp(300px, 54svh, 600px);
+  perspective:1500px; perspective-origin:50% 42%; touch-action:pan-y;
+  -webkit-user-select:none; user-select:none; cursor:grab; -webkit-touch-callout:none }
+.cxpalco:active{ cursor:grabbing }
+.ej-sombra{ position:absolute; left:50%; top:calc(47% + var(--hc,330px)/2 + 14px); width:calc(var(--w,260px)*1.05);
+  height:26px; margin-left:calc(var(--w,260px)*-.525); border-radius:50%; pointer-events:none;
+  background:radial-gradient(closest-side, rgba(0,0,0,.72), transparent);
+  transition:width .8s cubic-bezier(.22,.9,.25,1), margin .8s cubic-bezier(.22,.9,.25,1) }
+.cxpalco.aberta .ej-sombra{ width:calc(var(--w,260px)*1.9); margin-left:calc(var(--w,260px)*-.95) }
+
+/* ── o estojo: voo (sai da estante) › flutua (respira) › estojo (sua mão) ── */
+.voo{ --hc:calc(var(--w)*1.264); --d:calc(var(--w)*.104);
+  position:absolute; left:50%; top:47%; width:var(--w); height:var(--hc);
+  margin:calc(var(--hc)/-2) 0 0 calc(var(--w)/-2); transform-style:preserve-3d }
+.flutua{ position:absolute; inset:0; transform-style:preserve-3d; animation:ej-flutua 6s ease-in-out infinite }
+@keyframes ej-flutua{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-5px) } }
+.estojo{ position:absolute; inset:0; transform-style:preserve-3d;
+  transform:translateX(var(--ox,0px)) scale(var(--esc,1)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition:transform .85s cubic-bezier(.22,.9,.25,1) }
+.estojo.na-mao{ transition:none }
+
+/* só as faces recebem o dedo: os suportes do 3D são planos invisíveis na frente da bandeja */
+.voo,.flutua,.estojo,.ej-tampa{ pointer-events:none }
+.ej-f{ position:absolute; left:0; top:0; -webkit-backface-visibility:hidden; backface-visibility:hidden; pointer-events:auto }
+/* plástico azul do estojo PlayStation */
+.ej-lombo,.ej-borda,.ej-topo,.ej-base{ background:#17307a }
+.ej-lombo{ width:var(--d); height:100%; left:calc(50% - var(--d)/2);
+  transform:rotateY(-90deg) translateZ(calc(var(--w)/2)); overflow:hidden;
+  background:linear-gradient(180deg, color-mix(in oklab, var(--cor,#2a3040) 60%, #0b0c12), color-mix(in oklab, var(--cor,#2a3040) 38%, #06070b)) }
+.ej-lombo::after{ content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,255,255,.14), rgba(255,255,255,.03) 50%, rgba(0,0,0,.2)) }
+.ej-lombo b{ display:block; height:calc(var(--d)*1.05); display:grid; place-items:center;
+  font:600 calc(var(--d)*.3)/1 var(--ig-label); letter-spacing:.04em }
+.ej-lombo[data-plat="PS5"] b{ background:linear-gradient(180deg,#f6f7f9,#d6d9e0); color:#10131a }
+.ej-lombo[data-plat="PS4"] b{ background:linear-gradient(180deg,#2a63d4,#123a8f); color:#eef3ff }
+.ej-lombo span{ position:absolute; top:calc(var(--d)*1.3); bottom:calc(var(--d)*.6); left:0; right:0;
+  writing-mode:vertical-rl; transform:rotate(180deg); text-align:right; white-space:nowrap; overflow:hidden;
+  text-overflow:ellipsis; font:400 calc(var(--d)*.36)/var(--d) var(--ig-label); color:#eef1f6;
+  text-shadow:0 1px 2px rgba(0,0,0,.8) }
+.ej-borda{ width:var(--d); height:100%; left:calc(50% - var(--d)/2);
+  transform:rotateY(90deg) translateZ(calc(var(--w)/2));
+  background:repeating-linear-gradient(90deg, #091431 0 2px, #0e1d48 2px 4px) }
+.ej-topo{ width:100%; height:var(--d); top:calc(50% - var(--d)/2);
+  transform:rotateX(90deg) translateZ(calc(var(--hc)/2)); background:linear-gradient(90deg,#3a5cc0,#24449c) }
+.ej-base{ width:100%; height:var(--d); top:calc(50% - var(--d)/2);
+  transform:rotateX(-90deg) translateZ(calc(var(--hc)/2)); background:#0a1638 }
+
+/* o verso: sinopse e os seus números, como atrás de uma caixa de locadora */
+.ej-tras{ width:100%; height:100%; transform:rotateY(180deg) translateZ(calc(var(--d)/2));
+  border-radius:7px 3px 3px 7px; overflow:hidden; display:flex; flex-direction:column;
+  background:linear-gradient(180deg, color-mix(in oklab, var(--cor,#2a3040) 26%, #0b0d13), #07080c 70%);
+  box-shadow:inset 0 0 0 calc(var(--w)*.012) #1b3584; color:#dfe3ea }
+.ej-tras::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(150deg, rgba(255,255,255,.07), transparent 40%, rgba(0,0,0,.28)) }
+.tr-arte{ height:34%; background:#0a0c11 var(--arte,none) center 30%/cover no-repeat; position:relative }
+.tr-arte::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(7,8,12,.95)) }
+.tr-corpo{ flex:1; display:flex; flex-direction:column; gap:calc(var(--w)*.03);
+  padding:calc(var(--w)*.03) calc(var(--w)*.07) calc(var(--w)*.06); margin-top:calc(var(--w)*-.09); position:relative; min-height:0 }
+.tr-tit{ margin:0; font:300 calc(var(--w)*.066)/1.12 var(--ig-display); color:#f3f1ec; text-wrap:balance }
+.tr-txt{ margin:0; font-size:calc(var(--w)*.044); line-height:1.45; color:#b9bfca; flex:1; min-height:0; overflow:hidden;
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:6 }
+.tr-nums{ margin:0; display:grid; grid-template-columns:1fr 1fr; gap:calc(var(--w)*.012) calc(var(--w)*.04) }
+.tr-nums div{ display:flex; justify-content:space-between; gap:6px; border-top:1px solid rgba(255,255,255,.08); padding-top:3px }
+.tr-nums dt{ font:calc(var(--w)*.03)/1.3 var(--ig-label); letter-spacing:.14em; text-transform:uppercase; color:#8f95a3 }
+.tr-nums dd{ margin:0; font:calc(var(--w)*.038)/1.3 var(--ig-mono); color:var(--ig-neon-cyan) }
+.tr-pe{ display:flex; justify-content:space-between; align-items:flex-end; gap:8px;
+  font:calc(var(--w)*.03)/1 var(--ig-label); letter-spacing:.2em; color:#8f95a3 }
+.tr-barras{ width:calc(var(--w)*.26); height:calc(var(--w)*.09); border:2px solid #e9edf4; opacity:.8;
+  background:repeating-linear-gradient(90deg, #111 0 1px, #e9edf4 1px 3px, #111 3px 5px, #e9edf4 5px 6px, #111 6px 7px, #e9edf4 7px 10px) }
+
+/* a bandeja: o fundo de plástico onde o disco encaixa */
+.ej-bandeja{ width:100%; height:100%; transform:translateZ(calc(var(--d)/-2 + 2px)); transform-style:preserve-3d;
+  border-radius:3px 7px 7px 3px;
+  background:radial-gradient(circle at 50% 46%, #0b1636 0 5%, #173070 5.4% 7%, #0f2254 7.4%, #0c1b44 60%, #081333) }
+.ej-bandeja::before{ content:""; position:absolute; inset:calc(var(--w)*.03); border-radius:inherit;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.7), inset 0 -1px 0 rgba(255,255,255,.08) }
+
+/* a tampa: gira na dobradiça da lombada */
+.ej-tampa{ position:absolute; inset:0; transform-style:preserve-3d; transform-origin:0 50%;
+  transform:translateZ(calc(var(--d)/2)) rotateY(var(--abre,0deg));
+  transition:transform .9s cubic-bezier(.3,.9,.26,1) }
+.ej-capa{ width:100%; height:100%; transform:translateZ(.5px); border-radius:3px 7px 7px 3px;
+  overflow:hidden; background:#0a0c11; display:flex; flex-direction:column }
+.ej-capa .banda{ flex:none; height:11.5%; display:flex; align-items:center; padding-left:7%;
+  font:600 calc(var(--w)*.06)/1 var(--ig-label); letter-spacing:.05em }
+.ej-capa .banda[data-plat="PS5"]{ background:linear-gradient(180deg,#fbfbfc,#e3e5ea); color:#0d1017 }
+.ej-capa .banda[data-plat="PS4"]{ background:linear-gradient(180deg,#2d68dc,#113789); color:#f2f6ff }
+.ej-capa .banda[data-plat=""]{ display:none }
+.ej-capa .arte{ flex:1; min-height:0; position:relative }
+.ej-capa .arte img,.ej-capa .arte svg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block }
+/* o plástico por cima: luz única, alta à esquerda, e o aro do estojo */
+.ej-capa::after{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+  background:linear-gradient(150deg, rgba(255,255,255,.12), rgba(255,255,255,.02) 30%, transparent 55%, rgba(0,0,0,.22));
+  box-shadow:inset 0 0 0 calc(var(--w)*.012) #1b3584, inset 0 0 0 calc(var(--w)*.016) rgba(0,0,0,.35) }
+.ej-capa::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:calc(var(--w)*.045); z-index:2;
+  background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.04) 45%, rgba(0,0,0,.4)) }
+
+/* o lado de dentro da tampa: o encarte preso nas presilhas */
+.ej-dentro{ width:100%; height:100%; transform:rotateY(180deg) translateZ(.5px); border-radius:7px 3px 3px 7px;
+  background:linear-gradient(180deg,#132a68,#0c1b44); display:grid; place-items:center }
+.ej-folheto{ width:84%; height:80%; border-radius:2px; position:relative; overflow:hidden;
+  background:var(--ig-grao), linear-gradient(160deg,#efe9dc,#dcd4c2);
+  box-shadow:0 3px 8px rgba(0,0,0,.55); color:#1d1a14; display:flex; flex-direction:column;
+  padding:9% 8%; gap:calc(var(--w)*.03) }
+.ej-folheto .fl-arte{ height:38%; margin:-11% -10% 0; background:#1d1a14 var(--arte,none) center 30%/cover no-repeat;
+  filter:grayscale(.2) contrast(1.05) }
+.ej-folheto small{ font:calc(var(--w)*.03)/1 var(--ig-label); letter-spacing:.22em; text-transform:uppercase; color:#7a6d55 }
+.ej-folheto strong{ font:400 calc(var(--w)*.062)/1.1 var(--ig-display); color:#1d1a14; text-wrap:balance }
+.ej-folheto p{ margin:0; font-size:calc(var(--w)*.04); line-height:1.4; color:#4a4336;
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:5; overflow:hidden }
+.ej-presilha{ position:absolute; left:50%; width:22%; height:calc(var(--w)*.035); margin-left:-11%;
+  background:linear-gradient(180deg,#2d4fae,#152e72); border-radius:2px; box-shadow:0 1px 2px rgba(0,0,0,.6) }
+.ej-presilha.a{ top:7.5% } .ej-presilha.b{ bottom:7.5% }
+
+/* ── o disco: o lado de cima é a arte impressa, a borda é a mídia ───────── */
+.disco{ position:absolute; border:0; padding:0; margin:0; cursor:pointer; background:none; border-radius:50%;
+  width:calc(var(--w)*.88); height:calc(var(--w)*.88);
+  left:calc(var(--w)*.06); top:calc(var(--hc)*.47 - var(--w)*.44);
+  transform:translateZ(3px); transition:transform .75s cubic-bezier(.22,.9,.25,1);
+  display:grid; place-items:center; -webkit-tap-highlight-color:transparent }
+.disco.sobe{ transform:translateZ(calc(var(--w)*.24)) }
+.disco-giro{ position:absolute; inset:0; border-radius:50% }
+.disco-midia{ position:absolute; inset:0; border-radius:50%;
+  background:conic-gradient(from 210deg, #5b6270, #5eead4 9%, #7dd3fc 17%, #c4b5fd 25%, #f0abfc 32%, #fca5a5 39%,
+    #E8AE5E 47%, #9aa0ac 55%, #5eead4 65%, #93c5fd 73%, #d8b4fe 81%, #E8AE5E 89%, #5b6270);
+  -webkit-mask:radial-gradient(circle closest-side, transparent 0 12.5%, #000 13%);
+          mask:radial-gradient(circle closest-side, transparent 0 12.5%, #000 13%);
+  box-shadow:0 10px 18px -8px rgba(0,0,0,.9) }
+.disco-arte{ position:absolute; inset:0; border-radius:50%;
+  background:#0d0f14 var(--arte,none) center/cover no-repeat;
+  -webkit-mask:radial-gradient(circle closest-side, transparent 0 27%, #000 27.6% 96.6%, transparent 97.2%);
+          mask:radial-gradient(circle closest-side, transparent 0 27%, #000 27.6% 96.6%, transparent 97.2%) }
+.disco-luz{ position:absolute; inset:0; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle at 30% 24%, rgba(255,255,255,.26), transparent 42%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);
+  -webkit-mask:radial-gradient(circle closest-side, transparent 0 12.5%, #000 13%);
+          mask:radial-gradient(circle closest-side, transparent 0 12.5%, #000 13%) }
+.disco .rot{ position:relative; z-index:3; display:grid; gap:2px; justify-items:center; pointer-events:none;
+  width:calc(var(--w)*.2); height:calc(var(--w)*.2); place-content:center; border-radius:50%;
+  background:radial-gradient(circle, rgba(8,10,14,.82) 0 58%, transparent 60%) }
+.disco .rot svg{ width:calc(var(--w)*.07); height:calc(var(--w)*.07); fill:var(--ig-amber);
+  filter:drop-shadow(0 0 8px var(--ig-glow-amber)) }
+.disco .rot span{ font-family:var(--ig-label); font-size:calc(var(--w)*.026); letter-spacing:.22em;
+  text-transform:uppercase; color:#e3e7ee }
+.disco:hover .disco-luz{ background:radial-gradient(circle at 30% 24%, rgba(255,255,255,.36), transparent 46%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.05) 0 1px, transparent 1px 3px) }
+.disco.gira .disco-giro{ animation:ej-gira .75s linear infinite }
+@keyframes ej-gira{ to{ transform:rotate(360deg) } }
+.estojo:not(.aberta) .disco{ pointer-events:none }
+
+/* ── a dica e as teclas debaixo do palco ─────────────────────────────────── */
+.cxdica{ margin:0; min-height:1.4em; text-align:center; font-family:var(--ig-label); font-size:10px;
+  letter-spacing:.14em; max-width:34ch; text-transform:uppercase; color:#9aa0ac }
+.cxlado .cxacoes{ justify-content:center }
+
+@media (prefers-reduced-motion:reduce){
+  .flutua{ animation:none } .estojo,.ej-tampa,.disco{ transition:none }
+  .disco.gira .disco-giro{ animation:none }
+}
+
+/* ── o encarte: o folheto que vem dentro da caixa ────────────────────────── */
+.encarte{ width:100%; max-width:480px; border-radius:16px; padding:clamp(17px,3.4vw,24px);
+  display:grid; gap:15px; align-content:start;
+  background:
+    var(--ig-grao),
+    linear-gradient(168deg, rgba(255,255,255,.045), rgba(255,255,255,.008) 42%, rgba(0,0,0,.2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(255,255,255,.05),
+             0 30px 54px -26px rgba(0,0,0,.9) }
+.encarte h2{ margin:0; font-family:var(--ig-display); font-weight:300;
+  font-size:clamp(23px,5vw,30px); line-height:1.08; color:var(--ig-ink); text-wrap:balance }
+.encarte .cab{ display:grid; gap:5px }
+
+/* os números gravados */
+.dnums{ display:grid; border-radius:11px; overflow:hidden;
+  background:linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.14));
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.6), inset 0 -1px 0 rgba(255,255,255,.055) }
+.dnums div{ display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+  padding:9px 13px; border-top:1px solid rgba(255,255,255,.05) }
+.dnums div:first-child{ border-top:0 }
+.dnums dt{ margin:0; font-family:var(--ig-label); font-size:9px; letter-spacing:.2em;
+  text-transform:uppercase; color:#8f95a3 }
+.dnums dd{ margin:0; font-family:var(--ig-mono); font-size:13.5px; color:var(--ig-neon-cyan) }
+.dnums dd.q{ color:var(--ig-amber) }
+
+/* o que o Claude escreve */
+.dtxt{ display:grid; gap:13px }
+.dtxt section{ display:grid; gap:4px }
+.dtxt h4{ margin:0; font-family:var(--ig-label); font-size:9px; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--ig-amber) }
+.dtxt p{ margin:0; font-size:14px; line-height:1.55; color:var(--ig-dim) }
+.dcarreg{ display:flex; align-items:center; gap:10px; font-size:13.5px; color:#8f95a3 }
+.dnota{ font-size:12.5px; color:#7d8390; line-height:1.5 }
+.dnota button{ font:inherit; color:var(--ig-neon-cyan); background:none; border:0; cursor:pointer;
+  padding:0; text-decoration:underline; text-underline-offset:3px }
+.cxacoes{ display:flex; gap:10px; flex-wrap:wrap; padding-top:2px }
+
+/* ═══════════════ MODO IMERSIVO — DECK DE FITA ═══════════════
+   deck.html roda num iframe isolado. Aqui só a cortina e os controles. */
+.calm{ position:fixed; inset:0; z-index:90; overflow:hidden; opacity:0; transition:opacity .9s ease;
+  background:#050608; color:#f3e6d2 }
+.calm.on{ opacity:1 }
+.calm-deck{ position:absolute; inset:0; width:100%; height:100%; border:0; display:block;
+  background:#050608; pointer-events:none }
+.calm-research{ position:absolute; left:50%; transform:translateX(-50%); z-index:3;
+  top:max(14px, calc(env(safe-area-inset-top,0px) + 10px));
+  font-family:var(--ig-mono); font-size:13px; padding:7px 13px; border-radius:999px;
+  background:rgba(5,6,8,.74); border:1px solid rgba(94,234,212,.35); color:#bff4ff;
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px) }
+.calm-research.over{ border-color:rgba(255,160,140,.5); color:#ffd2c8 }
+.calm-fallback{ position:absolute; inset:0; z-index:2; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:10px }
+.calm-fallback .lbl{ font-family:var(--ig-label,monospace); font-size:11px; letter-spacing:.3em;
+  text-transform:uppercase; color:#b09a7e }
+.calm-fallback span:last-child{ font-size:clamp(56px,17vw,132px); line-height:1; color:#f3e6d2;
+  font-variant-numeric:tabular-nums }
+.calm-ui{ position:absolute; left:0; right:0; bottom:0; z-index:4;
+  padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));
+  display:flex; justify-content:center; flex-wrap:wrap; gap:10px;
+  background:#070809; border-top:1px solid rgba(232,174,94,.22);
+  box-shadow:0 -18px 40px -12px rgba(0,0,0,.9);
+  opacity:0; transform:translateY(12px); pointer-events:none; transition:opacity .5s, transform .5s }
+.calm.ui .calm-ui{ opacity:1; transform:none; pointer-events:auto }
+.calm-ui button{ font:inherit; font-size:14px; color:#f3e6d2; cursor:pointer; padding:11px 16px;
+  border-radius:14px; background:rgba(20,18,16,.55); border:1px solid rgba(243,230,210,.22);
+  -webkit-backdrop-filter:blur(16px) saturate(160%); backdrop-filter:blur(16px) saturate(160%) }
+.calm-ui button.stop{ border-color:rgba(255,140,120,.45) }
+.calm-ui button.stop.arm{ background:rgba(179,38,30,.55) }
+.calm-hint{ position:absolute; left:0; right:0; z-index:3;
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  width:max-content; max-width:calc(100% - 32px); margin:0 auto;
+  padding:7px 14px; border-radius:999px; text-align:center;
+  background:rgba(5,6,8,.78); border:1px solid rgba(243,230,210,.10);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  font-family:var(--ig-label); font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+  color:#b09a7e; opacity:.9; transition:opacity 1s; pointer-events:none }
+.calm.ui .calm-hint, .calm.hint-off .calm-hint{ opacity:0 }
+@media (prefers-reduced-motion:reduce){ .calm{transition:none} }
+
+/* ══════════ A ABERTURA · a sala acende (Rive) ══════════
+   Cortina escura por cima de tudo enquanto a fita de luz acende. A sala só começa a entrar
+   (o stagger) quando a cortina sai, então a chegada continua sendo uma coisa só. */
+.abertura{ display:none }
+html.abre .abertura{ display:block; position:fixed; inset:0; z-index:90; background:#050608; cursor:pointer;
+  transition:opacity .52s var(--ig-ease-effect) }
+.abertura canvas{ display:block; width:100%; height:100%; opacity:0; transition:opacity .28s ease-out }
+.abertura.tocando canvas{ opacity:1 }
+.abertura.sai{ display:block; position:fixed; inset:0; z-index:90; background:#050608; opacity:0; pointer-events:none;
+  transition:opacity .52s var(--ig-ease-effect) }
+html.abre .ig-stagger > *{ animation-play-state:paused }

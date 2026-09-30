@@ -1,0 +1,106 @@
+/* Brokkr · Instrumento (23/09/2026) — fonte: componente Instrumento do design system Intergalactic. */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INSTRUMENTO — a identidade de hoje (23/09/2026)
+   Metal do Panel + vidro Líquido + visor VFD + VU, num aparelho só. Profundidade
+   em camadas de papel: chassi → nicho fresado → visor aceso → lente de vidro →
+   aro de luz. Cada plano tem a sua sombra, todas da luz única alta à esquerda.
+   Vintage de verdade: metal escovado com grão, parafuso, fósforo com malha de
+   pontos, segmento apagado visível (o "8" fantasma). Calmo: nada pisca, o VU
+   anda na força do dado e assenta devagar.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root{
+  --ig-grao:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --ig-dig:var(--font-digits,"DSEG7 Classic","DSEG7","JetBrains Mono",ui-monospace,monospace);
+}
+/* 1 · CHASSI — a chapa de metal escovado que segura tudo */
+.ig-chassi{ position:relative; isolation:isolate; border-radius:18px; padding:clamp(18px,3.4vw,26px);
+  color:var(--ig-ink);
+  background:var(--ig-grao),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.024) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #282c35, #1a1c23 44%, #101116);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 34px 70px -26px rgba(0,0,0,.8), 0 3px 0 -1px rgba(0,0,0,.55),
+             inset 0 1px 0 rgba(255,255,255,.10), inset 0 0 0 1px rgba(0,0,0,.45) }
+/* 2 · NICHO — o rebaixo fresado no metal: escuro em cima, fio de luz embaixo */
+.ig-nicho{ position:relative; border-radius:14px; padding:5px;
+  background:linear-gradient(180deg, #06070a, #0d0f14);
+  box-shadow:inset 0 3px 5px rgba(0,0,0,.85), inset 0 -1px 0 rgba(255,255,255,.07),
+             0 1px 0 rgba(255,255,255,.06) }
+/* rótulo e régua gravados na chapa */
+.ig-gravado{ font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.26em;
+  font-size:10px; color:#8f95a3;
+  text-shadow:0 -1px 0 rgba(0,0,0,.75), 0 1px 0 rgba(255,255,255,.07) }
+.ig-regua-gravada{ font-size:12px; color:#8f95a3; text-shadow:0 -1px 0 rgba(0,0,0,.7), 0 1px 0 rgba(255,255,255,.06) }
+/* 3 · VISOR — fósforo VFD: fundo de vidro apagado, malha de pontos, brilho que vem do dado */
+.ig-visor{ --fos:var(--ig-vfd); --fos-glow:rgba(255,176,74,.5);
+  position:relative; overflow:hidden; border-radius:10px; padding:14px 16px 13px;
+  background:radial-gradient(120% 100% at 45% 35%, #17150f, #0a0907 72%);
+  box-shadow:inset 0 0 22px rgba(0,0,0,.85) }
+.ig-visor--cyan{ --fos:#7ffbe6; --fos-glow:rgba(94,234,212,.45) }
+.ig-visor--verde{ --fos:#8dfca4; --fos-glow:rgba(70,209,122,.45) }
+.ig-visor--fogo{ --fos:#ff8a7a; --fos-glow:rgba(255,81,71,.45) }
+.ig-visor::after{ content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+  background:radial-gradient(rgba(0,0,0,.42) 34%, transparent 40%) 0 0 / 3px 3px }  /* malha do VFD */
+.ig-visor__linha{ position:relative; z-index:1; display:flex; align-items:baseline; gap:8px }
+.ig-visor__num{ display:inline-grid; font-family:var(--ig-dig); font-style:italic;
+  font-size:clamp(28px,5.4vw,38px); line-height:1; color:var(--fos);
+  text-shadow:0 0 4px var(--fos-glow), 0 0 14px var(--fos-glow);
+  transition:color .6s var(--ig-ease-effect) }
+.ig-visor__num::before{ content:attr(data-fantasma); grid-area:1/1; justify-self:end;
+  color:var(--fos); opacity:.07; text-shadow:none }                 /* segmentos apagados visíveis */
+.ig-visor__num > b{ grid-area:1/1; justify-self:end; font-weight:inherit }
+.ig-visor__unid{ font-family:var(--ig-mono); font-size:12px; color:var(--fos); opacity:.7;
+  text-shadow:0 0 6px var(--fos-glow) }
+/* VU de células dentro do visor: célula apagada visível, acende pelo dado, cápsula de pico segura */
+.ig-vu-celas{ position:relative; z-index:1; display:grid; grid-auto-flow:column; grid-auto-columns:1fr;
+  gap:2px; height:8px; margin-top:11px }
+.ig-vu-celas i{ border-radius:1.5px; background:color-mix(in oklab, var(--fos) 11%, transparent);
+  transition:background-color .55s var(--ig-ease-effect), box-shadow .55s var(--ig-ease-effect) }
+.ig-vu-celas i.on{ background:var(--fos); box-shadow:0 0 6px var(--fos-glow) }
+.ig-vu-celas i.pico{ background:color-mix(in oklab, var(--fos) 70%, white); box-shadow:0 0 8px var(--fos-glow) }
+.ig-vu-celas i.alto.on{ background:#ffb061 } .ig-vu-celas i.limite.on{ background:#ff6a5c }
+/* 4 · LENTE — o vidro líquido por cima do visor: dobra de leve, aro de luz fixo, espessura */
+.ig-lente{ position:absolute; inset:5px; border-radius:10px; pointer-events:none; z-index:3;
+  background:linear-gradient(180deg, rgba(255,255,255,.055), transparent 38%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06), inset 0 10px 16px -12px rgba(255,255,255,.16),
+             inset 0 -8px 14px -10px rgba(0,0,0,.6) }
+.ig-lente::after{ content:""; position:absolute; inset:0; border-radius:inherit; padding:1.2px;
+  background:linear-gradient(135deg, rgba(255,255,255,.7), rgba(255,255,255,.12) 24%, transparent 48%,
+    transparent 66%, rgba(255,255,255,.14));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude }
+@supports (backdrop-filter:url(#x)) or (-webkit-backdrop-filter:url(#x)){
+  .ig-lente{ -webkit-backdrop-filter:url(#bd1-lq-lens-fina); backdrop-filter:url(#bd1-lq-lens-fina) } }
+/* 5 · MOSTRADOR — rótulo gravado + nicho com visor e lente + régua gravada */
+.ig-mostrador{ display:grid; gap:8px; align-content:start }
+/* 6 · TECLA — o botão líquido assentado numa sede fresada; ao apertar, afunda na sede */
+.ig-sede{ display:inline-flex; padding:4px; border-radius:9999px;
+  background:linear-gradient(180deg,#05060a,#0c0e13);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.9), inset 0 -1px 0 rgba(255,255,255,.08), 0 1px 0 rgba(255,255,255,.05) }
+.ig-sede > .ig-lq-btn{ box-shadow:0 6px 12px -6px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.4),
+  inset 0 -10px 18px -12px color-mix(in oklab, var(--lq-tint) 70%, transparent) }
+.ig-sede > .ig-lq-btn:active{ box-shadow:0 1px 2px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.25) }
+/* 7 · LÂMPADA — a gota neon atrás de um vidrinho, num furo da chapa */
+.ig-lampada{ display:inline-grid; place-items:center; width:22px; height:22px; border-radius:50%;
+  background:radial-gradient(circle at 50% 40%, #0d0f14, #05060a);
+  box-shadow:inset 0 2px 3px rgba(0,0,0,.9), inset 0 -1px 0 rgba(255,255,255,.08) }
+/* 8 · JANELA — pílula de estado: janelinha de visor com a gota e a palavra em fósforo */
+.ig-janela{ display:inline-flex; align-items:center; gap:8px; padding:3px; border-radius:9999px;
+  background:linear-gradient(180deg,#05060a,#0c0e13);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.9), inset 0 -1px 0 rgba(255,255,255,.08) }
+.ig-janela > span{ --fos:#8dfca4; --fos-glow:rgba(70,209,122,.45);
+  display:inline-flex; align-items:center; gap:8px; padding:5px 12px 5px 8px; border-radius:9999px;
+  background:radial-gradient(120% 120% at 40% 30%, #15140f, #0a0907);
+  font-family:var(--ig-label); text-transform:uppercase; letter-spacing:.16em; font-size:10px;
+  color:var(--fos); text-shadow:0 0 6px var(--fos-glow);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07), inset 0 0 10px rgba(0,0,0,.8) }
+.ig-janela--warn > span{ --fos:#ffc074; --fos-glow:rgba(255,176,74,.45) }
+.ig-janela--crit > span{ --fos:#ff8a7a; --fos-glow:rgba(255,81,71,.45) }
+.ig-janela--cyan > span{ --fos:#7ffbe6; --fos-glow:rgba(94,234,212,.45) }
+@media (prefers-reduced-motion:reduce){ .ig-vu-celas i,.ig-visor__num{ transition:none } }
+@media (prefers-reduced-transparency:reduce){ .ig-lente{ backdrop-filter:none; -webkit-backdrop-filter:none } }
+/* ═══════════════════════════════════════════════════════════════════════════
+   VU pelo dado (JS, 12 linhas no brokkr.js): igVU(el, 0..1) acende as células,
+   marca a cápsula de pico, que segura 0,9 s e desce uma célula a cada 120 ms.
+   ═══════════════════════════════════════════════════════════════════════════ */
